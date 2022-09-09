@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Assets.Scripts.Backends.HexGrid;
 
 public class HexGrid : MonoBehaviour
 {
@@ -33,7 +34,10 @@ public class HexGrid : MonoBehaviour
 
     private void CreateCell(int x, int z, int i)
     {
-        Vector3 pos = new Vector3(x * 10f, 0f, z * 10f);
+        Vector3 pos;
+        pos.x = (x + z * .5f - z / 2) * (HexMetrics.InnerRadius * 2);
+        pos.y = 0f;
+        pos.z = z * (HexMetrics.OuterRadius * 1.5f);
 
         HexCell cell = myCells[i] = Instantiate<HexCell>(CellPrefab);
         cell.transform.SetParent(transform, false);
