@@ -10,14 +10,17 @@ namespace Assets.Scripts.Backends.HexGrid
             return new HexCoordinates(x - z / 2, z);
         }
 
-        public int X { get; private set; }
+        [SerializeField]
+        private int x, z;
+
+        public int X { get { return x; } }
         public int Y { get { return -X - Z; } }
-        public int Z { get; private set; }
+        public int Z { get { return z; } }
 
         public HexCoordinates(int x, int z)
         {
-            X = x;
-            Z = z;
+            this.x = x;
+            this.z = z;
         }
 
         public override string ToString()
