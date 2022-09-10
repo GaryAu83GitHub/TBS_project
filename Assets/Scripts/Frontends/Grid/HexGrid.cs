@@ -42,18 +42,20 @@ public class HexGrid : MonoBehaviour
 
     private void CreateCell(int x, int z, int i)
     {
-        Vector3 pos;
-        pos.x = (x + z * .5f - z / 2) * (HexMetrics.InnerRadius * 2);
-        pos.y = 0f;
-        pos.z = z * (HexMetrics.OuterRadius * 1.5f);
+        Vector3 position;
+        position.x = (x + z * .5f - z / 2) * (HexMetrics.InnerRadius * 2);
+        position.y = 0f;
+        position.z = z * (HexMetrics.OuterRadius * 1.5f);
 
         HexCell cell = myCells[i] = Instantiate<HexCell>(CellPrefab);
         cell.transform.SetParent(transform, false);
-        cell.transform.localPosition = pos;
+        cell.transform.localPosition = position;
+        cell.Coordinates = HexCoordinates.FromOffsetCoordinates(x, z);
 
         Text label = Instantiate<Text>(CellLabelPrefab);
         label.rectTransform.SetParent(myGridCanvas.transform, false);
-        label.rectTransform.anchoredPosition = new Vector2(pos.x, pos.z);
-        label.text = "x: " + x.ToString() + "\n" + "z: " + z.ToString();
+        label.rectTransform.anchoredPosition = new Vector2(position.x, position.z);
+        //label.text = "x: " + x.ToString() + "\n" + "z: " + z.ToString();
+        label.text = cell.Coordinates.ToStringOnSeperateLines();
     }
 }
