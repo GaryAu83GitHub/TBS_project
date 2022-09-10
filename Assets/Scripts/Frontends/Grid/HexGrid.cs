@@ -15,14 +15,13 @@ public class HexGrid : MonoBehaviour
 
     private HexCell[] myCells;
     private HexMesh myHexMesh;
-
+    
     private Canvas myGridCanvas;
 
     void Awake()
     {
         myHexMesh = GetComponentInChildren<HexMesh>();
         myGridCanvas = GetComponentInChildren<Canvas>();
-
 
         myCells = new HexCell[Height * Width];
 
@@ -38,6 +37,20 @@ public class HexGrid : MonoBehaviour
     void Start()
     {
         myHexMesh.Triangulate(myCells);
+    }
+
+    void Update()
+    {
+        if (Input.GetMouseButton(0))
+            HandleInput();
+    }
+
+    private void HandleInput()
+    {
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+        if (Physics.Raycast(ray, out hit))
+            TouchCell(hit.point);
     }
 
     private void CreateCell(int x, int z, int i)
@@ -57,5 +70,12 @@ public class HexGrid : MonoBehaviour
         label.rectTransform.anchoredPosition = new Vector2(position.x, position.z);
         //label.text = "x: " + x.ToString() + "\n" + "z: " + z.ToString();
         label.text = cell.Coordinates.ToStringOnSeperateLines();
+    }
+
+    private void TouchCell(Vector3 aPosition)
+    {
+        aPosition = transform.InverseTransformPoint(aPosition);
+        HexCoordinates coordinates = HexCoordinates.FromPosition(aPosition);
+        Debug.Log("Thouch at " + coordinates.ToString());
     }
 }
