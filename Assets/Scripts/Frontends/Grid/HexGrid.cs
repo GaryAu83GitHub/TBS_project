@@ -44,8 +44,19 @@ public class HexGrid : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetMouseButton(0))
-            HandleInput();
+        //if (Input.GetMouseButtonDown(0))
+        //    HandleInput();
+    }
+
+    public void ColorCell(Vector3 aPosition, Color aColor)
+    {
+        aPosition = transform.InverseTransformPoint(aPosition);
+        HexCoordinates coordinates = HexCoordinates.FromPosition(aPosition);
+
+        int index = coordinates.X + coordinates.Z * Width + coordinates.Z / 2;
+        HexCell cell = myCells[index];
+        cell.Color = aColor;
+        myHexMesh.Triangulate(myCells);
     }
 
     private void HandleInput()
@@ -82,8 +93,12 @@ public class HexGrid : MonoBehaviour
         
         int index = coordinates.X + coordinates.Z * Width + coordinates.Z / 2;
         HexCell cell = myCells[index];
-        cell.Color = TouchedColor;
+
+        if(cell.Color == DefaultColor)
+            cell.Color = TouchedColor;
+        else
+            cell.Color = DefaultColor;
+        
         myHexMesh.Triangulate(myCells);
-        //Debug.Log("Thouch at " + coordinates.ToString());
     }
 }
