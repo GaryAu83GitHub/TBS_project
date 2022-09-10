@@ -11,6 +11,8 @@ public class HexMesh : MonoBehaviour
 
     private MeshCollider myCollider;
 
+    private List<Color> myColors;
+
     void Awake()
     {
         GetComponent<MeshFilter>().mesh = myHexMesh = new Mesh();
@@ -18,6 +20,7 @@ public class HexMesh : MonoBehaviour
 
         myHexMesh.name = "Hex Mesh";
         myVertices = new List<Vector3>();
+        myColors = new List<Color>();
         myTriangles = new List<int>();
     }
 
@@ -25,12 +28,14 @@ public class HexMesh : MonoBehaviour
     {
         myHexMesh.Clear();
         myVertices.Clear();
+        myColors.Clear();
         myTriangles.Clear();
 
         for(int i = 0; i < someCells.Length; i++)
             Triangulate(someCells[i]);
 
         myHexMesh.vertices = myVertices.ToArray();
+        myHexMesh.colors = myColors.ToArray();
         myHexMesh.triangles = myTriangles.ToArray();
         myHexMesh.RecalculateNormals();
 
@@ -47,7 +52,7 @@ public class HexMesh : MonoBehaviour
                 center + HexMetrics.Corners[i],
                 center + HexMetrics.Corners[i + 1]
                 );
-
+            AddTriangleColor(aCell.Color);
         }
     }
 
@@ -62,6 +67,13 @@ public class HexMesh : MonoBehaviour
         myTriangles.Add(vertexIndex);
         myTriangles.Add(vertexIndex + 1);
         myTriangles.Add(vertexIndex + 2);
+    }
+
+    private void AddTriangleColor(Color aColor)
+    {
+        myColors.Add(aColor);
+        myColors.Add(aColor);
+        myColors.Add(aColor);
     }
 
 

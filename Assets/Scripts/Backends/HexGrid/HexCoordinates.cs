@@ -10,12 +10,12 @@ namespace Assets.Scripts.Backends.HexGrid
             return new HexCoordinates(x - z / 2, z);
         }
 
-        public static HexCoordinates FromPosition(Vector3 aPosition)
-        {
-            float x = aPosition.x / (HexMetrics.InnerRadius * 2f);
+        public static HexCoordinates FromPosition(Vector3 position)
+        {            
+            float x = position.x / (HexMetrics.InnerRadius * 2f);
             float y = -x;
 
-            float offset = aPosition.z / (HexMetrics.InnerRadius * 3f);
+            float offset = position.z / (HexMetrics.OuterRadius * 3f);
             x -= offset;
             y -= offset;
 
@@ -23,7 +23,7 @@ namespace Assets.Scripts.Backends.HexGrid
             int iY = Mathf.RoundToInt(y);
             int iZ = Mathf.RoundToInt(-x - y);
 
-            if (iX + iY + iZ != 0) 
+            if (iX + iY + iZ != 0)
             {
                 float dX = Mathf.Abs(x - iX);
                 float dY = Mathf.Abs(y - iY);
@@ -31,11 +31,10 @@ namespace Assets.Scripts.Backends.HexGrid
 
                 if (dX > dY && dX > dZ)
                     iX = -iY - iZ;
-                else if(dZ > dY)
+                else if (dZ > dY)
                     iZ = -iX - iY;
-
             }
-            
+
             return new HexCoordinates(iX, iZ);
         }
 
