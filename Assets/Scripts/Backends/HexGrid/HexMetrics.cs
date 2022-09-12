@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using Assets.Scripts.Backends.HexGrid.Tools;
 
 namespace Assets.Scripts.Backends.HexGrid
 {
@@ -8,7 +9,7 @@ namespace Assets.Scripts.Backends.HexGrid
 
         public const float InnerRadius = OuterRadius * 0.866025404f;
 
-        public static Vector3[] Corners = { 
+        static Vector3[] Corners = { 
             new Vector3 (0f, 0f, OuterRadius),
             new Vector3 (InnerRadius, 0f, .5f * OuterRadius),
             new Vector3 (InnerRadius, 0f, -.5f * OuterRadius),
@@ -17,5 +18,16 @@ namespace Assets.Scripts.Backends.HexGrid
             new Vector3 (-InnerRadius, 0f, .5f * OuterRadius),
             new Vector3 (0f, 0f, OuterRadius)
         };
+
+        public static Vector3 GetFirstCorner(HexDirection aDir)
+        {
+            return Corners[(int)aDir];
+        }
+
+        public static Vector3 GetSecondCorner(HexDirection aDir)
+        {
+            return Corners[(int)aDir + 1];
+        }
+
     }
 }

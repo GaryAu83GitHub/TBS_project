@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Assets.Scripts.Backends.HexGrid;
+using Assets.Scripts.Backends.HexGrid.Tools;
 
 [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
 public class HexMesh : MonoBehaviour
@@ -44,16 +45,22 @@ public class HexMesh : MonoBehaviour
 
     private void Triangulate(HexCell aCell)
     {
-        Vector3 center = aCell.transform.localPosition;
-        for(int i = 0; i < 6; i++)
+        for(HexDirection d = HexDirection.NE; d <= HexDirection.NW; d++)
         {
-            AddTriangle(
-                center,
-                center + HexMetrics.Corners[i],
-                center + HexMetrics.Corners[i + 1]
-                );
-            AddTriangleColor(aCell.Color);
+            Triangulate(d, aCell);
         }
+    }
+
+    private void Triangulate(HexDirection aDir, HexCell aCell)
+    {
+        Vector3 center = aCell.transform.localPosition;
+        
+        AddTriangle(
+            center,
+            center + HexMetrics.GetFirstCorner(aDir),
+            center + HexMetrics.GetSecondCorner(aDir)
+            );
+        AddTriangleColor(aCell.Color);        
     }
 
     private void AddTriangle(Vector3 v1, Vector3 v2, Vector3 v3)
