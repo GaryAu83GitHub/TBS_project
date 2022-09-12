@@ -70,7 +70,22 @@ public class HexMesh : MonoBehaviour
         HexCell neighbor = aCell.GetNeighbor(aDir) ?? aCell;
         HexCell nextNeighbor = aCell.GetNeighbor(aDir.Next()) ?? aCell;
 
-        AddQuadColor(aCell.Color, (aCell.Color + neighbor.Color) * .5f);
+        Color bridgeColor = (aCell.Color + neighbor.Color) * .5f;
+        AddQuadColor(aCell.Color, bridgeColor);
+
+        AddTriangle(v1, center + HexMetrics.GetFirstCorner(aDir), v3);
+        AddTriangleColor(
+            aCell.Color,
+            (aCell.Color + prevNeighbor.Color + neighbor.Color) / 3f,
+            bridgeColor
+            );
+
+        AddTriangle(v2, v4, center + HexMetrics.GetSecondCorner(aDir));
+        AddTriangleColor(
+            aCell.Color,
+            bridgeColor,
+            (aCell.Color + neighbor.Color + nextNeighbor.Color) / 3f
+            );
     }
 
     private void AddTriangle(Vector3 v1, Vector3 v2, Vector3 v3)
