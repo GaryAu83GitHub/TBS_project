@@ -60,8 +60,9 @@ public class HexMesh : MonoBehaviour
         AddTriangle(center, v1, v2);
         AddTriangleColor(aCell.Color);
 
-        Vector3 v3 = center + HexMetrics.GetFirstCorner(aDir);
-        Vector3 v4 = center + HexMetrics.GetSecondCorner(aDir);
+        Vector3 bridge = HexMetrics.GetBridge(aDir);
+        Vector3 v3 = v1 + bridge;
+        Vector3 v4 = v2 + bridge;
 
         AddQuad(v1, v2, v3, v4);
 
@@ -69,12 +70,7 @@ public class HexMesh : MonoBehaviour
         HexCell neighbor = aCell.GetNeighbor(aDir) ?? aCell;
         HexCell nextNeighbor = aCell.GetNeighbor(aDir.Next()) ?? aCell;
 
-        AddQuadColor(
-            aCell.Color,
-            aCell.Color,
-            (aCell.Color + prevNeighbor.Color + neighbor.Color) / 3f,
-            (aCell.Color + neighbor.Color + nextNeighbor.Color) / 3f
-            );
+        AddQuadColor(aCell.Color, (aCell.Color + neighbor.Color) * .5f);
     }
 
     private void AddTriangle(Vector3 v1, Vector3 v2, Vector3 v3)
@@ -119,6 +115,14 @@ public class HexMesh : MonoBehaviour
         myColors.Add(aColor1);
         myColors.Add(aColor2);
         myColors.Add(aColor3);
+    }
+
+    private void AddQuadColor(Color aColor1, Color aColor2)
+    {
+        myColors.Add(aColor1);
+        myColors.Add(aColor1);
+        myColors.Add(aColor2);
+        myColors.Add(aColor2);
     }
 
     private void AddQuadColor(Color aColor1, Color aColor2, Color aColor3, Color aColor4)

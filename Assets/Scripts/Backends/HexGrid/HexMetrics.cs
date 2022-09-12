@@ -42,5 +42,10 @@ namespace Assets.Scripts.Backends.HexGrid
         {
             return Corners[(int)aDir + 1] * SolidFactor;
         }
+        
+        public static Vector3 GetBridge(HexDirection aDir)
+        {
+            return (Corners[(int)aDir] + Corners[(int)aDir + 1]) * .5f * BlendFactor;
+        }
     }
 }
