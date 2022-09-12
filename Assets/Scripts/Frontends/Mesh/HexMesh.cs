@@ -54,18 +54,23 @@ public class HexMesh : MonoBehaviour
     private void Triangulate(HexDirection aDir, HexCell aCell)
     {
         Vector3 center = aCell.transform.localPosition;
+        Vector3 v1 = center + HexMetrics.GetFirstSolidCorner(aDir);
+        Vector3 v2 = center + HexMetrics.GetSecondSolidCorner(aDir);
         
-        AddTriangle(
-            center,
-            center + HexMetrics.GetFirstSolidCorner(aDir),
-            center + HexMetrics.GetSecondSolidCorner(aDir)
-            );
+        AddTriangle(center, v1, v2);
+        AddTriangleColor(aCell.Color);
+
+        Vector3 v3 = center + HexMetrics.GetFirstCorner(aDir);
+        Vector3 v4 = center + HexMetrics.GetSecondCorner(aDir);
+
+        AddQuad(v1, v2, v3, v4);
 
         HexCell prevNeighbor = aCell.GetNeighbor(aDir.Previous()) ?? aCell;
         HexCell neighbor = aCell.GetNeighbor(aDir) ?? aCell;
         HexCell nextNeighbor = aCell.GetNeighbor(aDir.Next()) ?? aCell;
 
-        AddTriangleColor(
+        AddQuadColor(
+            aCell.Color,
             aCell.Color,
             (aCell.Color + prevNeighbor.Color + neighbor.Color) / 3f,
             (aCell.Color + neighbor.Color + nextNeighbor.Color) / 3f
@@ -85,6 +90,23 @@ public class HexMesh : MonoBehaviour
         myTriangles.Add(vertexIndex + 2);
     }
 
+    private void AddQuad(Vector3 v1, Vector3 v2, Vector3 v3, Vector3 v4)
+    {
+        int vertexIndex = myVertices.Count;
+
+        myVertices.Add(v1);
+        myVertices.Add(v2);
+        myVertices.Add(v3);
+        myVertices.Add(v4);
+
+        myTriangles.Add(vertexIndex);
+        myTriangles.Add(vertexIndex + 2);
+        myTriangles.Add(vertexIndex + 1);
+        myTriangles.Add(vertexIndex + 1);
+        myTriangles.Add(vertexIndex + 2);
+        myTriangles.Add(vertexIndex + 3);
+    }
+
     private void AddTriangleColor(Color aColor)
     {
         myColors.Add(aColor);
@@ -97,5 +119,13 @@ public class HexMesh : MonoBehaviour
         myColors.Add(aColor1);
         myColors.Add(aColor2);
         myColors.Add(aColor3);
+    }
+
+    private void AddQuadColor(Color aColor1, Color aColor2, Color aColor3, Color aColor4)
+    {
+        myColors.Add(aColor1);
+        myColors.Add(aColor2);
+        myColors.Add(aColor3);
+        myColors.Add(aColor4);
     }
 }
