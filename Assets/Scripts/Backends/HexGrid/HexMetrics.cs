@@ -9,6 +9,10 @@ namespace Assets.Scripts.Backends.HexGrid
 
         public const float InnerRadius = OuterRadius * 0.866025404f;
 
+        public const float SolidFactor = .75f;
+
+        public const float BlendFactor = 1f - SolidFactor;
+
         static Vector3[] Corners = { 
             new Vector3 (0f, 0f, OuterRadius),
             new Vector3 (InnerRadius, 0f, .5f * OuterRadius),
@@ -29,5 +33,14 @@ namespace Assets.Scripts.Backends.HexGrid
             return Corners[(int)aDir + 1];
         }
 
+        public static Vector3 GetFirstSolidCorner(HexDirection aDir)
+        {
+            return Corners[(int)aDir] * SolidFactor;
+        }
+
+        public static Vector3 GetSecondSolidCorner(HexDirection aDir)
+        {
+            return Corners[(int)aDir + 1] * SolidFactor;
+        }
     }
 }
