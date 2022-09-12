@@ -14,5 +14,15 @@ namespace Assets.Scripts.Backends.HexGrid.Tools
         {
             return (int)aDir < 3 ? (aDir + 3 ) : (aDir - 3);
         }
+
+        public static HexDirection Previous(this HexDirection aDir)
+        {
+            return aDir == HexDirection.NE ? HexDirection.NW : (aDir - 1);
+        }
+
+        public static HexDirection Next(this HexDirection aDir)
+        {
+            return aDir == HexDirection.NW ? HexDirection.NE : (aDir + 1);
+        }
     }
 }
