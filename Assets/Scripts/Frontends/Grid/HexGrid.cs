@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Assets.Scripts.Backends.HexGrid;
-
+using Assets.Scripts.Backends.HexGrid.Tools;
 
 public class HexGrid : MonoBehaviour
 {
@@ -79,6 +79,34 @@ public class HexGrid : MonoBehaviour
         cell.transform.localPosition = position;
         cell.Coordinates = HexCoordinates.FromOffsetCoordinates(x, z);
         cell.Color = DefaultColor;
+
+        
+        if(x > 0)
+        {
+            cell.SetNeighbor(HexDirection.W, myCells[i - 1]);
+        }
+
+        if(z > 0) 
+        {
+            if((z & 1) == 0)
+            {
+                cell.SetNeighbor(HexDirection.SE, myCells[i - Width]);
+                
+                if(x > 0)
+                {
+                    cell.SetNeighbor(HexDirection.SW, myCells[i - Width - 1]);
+                }
+            }
+            else
+            {
+                cell.SetNeighbor(HexDirection.SW, myCells[i - Width]);
+
+                if (x < Width - 1)
+                {
+                    cell.SetNeighbor(HexDirection.SE, myCells[i - Width + 1]);
+                }
+            }
+        }
 
         Text label = Instantiate<Text>(CellLabelPrefab);
         label.rectTransform.SetParent(myGridCanvas.transform, false);
