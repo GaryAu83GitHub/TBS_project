@@ -45,7 +45,7 @@ namespace Assets.Scripts.Backends.HexGrid
         
         public static Vector3 GetBridge(HexDirection aDir)
         {
-            return (Corners[(int)aDir] + Corners[(int)aDir + 1]) * .5f * BlendFactor;
+            return (Corners[(int)aDir] + Corners[(int)aDir + 1]) * BlendFactor;
         }
     }
 }
