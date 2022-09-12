@@ -64,34 +64,6 @@ public class HexMesh : MonoBehaviour
         {
             TriangulateConnection(aDir, aCell, v1, v2);
         }
-        /*
-        Vector3 bridge = HexMetrics.GetBridge(aDir);
-        Vector3 v3 = v1 + bridge;
-        Vector3 v4 = v2 + bridge;
-
-        AddQuad(v1, v2, v3, v4);
-
-        HexCell prevNeighbor = aCell.GetNeighbor(aDir.Previous()) ?? aCell;
-        HexCell neighbor = aCell.GetNeighbor(aDir) ?? aCell;
-        HexCell nextNeighbor = aCell.GetNeighbor(aDir.Next()) ?? aCell;
-
-        Color bridgeColor = (aCell.Color + neighbor.Color) * .5f;
-        AddQuadColor(aCell.Color, bridgeColor);
-
-        AddTriangle(v1, center + HexMetrics.GetFirstCorner(aDir), v3);
-        AddTriangleColor(
-            aCell.Color,
-            (aCell.Color + prevNeighbor.Color + neighbor.Color) / 3f,
-            bridgeColor
-            );
-
-        AddTriangle(v2, v4, center + HexMetrics.GetSecondCorner(aDir));
-        AddTriangleColor(
-            aCell.Color,
-            bridgeColor,
-            (aCell.Color + neighbor.Color + nextNeighbor.Color) / 3f
-            );
-        */
     }
 
     private void TriangulateConnection(HexDirection aDir, HexCell aCell, Vector3 v1, Vector3 v2)
