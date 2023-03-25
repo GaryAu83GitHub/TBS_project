@@ -16,6 +16,8 @@ public class HexGrid : MonoBehaviour
     public  HexCell CellPrefab;
     public Text CellLabelPrefab;
 
+    public Texture2D NoiseSource;
+
     private HexCell[] myCells;
     private HexMesh myHexMesh;
     
@@ -23,6 +25,8 @@ public class HexGrid : MonoBehaviour
 
     void Awake()
     {
+        HexMetrics.NoiseSource = NoiseSource;
+
         myHexMesh = GetComponentInChildren<HexMesh>();
         myGridCanvas = GetComponentInChildren<Canvas>();
 
@@ -35,6 +39,11 @@ public class HexGrid : MonoBehaviour
                 CreateCell(x, z, i++);
             }
         }
+    }
+
+    private void OnEnable()
+    {
+        HexMetrics.NoiseSource = NoiseSource;
     }
 
     void Start()
