@@ -6,6 +6,8 @@ namespace Assets.Scripts.Backends.HexGrid
     public enum HexEdgeType { FLAT, SLOPE, CLIFF }
     public static class HexMetrics
     {
+        public static Texture2D NoiseSource;
+
         public const float OuterRadius = 10f;
 
         public const float InnerRadius = OuterRadius * 0.866025404f;
@@ -87,6 +89,11 @@ namespace Assets.Scripts.Backends.HexGrid
                 return HexEdgeType.SLOPE;
 
             return HexEdgeType.CLIFF;
+        }
+
+        public static Vector4 SaampleNoise(Vector3 worldPosition) 
+        {
+            return NoiseSource.GetPixelBilinear(worldPosition.x, worldPosition.z);
         }
     }
 }
