@@ -137,6 +137,8 @@ public class HexGrid : MonoBehaviour
         label.text = cell.Coordinates.ToStringOnSeperateLines();
 
         cell.UIRect = label.rectTransform;
+
+        cell.Elevation = 0;
     }
 
     private void TouchCell(Vector3 aPosition)
