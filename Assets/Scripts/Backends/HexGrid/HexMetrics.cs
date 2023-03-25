@@ -15,6 +15,14 @@ namespace Assets.Scripts.Backends.HexGrid
 
         public const float ElevationStep = 5f;
 
+        public const int TerracesPerSlope = 2;
+
+        public const int TerraceSteps = TerracesPerSlope * 2 + 1;
+
+        public const float HorizontalTerraceStepSize = 1f / TerraceSteps;
+
+        public const float VerticalTerraceStepSize = 1f / (TerraceSteps + 1);
+
         static Vector3[] Corners = { 
             new Vector3 (0f, 0f, OuterRadius),
             new Vector3 (InnerRadius, 0f, .5f * OuterRadius),
@@ -48,6 +56,24 @@ namespace Assets.Scripts.Backends.HexGrid
         public static Vector3 GetBridge(HexDirection aDir)
         {
             return (Corners[(int)aDir] + Corners[(int)aDir + 1]) * BlendFactor;
+        }
+
+        public static Vector3 TerraceLerp(Vector3 aA, Vector3 aB, int aStep)
+        {
+            float h = aStep * HexMetrics.HorizontalTerraceStepSize;
+            aA.x += (aB.x - aA.x) * h;
+            aA.z += (aB.z - aA.z) * h;
+
+            float v = ((aStep + 1) / 2) * HexMetrics.VerticalTerraceStepSize;
+            aA.y += (aB.y - aA.y) * v;
+
+            return aA;
+        }
+
+        public static Color TerraceLerp(Color aColorA, Color aColorB, int aStep)
+        {
+            float h = aStep * HexMetrics.HorizontalTerraceStepSize;
+            return Color.Lerp(aColorA, aColorB, h);
         }
     }
 }
