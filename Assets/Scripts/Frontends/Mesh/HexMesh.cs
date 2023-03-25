@@ -281,13 +281,24 @@ public class HexMesh : MonoBehaviour
         AddTriangleColor(c2, leftCell.Color, boundaryColor);
     }
 
+    private Vector3 Perturb(Vector3 aPosition)
+    {
+        Vector4 sample = HexMetrics.SampleNoise(aPosition);
+        
+        aPosition.x += (sample.x * 2f - 1f) * HexMetrics.CellPerturbStrength;
+        aPosition.y += (sample.y * 2f - 1f) * HexMetrics.CellPerturbStrength;
+        aPosition.z += (sample.z * 2f - 1f) * HexMetrics.CellPerturbStrength;
+
+        return aPosition;
+    }
+
     private void AddTriangle(Vector3 v1, Vector3 v2, Vector3 v3)
     {
         int vertexIndex = myVertices.Count;
 
-        myVertices.Add(v1);
-        myVertices.Add(v2);
-        myVertices.Add(v3);
+        myVertices.Add(Perturb(v1));
+        myVertices.Add(Perturb(v2));
+        myVertices.Add(Perturb(v3));
         
         myTriangles.Add(vertexIndex);
         myTriangles.Add(vertexIndex + 1);
@@ -298,10 +309,10 @@ public class HexMesh : MonoBehaviour
     {
         int vertexIndex = myVertices.Count;
 
-        myVertices.Add(v1);
-        myVertices.Add(v2);
-        myVertices.Add(v3);
-        myVertices.Add(v4);
+        myVertices.Add(Perturb(v1));
+        myVertices.Add(Perturb(v2));
+        myVertices.Add(Perturb(v3));
+        myVertices.Add(Perturb(v4));
 
         myTriangles.Add(vertexIndex);
         myTriangles.Add(vertexIndex + 2);

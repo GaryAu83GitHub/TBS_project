@@ -26,6 +26,10 @@ namespace Assets.Scripts.Backends.HexGrid
 
         public const float VerticalTerraceStepSize = 1f / (TerracesPerSlope + 1);
 
+        public const float CellPerturbStrength = 5f;
+
+        public const float NoiseScale = .003f;
+
         static Vector3[] Corners = { 
             new Vector3 (0f, 0f, OuterRadius),
             new Vector3 (InnerRadius, 0f, .5f * OuterRadius),
@@ -91,9 +95,9 @@ namespace Assets.Scripts.Backends.HexGrid
             return HexEdgeType.CLIFF;
         }
 
-        public static Vector4 SaampleNoise(Vector3 worldPosition) 
+        public static Vector4 SampleNoise(Vector3 worldPosition) 
         {
-            return NoiseSource.GetPixelBilinear(worldPosition.x, worldPosition.z);
+            return NoiseSource.GetPixelBilinear(worldPosition.x * NoiseScale, worldPosition.z * NoiseScale);
         }
     }
 }
