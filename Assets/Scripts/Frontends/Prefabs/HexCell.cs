@@ -14,6 +14,25 @@ public class HexCell : MonoBehaviour
     [SerializeField]
     HexCell[] Neighbors;
 
+    public RectTransform UIRect;
+
+    public int Elevation 
+    {
+        get { return myElavation; } 
+        set 
+        { 
+            myElavation = value;
+            Vector3 position = transform.localPosition;
+            position.y = value * HexMetrics.ElevationStep;
+            transform.localPosition = position;
+
+            Vector3 uiPosition = UIRect.localPosition;
+            uiPosition.z = myElavation * -HexMetrics.ElevationStep;
+            UIRect.localPosition = uiPosition;
+        } 
+    }
+    private int myElavation;
+
     public HexCell GetNeighbor(HexDirection aDir)
     {
         return Neighbors[(int)aDir];

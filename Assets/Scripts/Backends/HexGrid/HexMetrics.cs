@@ -13,6 +13,8 @@ namespace Assets.Scripts.Backends.HexGrid
 
         public const float BlendFactor = 1f - SolidFactor;
 
+        public const float ElevationStep = 5f;
+
         static Vector3[] Corners = { 
             new Vector3 (0f, 0f, OuterRadius),
             new Vector3 (InnerRadius, 0f, .5f * OuterRadius),
