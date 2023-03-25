@@ -22,7 +22,7 @@ namespace Assets.Scripts.Backends.HexGrid
 
         public const float HorizontalTerraceStepSize = 1f / TerraceSteps;
 
-        public const float VerticalTerraceStepSize = 1f / (TerraceSteps + 1);
+        public const float VerticalTerraceStepSize = 1f / (TerracesPerSlope + 1);
 
         static Vector3[] Corners = { 
             new Vector3 (0f, 0f, OuterRadius),
