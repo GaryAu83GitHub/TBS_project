@@ -3,6 +3,7 @@ using Assets.Scripts.Backends.HexGrid.Tools;
 
 namespace Assets.Scripts.Backends.HexGrid
 {
+    public enum HexEdgeType { FLATT, SLOPE, CLIFF }
     public static class HexMetrics
     {
         public const float OuterRadius = 10f;
@@ -74,6 +75,18 @@ namespace Assets.Scripts.Backends.HexGrid
         {
             float h = aStep * HexMetrics.HorizontalTerraceStepSize;
             return Color.Lerp(aColorA, aColorB, h);
+        }
+
+        public static HexEdgeType GetEdgeType(int anElevation1, int anElevation2)
+        {
+            if (anElevation1 == anElevation2)
+                return HexEdgeType.FLATT;
+
+            int delta = anElevation2 - anElevation1;
+            if(delta == 1 || delta == -1)
+                return HexEdgeType.SLOPE;
+
+            return HexEdgeType.CLIFF;
         }
     }
 }

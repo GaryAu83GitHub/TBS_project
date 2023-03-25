@@ -43,4 +43,9 @@ public class HexCell : MonoBehaviour
         Neighbors[(int)aDir] = aCell;
         aCell.Neighbors[(int)aDir.Opposite()] = this;
     }
+
+    public HexEdgeType GetEdgeType(HexDirection aDir)
+    {
+        return HexMetrics.GetEdgeType(myElavation, Neighbors[(int)aDir].Elevation);
+    }
 }
