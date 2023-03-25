@@ -18,6 +18,8 @@ namespace Assets.Scripts.Backends.HexGrid
 
         public const float ElevationStep = 5f;
 
+        public const float ElevationPerturbStrength = 1.5f;
+
         public const int TerracesPerSlope = 2;
 
         public const int TerraceSteps = TerracesPerSlope * 2 + 1;

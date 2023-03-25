@@ -16,6 +16,8 @@ public class HexCell : MonoBehaviour
 
     public RectTransform UIRect;
 
+    public Vector3 Position { get { return transform.localPosition; } }
+
     public int Elevation 
     {
         get { return myElavation; } 
@@ -24,10 +26,11 @@ public class HexCell : MonoBehaviour
             myElavation = value;
             Vector3 position = transform.localPosition;
             position.y = value * HexMetrics.ElevationStep;
+            position.y += (HexMetrics.SampleNoise(position).y * 2f - 1f) * HexMetrics.ElevationPerturbStrength;
             transform.localPosition = position;
 
             Vector3 uiPosition = UIRect.localPosition;
-            uiPosition.z = myElavation * -HexMetrics.ElevationStep;
+            uiPosition.z = -position.y;
             UIRect.localPosition = uiPosition;
         } 
     }
