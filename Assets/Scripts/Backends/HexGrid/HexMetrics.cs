@@ -32,6 +32,8 @@ namespace Assets.Scripts.Backends.HexGrid
 
         public const float NoiseScale = .003f;
 
+        public const int ChunkSizeX = 5, ChunkSizeZ = 5;
+
         static Vector3[] Corners = { 
             new Vector3 (0f, 0f, OuterRadius),
             new Vector3 (InnerRadius, 0f, .5f * OuterRadius),

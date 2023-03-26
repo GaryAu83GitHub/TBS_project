@@ -7,21 +7,25 @@ using Assets.Scripts.Backends.HexGrid.Tools;
 
 public class HexGrid : MonoBehaviour
 {
-    public int Width = 6;
-    public int Height = 6;
+    [SerializeField]
+    private int ChunkCountX = 4, ChunkCountZ = 3;
 
     public Color DefaultColor = Color.white;
-    public Color TouchedColor = Color.magenta;
-
-    public  HexCell CellPrefab;
+ 
+    public HexCell CellPrefab;
     public Text CellLabelPrefab;
+
+    public HexGridChunk ChunkPrefab;
 
     public Texture2D NoiseSource;
 
+    private HexGridChunk[] myChunks;
     private HexCell[] myCells;
     private HexMesh myHexMesh;
     
     private Canvas myGridCanvas;
+
+    private int myCellCountX, myCellCountZ;
 
     void Awake()
     {
@@ -30,15 +34,11 @@ public class HexGrid : MonoBehaviour
         myHexMesh = GetComponentInChildren<HexMesh>();
         myGridCanvas = GetComponentInChildren<Canvas>();
 
-        myCells = new HexCell[Height * Width];
+        myCellCountX = ChunkCountX * HexMetrics.ChunkSizeX;
+        myCellCountZ = ChunkCountZ * HexMetrics.ChunkSizeZ;
 
-        for(int z = 0, i = 0; z < Height; z++)
-        {
-            for(int x = 0; x < Width; x++)
-            {
-                CreateCell(x, z, i++);
-            }
-        }
+        CreateChunks();
+        CreateCells();
     }
 
     private void OnEnable()
@@ -62,7 +62,7 @@ public class HexGrid : MonoBehaviour
         aPosition = transform.InverseTransformPoint(aPosition);
         HexCoordinates coordinates = HexCoordinates.FromPosition(aPosition);
 
-        int index = coordinates.X + coordinates.Z * Width + coordinates.Z / 2;
+        int index = coordinates.X + coordinates.Z * myCellCountX + coordinates.Z / 2;
         HexCell cell = myCells[index];
         cell.Color = aColor;
         myHexMesh.Triangulate(myCells);
@@ -73,7 +73,7 @@ public class HexGrid : MonoBehaviour
         aPosition = transform.InverseTransformPoint(aPosition);
         HexCoordinates coordinates = HexCoordinates.FromPosition(aPosition);
 
-        int index = coordinates.X + coordinates.Z * Width + coordinates.Z / 2;
+        int index = coordinates.X + coordinates.Z * myCellCountX + coordinates.Z / 2;
         return myCells[index];
     }
 
@@ -113,20 +113,20 @@ public class HexGrid : MonoBehaviour
         {
             if((z & 1) == 0)
             {
-                cell.SetNeighbor(HexDirection.SE, myCells[i - Width]);
+                cell.SetNeighbor(HexDirection.SE, myCells[i - myCellCountX]);
                 
                 if(x > 0)
                 {
-                    cell.SetNeighbor(HexDirection.SW, myCells[i - Width - 1]);
+                    cell.SetNeighbor(HexDirection.SW, myCells[i - myCellCountX - 1]);
                 }
             }
             else
             {
-                cell.SetNeighbor(HexDirection.SW, myCells[i - Width]);
+                cell.SetNeighbor(HexDirection.SW, myCells[i - myCellCountX]);
 
-                if (x < Width - 1)
+                if (x < myCellCountX - 1)
                 {
-                    cell.SetNeighbor(HexDirection.SE, myCells[i - Width + 1]);
+                    cell.SetNeighbor(HexDirection.SE, myCells[i - myCellCountX + 1]);
                 }
             }
         }
@@ -141,18 +141,45 @@ public class HexGrid : MonoBehaviour
         cell.Elevation = 0;
     }
 
+    private void CreateChunks()
+    {
+        myChunks = new HexGridChunk[ChunkCountX * ChunkCountZ];
+
+        for(int z = 0, i = 0; z < ChunkCountZ; z++)
+        {
+            for(int x = 0; x < ChunkCountX; x++)
+            {
+                HexGridChunk chunk = myChunks[i++] = Instantiate(ChunkPrefab);
+                chunk.transform.SetParent(transform);
+            }
+        }
+    }
+
+    private void CreateCells()
+    {
+        myCells = new HexCell[myCellCountZ * myCellCountX];
+
+        for (int z = 0, i = 0; z < myCellCountZ; z++)
+        {
+            for (int x = 0; x < myCellCountX; x++)
+            {
+                CreateCell(x, z, i++);
+            }
+        }
+    }
+
     private void TouchCell(Vector3 aPosition)
     {
         aPosition = transform.InverseTransformPoint(aPosition);
         HexCoordinates coordinates = HexCoordinates.FromPosition(aPosition);
         
-        int index = coordinates.X + coordinates.Z * Width + coordinates.Z / 2;
+        int index = coordinates.X + coordinates.Z * myCellCountX + coordinates.Z / 2;
         HexCell cell = myCells[index];
 
-        if(cell.Color == DefaultColor)
-            cell.Color = TouchedColor;
-        else
-            cell.Color = DefaultColor;
+        //if(cell.Color == DefaultColor)
+        //    cell.Color = TouchedColor;
+        //else
+        //    cell.Color = DefaultColor;
         
         myHexMesh.Triangulate(myCells);
     }
