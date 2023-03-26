@@ -101,5 +101,8 @@ namespace Assets.Scripts.Backends.HexGrid
         {
             return NoiseSource.GetPixelBilinear(worldPosition.x * NoiseScale, worldPosition.z * NoiseScale);
         }
+
+        private static void Hej()
+        { }
     }
 }
