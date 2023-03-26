@@ -28,7 +28,7 @@ namespace Assets.Scripts.Backends.HexGrid
 
         public const float VerticalTerraceStepSize = 1f / (TerracesPerSlope + 1);
 
-        public const float CellPerturbStrength = 5f;
+        public const float CellPerturbStrength = 4f;
 
         public const float NoiseScale = .003f;
 
