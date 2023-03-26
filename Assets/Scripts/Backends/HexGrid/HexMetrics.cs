@@ -12,11 +12,11 @@ namespace Assets.Scripts.Backends.HexGrid
 
         public const float InnerRadius = OuterRadius * 0.866025404f;
 
-        public const float SolidFactor = .75f;
+        public const float SolidFactor = .8f;
 
         public const float BlendFactor = 1f - SolidFactor;
 
-        public const float ElevationStep = 5f;
+        public const float ElevationStep = 3f;
 
         public const float ElevationPerturbStrength = 1.5f;
 
