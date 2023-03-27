@@ -7,22 +7,23 @@ using Assets.Scripts.Backends.HexGrid.Tools;
 public class HexMesh : MonoBehaviour
 {
     private Mesh myHexMesh;
-    private List<Vector3> myVertices;
-    private List<int> myTriangles;
 
     private MeshCollider myCollider;
 
-    private List<Color> myColors;
+    public static List<Vector3> myVertices = new();
+    public static List<Color> myColors = new();
+    public static List<int> myTriangles = new();
 
     void Awake()
     {
+        string hej;
         GetComponent<MeshFilter>().mesh = myHexMesh = new Mesh();
         myCollider = gameObject.AddComponent<MeshCollider>();
 
         myHexMesh.name = "Hex Mesh";
-        myVertices = new List<Vector3>();
-        myColors = new List<Color>();
-        myTriangles = new List<int>();
+        //myVertices = new List<Vector3>();
+        //myColors = new List<Color>();
+        //myTriangles = new List<int>();
     }
 
     public void Triangulate(HexCell[] someCells)
