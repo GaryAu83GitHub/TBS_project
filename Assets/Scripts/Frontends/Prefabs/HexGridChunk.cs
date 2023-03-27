@@ -20,4 +20,11 @@ public class HexGridChunk : MonoBehaviour
     {
         myHexMesh.Triangulate(myCells);
     }
+
+    public void AddCell(int index, HexCell aCell)
+    {
+        myCells[index] = aCell;
+        aCell.transform.SetParent(transform, false);
+        aCell.UIRect.SetParent(myGridCanvas.transform, false);
+    }
 }
