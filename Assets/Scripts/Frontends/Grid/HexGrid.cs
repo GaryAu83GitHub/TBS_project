@@ -98,7 +98,7 @@ public class HexGrid : MonoBehaviour
         position.z = z * (HexMetrics.OuterRadius * 1.5f);
 
         HexCell cell = myCells[i] = Instantiate<HexCell>(CellPrefab);
-        cell.transform.SetParent(transform, false);
+        //cell.transform.SetParent(transform, false);
         cell.transform.localPosition = position;
         cell.Coordinates = HexCoordinates.FromOffsetCoordinates(x, z);
         cell.Color = DefaultColor;
@@ -132,13 +132,27 @@ public class HexGrid : MonoBehaviour
         }
 
         Text label = Instantiate<Text>(CellLabelPrefab);
-        label.rectTransform.SetParent(myGridCanvas.transform, false);
+        //label.rectTransform.SetParent(myGridCanvas.transform, false);
         label.rectTransform.anchoredPosition = new Vector2(position.x, position.z);
         label.text = cell.Coordinates.ToStringOnSeperateLines();
 
         cell.UIRect = label.rectTransform;
 
         cell.Elevation = 0;
+
+        AddCellToChunk(x, z, cell);
+    }
+
+    private void AddCellToChunk(int x, int z, HexCell aCell)
+    {
+        int chunkX = x / HexMetrics.ChunkSizeX;
+        int chunkZ = z / HexMetrics.ChunkSizeZ;
+
+        HexGridChunk chunk = myChunks[chunkX + chunkZ * ChunkCountX];
+
+        int localX = x - chunkX * HexMetrics.ChunkSizeX;
+        int localZ = z - chunkZ * HexMetrics.ChunkSizeZ;
+        chunk.AddCell(localX + localZ * HexMetrics.ChunkSizeX, aCell);
     }
 
     private void CreateChunks()
