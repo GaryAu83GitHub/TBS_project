@@ -935,12 +935,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce543ed0ab6410c45b53dad1f5368a7f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Width: 6
-  Height: 6
+  ChunkCountX: 4
+  ChunkCountZ: 3
   DefaultColor: {r: 1, g: 1, b: 1, a: 1}
-  TouchedColor: {r: 1, g: 0, b: 1, a: 1}
   CellPrefab: {fileID: 6589022703536304834, guid: 2d9a5cb8e3672dc42872faf35467610a, type: 3}
   CellLabelPrefab: {fileID: 2967145994133076617, guid: 37cf0449e28b015498db6a7f22543386, type: 3}
+  ChunkPrefab: {fileID: 0}
   NoiseSource: {fileID: 2800000, guid: 46e63e427702b6846ac9af6942bc4c02, type: 3}
 --- !u!4 &943571974
 Transform:
