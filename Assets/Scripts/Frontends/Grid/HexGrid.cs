@@ -20,19 +20,13 @@ public class HexGrid : MonoBehaviour
     public Texture2D NoiseSource;
 
     private HexGridChunk[] myChunks;
-    private HexCell[] myCells;
-    private HexMesh myHexMesh;
-    
-    private Canvas myGridCanvas;
+    private HexCell[] myCells;    
 
     private int myCellCountX, myCellCountZ;
 
     void Awake()
     {
         HexMetrics.NoiseSource = NoiseSource;
-
-        myHexMesh = GetComponentInChildren<HexMesh>();
-        myGridCanvas = GetComponentInChildren<Canvas>();
 
         myCellCountX = ChunkCountX * HexMetrics.ChunkSizeX;
         myCellCountZ = ChunkCountZ * HexMetrics.ChunkSizeZ;
@@ -46,17 +40,6 @@ public class HexGrid : MonoBehaviour
         HexMetrics.NoiseSource = NoiseSource;
     }
 
-    void Start()
-    {
-        myHexMesh.Triangulate(myCells);
-    }
-
-    void Update()
-    {
-        //if (Input.GetMouseButtonDown(0))
-        //    HandleInput();
-    }
-
     public void ColorCell(Vector3 aPosition, Color aColor)
     {
         aPosition = transform.InverseTransformPoint(aPosition);
@@ -65,7 +48,6 @@ public class HexGrid : MonoBehaviour
         int index = coordinates.X + coordinates.Z * myCellCountX + coordinates.Z / 2;
         HexCell cell = myCells[index];
         cell.Color = aColor;
-        myHexMesh.Triangulate(myCells);
     }
 
     public HexCell GetCell(Vector3 aPosition)
@@ -75,11 +57,6 @@ public class HexGrid : MonoBehaviour
 
         int index = coordinates.X + coordinates.Z * myCellCountX + coordinates.Z / 2;
         return myCells[index];
-    }
-
-    public void Refresh()
-    {
-        myHexMesh.Triangulate(myCells);
     }
 
     private void HandleInput()
@@ -195,6 +172,5 @@ public class HexGrid : MonoBehaviour
         //else
         //    cell.Color = DefaultColor;
         
-        myHexMesh.Triangulate(myCells);
     }
 }
