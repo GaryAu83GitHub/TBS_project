@@ -16,6 +16,7 @@ public class HexMesh : MonoBehaviour
 
     void Awake()
     {
+        string hej;
         GetComponent<MeshFilter>().mesh = myHexMesh = new Mesh();
         myCollider = gameObject.AddComponent<MeshCollider>();
 
