@@ -8,7 +8,7 @@ using Assets.Scripts.Backends.HexGrid.Tools;
 public class HexGrid : MonoBehaviour
 {
     [SerializeField]
-    private int ChunkCountX = 4, ChunkCountZ = 3;
+    public int ChunkCountX = 4, ChunkCountZ = 3;
 
     public Color DefaultColor = Color.white;
  
