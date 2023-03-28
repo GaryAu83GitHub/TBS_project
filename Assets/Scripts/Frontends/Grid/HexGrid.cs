@@ -59,6 +59,19 @@ public class HexGrid : MonoBehaviour
         return myCells[index];
     }
 
+    public HexCell GetCell(HexCoordinates coordinates)
+    {
+        int z = coordinates.Z;
+        if(z < 0 || z >= myCellCountZ)
+            return null;
+
+        int x = coordinates.X + z / 2;
+        if (x < 0 || x >= myCellCountX)
+            return null;
+
+        return myCells[x + z * myCellCountX];
+    }
+
     private void HandleInput()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
