@@ -72,6 +72,14 @@ public class HexGrid : MonoBehaviour
         return myCells[x + z * myCellCountX];
     }
 
+    public void ShowUI(bool visible)
+    {
+        for(int i = 0; i < myChunks.Length; i++)
+        {
+            myChunks[i].ShowUI(visible);
+        }
+    }
+
     private void HandleInput()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
