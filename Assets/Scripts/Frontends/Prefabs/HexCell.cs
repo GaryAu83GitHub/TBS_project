@@ -57,14 +57,18 @@ public class HexCell : MonoBehaviour
     }
     private int myElavation = int.MinValue;
 
-    public bool HasIncomingRiver { get; private set; }
-    public bool HasOutgoingRiver { get; private set; }
+    public bool HasIncomingRiver { get { return myHasIncomingRiver; } }
+    public bool HasOutgoingRiver { get { return myHasOutgoingRiver; } }
 
-    public bool HasRiver { get { return HasIncomingRiver || HasOutgoingRiver; } }
-    public bool HasRiverBeginOrEnd { get { return HasIncomingRiver != HasOutgoingRiver; } }
+    public bool HasRiver { get { return myHasIncomingRiver || myHasOutgoingRiver; } }
+    public bool HasRiverBeginOrEnd { get { return myHasIncomingRiver != myHasOutgoingRiver; } }
 
-    public HexDirection IncomingRiver { get; private set; }
-    public HexDirection OutgoingRiver { get; private set; }
+    private bool myHasIncomingRiver, myHasOutgoingRiver;
+    
+    public HexDirection IncomingRiver { get { return myIncomingRiver; } }
+    public HexDirection OutgoingRiver { get { return myOutgoingRiver; } }
+
+    private HexDirection myIncomingRiver, myOutgoingRiver;
 
     public HexCell GetNeighbor(HexDirection aDir)
     {
@@ -90,8 +94,8 @@ public class HexCell : MonoBehaviour
     public bool HasRiverThroughEdge(HexDirection direction)
     {
         return
-            HasIncomingRiver && IncomingRiver == direction ||
-            HasOutgoingRiver && OutgoingRiver == direction;
+            myHasIncomingRiver && myIncomingRiver == direction ||
+            myHasOutgoingRiver && myOutgoingRiver == direction;
     }
 
     private void Refresh()
