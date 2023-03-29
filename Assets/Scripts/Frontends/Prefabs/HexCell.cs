@@ -98,6 +98,38 @@ public class HexCell : MonoBehaviour
             myHasOutgoingRiver && myOutgoingRiver == direction;
     }
 
+    public void RemoveRiver()
+    {
+        RemoveOutgoingRiver();
+        RemoveIncomingRiver();
+    }
+
+    public void RemoveOutgoingRiver()
+    {
+        if (!myHasOutgoingRiver)
+            return;
+
+        myHasOutgoingRiver = false;
+        RefreshSelfOnly();
+
+        HexCell neighbor = GetNeighbor(myOutgoingRiver);
+        neighbor.myHasIncomingRiver = false;
+        neighbor.RefreshSelfOnly();
+    }
+
+    public void RemoveIncomingRiver()
+    {
+        if (!myHasIncomingRiver)
+            return;
+
+        myHasIncomingRiver = false;
+        RefreshSelfOnly();
+
+        HexCell neighbor = GetNeighbor(myIncomingRiver);
+        neighbor.myHasOutgoingRiver = false;
+        neighbor.RefreshSelfOnly();
+    }
+
     private void Refresh()
     {
         if (Chunk)
@@ -111,5 +143,10 @@ public class HexCell : MonoBehaviour
                     neighbor.Chunk.Refresh();
             }
         }
+    }
+
+    private void RefreshSelfOnly()
+    {
+        Chunk.Refresh();
     }
 }
