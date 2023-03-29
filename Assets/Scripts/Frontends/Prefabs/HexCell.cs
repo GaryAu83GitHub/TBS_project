@@ -52,6 +52,12 @@ public class HexCell : MonoBehaviour
             uiPosition.z = -position.y;
             UIRect.localPosition = uiPosition;
 
+            if (myHasOutgoingRiver && myElavation < GetNeighbor(myOutgoingRiver).myElavation)
+                RemoveOutgoingRiver();
+
+            if (myHasIncomingRiver && myElavation < GetNeighbor(myIncomingRiver).myElavation)
+                RemoveIncomingRiver();
+
             Refresh();
         } 
     }
