@@ -7,9 +7,19 @@ using Assets.Scripts.Backends.HexGrid.Tools;
 
 public class HexCell : MonoBehaviour
 {
-    public HexCoordinates Coordinates;
-    
+    public HexCoordinates Coordinates;    
+
+    [SerializeField]
+    HexCell[] Neighbors;
+
     [HideInInspector]
+    public RectTransform UIRect;
+
+    [HideInInspector]
+    public HexGridChunk Chunk;
+
+    public Vector3 Position { get { return transform.localPosition; } }
+
     public Color Color 
     {
         get { return myColor; }
@@ -23,17 +33,6 @@ public class HexCell : MonoBehaviour
         }
     }
     private Color myColor;
-
-    [SerializeField]
-    HexCell[] Neighbors;
-
-    [HideInInspector]
-    public RectTransform UIRect;
-
-    [HideInInspector]
-    public HexGridChunk Chunk;
-
-    public Vector3 Position { get { return transform.localPosition; } }
 
     public int Elevation 
     {
@@ -58,6 +57,15 @@ public class HexCell : MonoBehaviour
     }
     private int myElavation = int.MinValue;
 
+    public bool HasIncomingRiver { get; private set; }
+    public bool HasOutgoingRiver { get; private set; }
+
+    public bool HasRiver { get { return HasIncomingRiver || HasOutgoingRiver; } }
+    public bool HasRiverBeginOrEnd { get { return HasIncomingRiver != HasOutgoingRiver; } }
+
+    public HexDirection IncomingRiver { get; private set; }
+    public HexDirection OutgoingRiver { get; private set; }
+
     public HexCell GetNeighbor(HexDirection aDir)
     {
         return Neighbors[(int)aDir];
@@ -77,6 +85,13 @@ public class HexCell : MonoBehaviour
     public HexEdgeType GetEdgeType(HexCell otherCell)
     {
         return HexMetrics.GetEdgeType(Elevation, otherCell.Elevation);
+    }
+
+    public bool HasRiverThroughEdge(HexDirection direction)
+    {
+        return
+            HasIncomingRiver && IncomingRiver == direction ||
+            HasOutgoingRiver && OutgoingRiver == direction;
     }
 
     private void Refresh()
