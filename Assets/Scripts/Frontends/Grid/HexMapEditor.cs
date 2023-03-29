@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using Assets.Scripts.Backends.HexGrid;
+using Assets.Scripts.Backends.HexGrid.Tools;
 
 public class HexMapEditor : MonoBehaviour
 {
@@ -24,6 +25,10 @@ public class HexMapEditor : MonoBehaviour
 
     private OptionalToggle myRiverMode;
 
+    private bool myIsDrag;
+    private HexDirection myDragDirection;
+    private HexCell myPreviousCell;
+
     void Awake()
     {
         SelectColor(0);
@@ -33,6 +38,10 @@ public class HexMapEditor : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
             HandleInput();
+        else
+        {
+            myPreviousCell = null;
+        }
     }
 
     private void HandleInput()
@@ -40,7 +49,20 @@ public class HexMapEditor : MonoBehaviour
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit))
-            EditCells(HexGrid.GetCell(hit.point));
+        {
+            HexCell currentCell = HexGrid.GetCell(hit.point);
+            if (myPreviousCell && myPreviousCell != currentCell)
+                ValidateDrag(currentCell);
+            else
+                myIsDrag = false;
+
+            EditCells(currentCell);
+            myPreviousCell = currentCell;
+        }
+        else
+        {
+            myPreviousCell = null;
+        }
     }
 
     private void EditCells(HexCell center)
@@ -75,6 +97,19 @@ public class HexMapEditor : MonoBehaviour
             if (myApplyElevation)
                 aCell.Elevation = myActiveElevation;
         }
+    }
+
+    private void ValidateDrag(HexCell currentCell)
+    {
+        for(myDragDirection = HexDirection.NE; myDragDirection <= HexDirection.NW; myDragDirection++)
+        {
+            if(myPreviousCell.GetNeighbor(myDragDirection) == currentCell)
+            {
+                myIsDrag = true;
+                return;
+            }
+        }
+        myIsDrag = false;
     }
 
     public void SelectColor(int anIndex)
