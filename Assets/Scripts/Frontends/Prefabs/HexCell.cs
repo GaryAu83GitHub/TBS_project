@@ -130,6 +130,29 @@ public class HexCell : MonoBehaviour
         neighbor.RefreshSelfOnly();
     }
 
+    public void SetOutgoingRiver(HexDirection direction)
+    {
+        if (myHasOutgoingRiver && myOutgoingRiver == direction)
+            return;
+
+        HexCell neighbor = GetNeighbor(direction);
+        if (!neighbor || myElavation < neighbor.myElavation)
+            return;
+
+        RemoveOutgoingRiver();
+        if (myHasIncomingRiver && myIncomingRiver == direction)
+            RemoveIncomingRiver();
+
+        myHasOutgoingRiver = true;
+        myOutgoingRiver = direction;
+        RefreshSelfOnly();
+
+        neighbor.RemoveIncomingRiver();
+        neighbor.myHasIncomingRiver = true;
+        neighbor.myIncomingRiver = direction.Opposite();
+        neighbor.RefreshSelfOnly();
+    }
+
     private void Refresh()
     {
         if (Chunk)
