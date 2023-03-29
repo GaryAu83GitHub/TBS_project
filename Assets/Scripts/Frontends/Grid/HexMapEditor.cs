@@ -6,6 +6,8 @@ using Assets.Scripts.Backends.HexGrid;
 
 public class HexMapEditor : MonoBehaviour
 {
+    private enum OptionalToggle { IGNORE, YES, NO }
+
     [SerializeField]
     public Color[] Colors;
 
@@ -19,6 +21,8 @@ public class HexMapEditor : MonoBehaviour
     private bool myApplyElevation = true;
 
     private int myBrushSize;
+
+    private OptionalToggle myRiverMode;
 
     void Awake()
     {
@@ -99,5 +103,10 @@ public class HexMapEditor : MonoBehaviour
     public void ShowUI(bool visible)
     {
         HexGrid.ShowUI(visible);
+    }
+
+    public void SetRiverMode(int aMode)
+    {
+        myRiverMode = (OptionalToggle)aMode;
     }
 }
