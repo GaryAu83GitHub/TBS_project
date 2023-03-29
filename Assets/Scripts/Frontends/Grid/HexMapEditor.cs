@@ -36,7 +36,7 @@ public class HexMapEditor : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
+        if (Input.GetMouseButton(0) && !EventSystem.current.IsPointerOverGameObject())
             HandleInput();
         else
         {
@@ -96,6 +96,15 @@ public class HexMapEditor : MonoBehaviour
 
             if (myApplyElevation)
                 aCell.Elevation = myActiveElevation;
+
+            if (myRiverMode == OptionalToggle.NO)
+                aCell.RemoveRiver();
+            else if (myIsDrag && myRiverMode == OptionalToggle.YES)
+            {
+                HexCell otherCell = aCell.GetNeighbor(myDragDirection.Opposite());
+                if(otherCell)
+                    otherCell.SetOutgoingRiver(myDragDirection);
+            }
         }
     }
 
