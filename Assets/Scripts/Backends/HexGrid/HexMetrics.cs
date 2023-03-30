@@ -115,7 +115,14 @@ namespace Assets.Scripts.Backends.HexGrid
             return NoiseSource.GetPixelBilinear(worldPosition.x * NoiseScale, worldPosition.z * NoiseScale);
         }
 
-        private static void Hej()
-        { }
+        public static Vector3 Perturb(Vector3 aPosition)
+        {
+            Vector4 sample = SampleNoise(aPosition);
+
+            aPosition.x += (sample.x * 2f - 1f) * CellPerturbStrength;
+            aPosition.z += (sample.z * 2f - 1f) * CellPerturbStrength;
+
+            return aPosition;
+        }
     }
 }
