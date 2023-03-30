@@ -66,6 +66,10 @@ public class HexMesh : MonoBehaviour
                 else
                     TriangulateWithRiver(aDir, aCell, center, e);
             }
+            else
+            {
+                TriangulateAdjacentToRiver(aDir, aCell, center, e);
+            }
         }
         else
             TriangulateEdgeFan(center, e, aCell.Color);
@@ -431,6 +435,33 @@ public class HexMesh : MonoBehaviour
             );
 
         m.v3.y = e.v3.y;
+
+        TriangulateEdgeStrip(m, aCell.Color, e, aCell.Color);
+        TriangulateEdgeFan(center, m, aCell.Color);
+    }
+
+    private void TriangulateAdjacentToRiver(HexDirection aDir, HexCell aCell, Vector3 center, EdgeVertices e)
+    {
+        if(aCell.HasRiverThroughEdge(aDir.Next()))
+        {
+            if(aCell.HasRiverThroughEdge(aDir.Previous()))
+            {
+                center += HexMetrics.GetSolidEdgeMiddle(aDir) * (HexMetrics.InnerToOuter * .5f);
+            }
+            else if(aCell.HasRiverThroughEdge(aDir.Previous2()))
+            {
+                center += HexMetrics.GetFirstSolidCorner(aDir) * .25f;
+            }
+        }
+        else if(aCell.HasRiverThroughEdge(aDir.Previous()) && aCell.HasRiverThroughEdge(aDir.Next2()))
+        {
+            center += HexMetrics.GetSecondSolidCorner(aDir) * .25f;
+        }
+
+        EdgeVertices m = new EdgeVertices(
+            Vector3.Lerp(center, e.v1, .5f),
+            Vector3.Lerp(center, e.v5, .5f)
+            );
 
         TriangulateEdgeStrip(m, aCell.Color, e, aCell.Color);
         TriangulateEdgeFan(center, m, aCell.Color);
