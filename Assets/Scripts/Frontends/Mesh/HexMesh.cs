@@ -56,6 +56,9 @@ public class HexMesh : MonoBehaviour
             center + HexMetrics.GetSecondSolidCorner(aDir)
             );
 
+        if (aCell.HasRiverThroughEdge(aDir))
+            e.v3.y = aCell.StreamBedY;
+
         TriangulateEdgeFan(center, e, aCell.Color);
 
         if (aDir <= HexDirection.SE)
@@ -76,6 +79,9 @@ public class HexMesh : MonoBehaviour
             e1.v1 + bridge,
             e1.v5 + bridge
             );
+
+        if (aCell.HasRiverThroughEdge(aDir))
+            e2.v3.y = neighbor.StreamBedY;
 
         if (aCell.GetEdgeType(aDir) == HexEdgeType.SLOPE)
         {
