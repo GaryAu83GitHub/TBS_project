@@ -370,8 +370,35 @@ public class HexMesh : MonoBehaviour
 
     private void TriangulateWithRiver(HexDirection aDir, HexCell aCell, Vector3 center, EdgeVertices e)
     {
-        Vector3 centerL = center + HexMetrics.GetFirstSolidCorner(aDir.Previous()) * .25f;
-        Vector3 centerR = center + HexMetrics.GetSecondSolidCorner(aDir.Next()) * .25f;
+        Vector3 centerL, centerR;
+
+        if (aCell.HasRiverThroughEdge(aDir.Opposite()))
+        {
+            centerL = center + HexMetrics.GetFirstSolidCorner(aDir.Previous()) * .25f;
+            centerR = center + HexMetrics.GetSecondSolidCorner(aDir.Next()) * .25f;
+        }
+        else if (aCell.HasRiverThroughEdge(aDir.Next()))
+        {
+            centerL = center;
+            centerR = Vector3.Lerp(center, e.v5, 2f / 3f);
+        }
+        else if (aCell.HasRiverThroughEdge(aDir.Previous()))
+        {
+            centerL = Vector3.Lerp(center, e.v1, 2f / 3f);
+            centerR = center;
+        }
+        else if (aCell.HasRiverThroughEdge(aDir.Next2()))
+        {
+            centerL = center;
+            centerR = center + HexMetrics.GetSolidEdgeMiddle(aDir.Next()) * (.5f * HexMetrics.InnerToOuter);
+
+        }
+        else
+        {
+            centerL = center + HexMetrics.GetSolidEdgeMiddle(aDir.Previous()) * (.5f * HexMetrics.InnerToOuter);
+            centerR = center;
+        }
+        center = Vector3.Lerp(centerL, centerR, .5f);
 
         EdgeVertices m = new EdgeVertices(
             Vector3.Lerp(centerL, e.v1, .5f), 

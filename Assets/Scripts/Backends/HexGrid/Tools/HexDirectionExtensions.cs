@@ -20,9 +20,21 @@ namespace Assets.Scripts.Backends.HexGrid.Tools
             return aDir == HexDirection.NE ? HexDirection.NW : (aDir - 1);
         }
 
+        public static HexDirection Previous2(this HexDirection aDir)
+        {
+            aDir -= 2;
+            return aDir >= HexDirection.NE ? aDir : (aDir + 6);
+        }
+
         public static HexDirection Next(this HexDirection aDir)
         {
             return aDir == HexDirection.NW ? HexDirection.NE : (aDir + 1);
+        }
+
+        public static HexDirection Next2(this HexDirection aDir)
+        {
+            aDir += 2;
+            return aDir <= HexDirection.NW ? aDir : (aDir - 6);
         }
     }
 }
