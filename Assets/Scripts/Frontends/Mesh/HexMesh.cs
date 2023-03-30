@@ -61,7 +61,10 @@ public class HexMesh : MonoBehaviour
             if (aCell.HasRiverThroughEdge(aDir))
             {
                 e.v3.y = aCell.StreamBedY;
-                TriangulateWithRiver(aDir, aCell, center, e);
+                if(aCell.HasRiverBeginOrEnd)
+                    TriangulateWithRiverBeginOrEnd(aDir, aCell, center, e);
+                else
+                    TriangulateWithRiver(aDir, aCell, center, e);
             }
         }
         else
@@ -391,6 +394,19 @@ public class HexMesh : MonoBehaviour
 
         AddTriangle(centerR, m.v4, m.v5);
         AddTriangleColor(aCell.Color);
+    }
+
+    private void TriangulateWithRiverBeginOrEnd(HexDirection aDir, HexCell aCell, Vector3 center, EdgeVertices e)
+    {
+        EdgeVertices m = new EdgeVertices(
+            Vector3.Lerp(center, e.v1, .5f), 
+            Vector3.Lerp(center, e.v5, .5f)
+            );
+
+        m.v3.y = e.v3.y;
+
+        TriangulateEdgeStrip(m, aCell.Color, e, aCell.Color);
+        TriangulateEdgeFan(center, m, aCell.Color);
     }
 
     private void AddTriangle(Vector3 v1, Vector3 v2, Vector3 v3)
