@@ -442,6 +442,22 @@ public class HexMesh : MonoBehaviour
 
     private void TriangulateAdjacentToRiver(HexDirection aDir, HexCell aCell, Vector3 center, EdgeVertices e)
     {
+        if(aCell.HasRiverThroughEdge(aDir.Next()))
+        {
+            if(aCell.HasRiverThroughEdge(aDir.Previous()))
+            {
+                center += HexMetrics.GetSolidEdgeMiddle(aDir) * (HexMetrics.InnerToOuter * .5f);
+            }
+            else if(aCell.HasRiverThroughEdge(aDir.Previous2()))
+            {
+                center += HexMetrics.GetFirstSolidCorner(aDir) * .25f;
+            }
+        }
+        else if(aCell.HasRiverThroughEdge(aDir.Previous()) && aCell.HasRiverThroughEdge(aDir.Next2()))
+        {
+            center += HexMetrics.GetSecondSolidCorner(aDir) * .25f;
+        }
+
         EdgeVertices m = new EdgeVertices(
             Vector3.Lerp(center, e.v1, .5f),
             Vector3.Lerp(center, e.v5, .5f)
