@@ -8,9 +8,13 @@ namespace Assets.Scripts.Backends.HexGrid
     {
         public static Texture2D NoiseSource;
 
+        public const float OuterToInner = 0.866025404f;
+
+        public const float InnerToOuter = 1f / OuterToInner;
+
         public const float OuterRadius = 10f;
 
-        public const float InnerRadius = OuterRadius * 0.866025404f;
+        public const float InnerRadius = OuterRadius * OuterToInner;
 
         public const float SolidFactor = .8f;
 
@@ -30,7 +34,7 @@ namespace Assets.Scripts.Backends.HexGrid
 
         public const float VerticalTerraceStepSize = 1f / (TerracesPerSlope + 1);
 
-        public const float CellPerturbStrength = 4f;
+        public const float CellPerturbStrength = 0f; //4f;
 
         public const float NoiseScale = .003f;
 
@@ -65,7 +69,12 @@ namespace Assets.Scripts.Backends.HexGrid
         {
             return Corners[(int)aDir + 1] * SolidFactor;
         }
-        
+
+        public static Vector3 GetSolidEdgeMiddle(HexDirection aDir)
+        {
+            return (Corners[(int)aDir] + Corners[(int)aDir + 1]) * (.5f * SolidFactor);
+        }
+
         public static Vector3 GetBridge(HexDirection aDir)
         {
             return (Corners[(int)aDir] + Corners[(int)aDir + 1]) * BlendFactor;
