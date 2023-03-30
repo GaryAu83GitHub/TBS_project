@@ -78,6 +78,14 @@ public class HexCell : MonoBehaviour
     [SerializeField]
     private HexDirection myIncomingRiver, myOutgoingRiver;
 
+    public float StreamBedY 
+    { 
+        get 
+        {
+            return (elavation + HexMetrics.StreamBedElevationOffset) * HexMetrics.ElevationStep;
+        } 
+    }
+
     [SerializeField]
     HexCell[] Neighbors;
 
