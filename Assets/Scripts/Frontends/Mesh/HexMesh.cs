@@ -56,10 +56,16 @@ public class HexMesh : MonoBehaviour
             center + HexMetrics.GetSecondSolidCorner(aDir)
             );
 
-        if (aCell.HasRiverThroughEdge(aDir))
-            e.v3.y = aCell.StreamBedY;
-
-        TriangulateEdgeFan(center, e, aCell.Color);
+        if (aCell.HasRiver)
+        {
+            if (aCell.HasRiverThroughEdge(aDir))
+            {
+                e.v3.y = aCell.StreamBedY;
+                TriangulateWithRiver(aDir, aCell, center, e);
+            }
+        }
+        else
+            TriangulateEdgeFan(center, e, aCell.Color);
 
         if (aDir <= HexDirection.SE)
         {
@@ -358,6 +364,9 @@ public class HexMesh : MonoBehaviour
         AddQuad(e1.v4, e1.v5, e2.v4, e2.v5);
         AddQuadColor(c1, c2);
     }
+
+    private void TriangulateWithRiver(HexDirection aDir, HexCell aCell, Vector3 center, EdgeVertices e)
+    { }
 
     private void AddTrianglePerturb(Vector3 v1, Vector3 v2, Vector3 v3)
     {
