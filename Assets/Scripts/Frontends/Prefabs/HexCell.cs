@@ -63,6 +63,7 @@ public class HexCell : MonoBehaviour
     [SerializeField]
     private int elavation = int.MinValue;
 
+    // river stuffs
     public bool HasIncomingRiver { get { return myHasIncomingRiver; } }
     public bool HasOutgoingRiver { get { return myHasOutgoingRiver; } }
 
@@ -93,8 +94,26 @@ public class HexCell : MonoBehaviour
         } 
     }
 
+    // neighbors stuffs
     [SerializeField]
     HexCell[] Neighbors;
+
+    // roads stuff
+    public bool HasRoads 
+    {
+        get 
+        {
+            for(int i = 0; i < roads.Length; i++)
+            {
+                if (roads[i])
+                    return true;
+            }
+            return false;
+        }
+    }
+
+    [SerializeField]
+    bool[] roads;
 
     public HexCell GetNeighbor(HexDirection aDir)
     {
@@ -177,6 +196,11 @@ public class HexCell : MonoBehaviour
         neighbor.myHasIncomingRiver = true;
         neighbor.myIncomingRiver = direction.Opposite();
         neighbor.RefreshSelfOnly();
+    }
+
+    public bool HasRoadThroughEdge(HexDirection aDir)
+    {
+        return roads[(int)aDir];
     }
 
     private void Refresh()

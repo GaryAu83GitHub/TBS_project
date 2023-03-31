@@ -47,7 +47,14 @@ MonoBehaviour:
   Coordinates:
     x: 0
     z: 0
-  Color: {r: 0, g: 0, b: 0, a: 0}
+  UIRect: {fileID: 0}
+  Chunk: {fileID: 0}
+  color: {r: 0, g: 0, b: 0, a: 0}
+  elavation: -2147483648
+  myHasIncomingRiver: 0
+  myHasOutgoingRiver: 0
+  myIncomingRiver: 0
+  myOutgoingRiver: 0
   Neighbors:
   - {fileID: 0}
   - {fileID: 0}
@@ -55,3 +62,4 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  roads: 000000000000
