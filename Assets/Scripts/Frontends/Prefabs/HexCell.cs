@@ -68,7 +68,7 @@ public class HexCell : MonoBehaviour
 
     public bool HasRiver { get { return myHasIncomingRiver || myHasOutgoingRiver; } }
     public bool HasRiverBeginOrEnd { get { return myHasIncomingRiver != myHasOutgoingRiver; } }
-    
+        
     [SerializeField]
     private bool myHasIncomingRiver, myHasOutgoingRiver;
     
@@ -83,6 +83,13 @@ public class HexCell : MonoBehaviour
         get 
         {
             return (elavation + HexMetrics.StreamBedElevationOffset) * HexMetrics.ElevationStep;
+        } 
+    }
+    public float RiverSurfaceY 
+    { 
+        get 
+        { 
+            return (elavation + HexMetrics.RiverSurfaceElevationOffset) * HexMetrics.ElevationStep; 
         } 
     }
 
