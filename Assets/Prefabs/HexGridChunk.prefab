@@ -244,3 +244,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   UseCollider: 1
+  UseColors: 1
+  UseUVCoordinates: 0
