@@ -8,41 +8,37 @@ using Assets.Scripts.Backends.Tools;
 [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
 public class HexMesh : MonoBehaviour
 {
-    private Mesh myHexMesh;
+    public bool UseCollider;
 
+    private Mesh myHexMesh;
     private MeshCollider myCollider;
 
     [NonSerialized] List<Vector3> myVertices;
     [NonSerialized] List<Color> myColors;
     [NonSerialized] List<int> myTriangles;
 
-    //public static List<Vector3> myVertices = new();
-    //public static List<Color> myColors = new();
-    //public static List<int> myTriangles = new();
-
     void Awake()
     {
         GetComponent<MeshFilter>().mesh = myHexMesh = new Mesh();
-        myCollider = gameObject.AddComponent<MeshCollider>();
+        if(UseCollider)
+            myCollider = gameObject.AddComponent<MeshCollider>();
 
         myHexMesh.name = "Hex Mesh";
     }
 
     public void Apply()
     {
-        //myHexMesh.vertices = myVertices.ToArray();
-        //myHexMesh.colors = myColors.ToArray();
-        //myHexMesh.triangles = myTriangles.ToArray();
         myHexMesh.SetVertices(myVertices);
         ListPool<Vector3>.Add(myVertices);
+
         myHexMesh.SetColors(myColors);
         ListPool<Color>.Add(myColors);
+        
         myHexMesh.SetTriangles(myTriangles, 0);
         ListPool<int>.Add(myTriangles);
-
         myHexMesh.RecalculateNormals();
-
-        myCollider.sharedMesh = myHexMesh;
+        if(UseCollider)
+            myCollider.sharedMesh = myHexMesh;
     }
 
     public void Clear()
