@@ -96,7 +96,7 @@ public class HexCell : MonoBehaviour
 
     // neighbors stuffs
     [SerializeField]
-    HexCell[] Neighbors;
+    HexCell[] neighbors;
 
     // roads stuff
     public bool HasRoads 
@@ -117,18 +117,18 @@ public class HexCell : MonoBehaviour
 
     public HexCell GetNeighbor(HexDirection aDir)
     {
-        return Neighbors[(int)aDir];
+        return neighbors[(int)aDir];
     }
 
     public void SetNeighbor(HexDirection aDir, HexCell aCell)
     {
-        Neighbors[(int)aDir] = aCell;
-        aCell.Neighbors[(int)aDir.Opposite()] = this;
+        neighbors[(int)aDir] = aCell;
+        aCell.neighbors[(int)aDir.Opposite()] = this;
     }
 
     public HexEdgeType GetEdgeType(HexDirection aDir)
     {
-        return HexMetrics.GetEdgeType(Elevation, Neighbors[(int)aDir].Elevation);
+        return HexMetrics.GetEdgeType(Elevation, neighbors[(int)aDir].Elevation);
     }
 
     public HexEdgeType GetEdgeType(HexCell otherCell)
@@ -203,15 +203,29 @@ public class HexCell : MonoBehaviour
         return roads[(int)aDir];
     }
 
+    public void RemoveRoads()
+    {
+        for (int i = 0; i < neighbors.Length; i++)
+        {
+            if (roads[i])
+            {
+                roads[i] = false;
+                neighbors[i].roads[(int)((HexDirection)i).Opposite()] = false;
+                neighbors[i].RefreshSelfOnly();
+                RefreshSelfOnly();
+            }
+        } 
+    }
+
     private void Refresh()
     {
         if (Chunk)
         {
             Chunk.Refresh();
 
-            for(int i = 0; i < Neighbors.Length; i++)
+            for(int i = 0; i < neighbors.Length; i++)
             {
-                HexCell neighbor = Neighbors[i];
+                HexCell neighbor = neighbors[i];
                 if (neighbor != null && neighbor.Chunk != Chunk)
                     neighbor.Chunk.Refresh();
             }
