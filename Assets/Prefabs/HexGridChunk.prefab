@@ -48,7 +48,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   terrain: {fileID: 1352310152630374099}
-  river: {fileID: 8719218813219525260}
+  rivers: {fileID: 8719218813219525260}
 --- !u!1 &5750116695740682420
 GameObject:
   m_ObjectHideFlags: 0
