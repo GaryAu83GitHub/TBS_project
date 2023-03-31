@@ -57,6 +57,12 @@ public class HexCell : MonoBehaviour
             if (myHasIncomingRiver && elevation < GetNeighbor(myIncomingRiver).elevation)
                 RemoveIncomingRiver();
 
+            for(int i = 0; i < roads.Length; i++)
+            {
+                if (roads[i] && GetElevationDifference((HexDirection)i) > 1)
+                    SetRoad(i, false);
+            }
+
             Refresh();
         } 
     }
@@ -196,12 +202,14 @@ public class HexCell : MonoBehaviour
 
         myHasOutgoingRiver = true;
         myOutgoingRiver = direction;
-        RefreshSelfOnly();
+        //RefreshSelfOnly();
 
         neighbor.RemoveIncomingRiver();
         neighbor.myHasIncomingRiver = true;
         neighbor.myIncomingRiver = direction.Opposite();
-        neighbor.RefreshSelfOnly();
+        //neighbor.RefreshSelfOnly();
+
+        SetRoad((int)direction, false);
     }
 
     public bool HasRoadThroughEdge(HexDirection aDir)
