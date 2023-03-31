@@ -24,7 +24,7 @@ namespace Assets.Scripts.Backends.HexGrid
 
         public const float ElevationPerturbStrength = 1.5f;
 
-        public const float StreamBedElevationOffset = -1f;
+        public const float StreamBedElevationOffset = -1.75f;
 
         public const float RiverSurfaceElevationOffset = -.5f;
 
