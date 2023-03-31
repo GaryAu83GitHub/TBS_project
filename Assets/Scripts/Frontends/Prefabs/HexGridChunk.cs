@@ -5,7 +5,7 @@ using Assets.Scripts.Backends.HexGrid.Tools;
 
 public class HexGridChunk : MonoBehaviour
 {
-    public HexMesh terrain, river;
+    public HexMesh terrain, rivers;
     private HexCell[] myCells;
     //private HexMesh myHexMesh;
     Canvas myGridCanvas;
@@ -46,13 +46,13 @@ public class HexGridChunk : MonoBehaviour
     public void Triangulate()
     {
         terrain.Clear();
-        river.Clear();
+        rivers.Clear();
 
         for (int i = 0; i < myCells.Length; i++)
             Triangulate(myCells[i]);
 
         terrain.Apply();
-        river.Apply();
+        rivers.Apply();
     }
 
     private void Triangulate(HexCell aCell)
@@ -448,6 +448,20 @@ public class HexGridChunk : MonoBehaviour
 
         TriangulateEdgeStrip(m, aCell.Color, e, aCell.Color);
         TriangulateEdgeFan(center, m, aCell.Color);
+
+        bool reversed = aCell.HasIncomingRiver;
+        TriangulateRiverQuad(m.v2, m.v4, e.v2, e.v4, aCell.RiverSurfaceY, reversed);
+
+        center.y = m.v2.y = m.v4.y = aCell.RiverSurfaceY;
+        rivers.AddTriangle(center, m.v2, m.v4);
+        if(reversed)
+        {
+            rivers.AddTriangleUV(new Vector2(.5f, 1f), new Vector2(1f, 0f), new Vector2(0f, 0f));
+        }
+        else
+        {
+            rivers.AddTriangleUV(new Vector2(.5f, 0f), new Vector2(0f, 1f), new Vector2(1f, 1f));
+        }
     }
 
     private void TriangulateAdjacentToRiver(HexDirection aDir, HexCell aCell, Vector3 center, EdgeVertices e)
@@ -480,10 +494,10 @@ public class HexGridChunk : MonoBehaviour
     private void TriangulateRiverQuad(Vector3 v1, Vector3 v2, Vector3 v3, Vector3 v4, float y, bool reversed)
     {
         v1.y = v2.y = v3.y = v4.y = y;
-        river.AddQuad(v1, v2, v3, v4);
+        rivers.AddQuad(v1, v2, v3, v4);
         if(reversed)
-            river.AddQuadUV(1f, 0f, 1f, 0f);
+            rivers.AddQuadUV(1f, 0f, 1f, 0f);
         else
-            river.AddQuadUV(0f, 1f, 0f, 1f);
+            rivers.AddQuadUV(0f, 1f, 0f, 1f);
     }
 }
