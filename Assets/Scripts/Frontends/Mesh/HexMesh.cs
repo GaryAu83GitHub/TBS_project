@@ -1,7 +1,9 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Assets.Scripts.Backends.HexGrid;
 using Assets.Scripts.Backends.HexGrid.Tools;
+using Assets.Scripts.Backends.Tools;
 
 [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
 public class HexMesh : MonoBehaviour
@@ -10,9 +12,13 @@ public class HexMesh : MonoBehaviour
 
     private MeshCollider myCollider;
 
-    public static List<Vector3> myVertices = new();
-    public static List<Color> myColors = new();
-    public static List<int> myTriangles = new();
+    [NonSerialized] List<Vector3> myVertices;
+    [NonSerialized] List<Color> myColors;
+    [NonSerialized] List<int> myTriangles;
+
+    //public static List<Vector3> myVertices = new();
+    //public static List<Color> myColors = new();
+    //public static List<int> myTriangles = new();
 
     void Awake()
     {
@@ -24,9 +30,16 @@ public class HexMesh : MonoBehaviour
 
     public void Apply()
     {
-        myHexMesh.vertices = myVertices.ToArray();
-        myHexMesh.colors = myColors.ToArray();
-        myHexMesh.triangles = myTriangles.ToArray();
+        //myHexMesh.vertices = myVertices.ToArray();
+        //myHexMesh.colors = myColors.ToArray();
+        //myHexMesh.triangles = myTriangles.ToArray();
+        myHexMesh.SetVertices(myVertices);
+        ListPool<Vector3>.Add(myVertices);
+        myHexMesh.SetColors(myColors);
+        ListPool<Color>.Add(myColors);
+        myHexMesh.SetTriangles(myTriangles, 0);
+        ListPool<int>.Add(myTriangles);
+
         myHexMesh.RecalculateNormals();
 
         myCollider.sharedMesh = myHexMesh;
@@ -35,9 +48,9 @@ public class HexMesh : MonoBehaviour
     public void Clear()
     {
         myHexMesh.Clear();
-        myVertices.Clear();
-        myColors.Clear();
-        myTriangles.Clear();
+        myVertices = ListPool<Vector3>.Get();
+        myColors = ListPool<Color>.Get();
+        myTriangles = ListPool<int>.Get();
     }
 
     //public void Triangulate(HexCell[] someCells)
