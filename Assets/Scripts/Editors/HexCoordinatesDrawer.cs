@@ -12,6 +12,7 @@ public class HexCoordinatesDrawer : PropertyDrawer
             property.FindPropertyRelative("z").intValue
             );
 
-        EditorGUI.LabelField(position, label.text, coordinates.ToString());
+        position = EditorGUI.PrefixLabel(position, label);
+        GUI.Label(position, coordinates.ToString());
     }
 }

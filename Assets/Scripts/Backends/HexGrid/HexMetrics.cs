@@ -8,9 +8,13 @@ namespace Assets.Scripts.Backends.HexGrid
     {
         public static Texture2D NoiseSource;
 
+        public const float OuterToInner = 0.866025404f;
+
+        public const float InnerToOuter = 1f / OuterToInner;
+
         public const float OuterRadius = 10f;
 
-        public const float InnerRadius = OuterRadius * 0.866025404f;
+        public const float InnerRadius = OuterRadius * OuterToInner;
 
         public const float SolidFactor = .8f;
 
@@ -19,6 +23,10 @@ namespace Assets.Scripts.Backends.HexGrid
         public const float ElevationStep = 3f;
 
         public const float ElevationPerturbStrength = 1.5f;
+
+        public const float StreamBedElevationOffset = -1.75f;
+
+        public const float RiverSurfaceElevationOffset = -.5f;
 
         public const int TerracesPerSlope = 2;
 
@@ -63,7 +71,12 @@ namespace Assets.Scripts.Backends.HexGrid
         {
             return Corners[(int)aDir + 1] * SolidFactor;
         }
-        
+
+        public static Vector3 GetSolidEdgeMiddle(HexDirection aDir)
+        {
+            return (Corners[(int)aDir] + Corners[(int)aDir + 1]) * (.5f * SolidFactor);
+        }
+
         public static Vector3 GetBridge(HexDirection aDir)
         {
             return (Corners[(int)aDir] + Corners[(int)aDir + 1]) * BlendFactor;
@@ -104,7 +117,14 @@ namespace Assets.Scripts.Backends.HexGrid
             return NoiseSource.GetPixelBilinear(worldPosition.x * NoiseScale, worldPosition.z * NoiseScale);
         }
 
-        private static void Hej()
-        { }
+        public static Vector3 Perturb(Vector3 aPosition)
+        {
+            Vector4 sample = SampleNoise(aPosition);
+
+            aPosition.x += (sample.x * 2f - 1f) * CellPerturbStrength;
+            aPosition.z += (sample.z * 2f - 1f) * CellPerturbStrength;
+
+            return aPosition;
+        }
     }
 }

@@ -3,46 +3,45 @@ using System.Collections.Generic;
 using UnityEngine;
 using Assets.Scripts.Backends.HexGrid;
 using Assets.Scripts.Backends.HexGrid.Tools;
-
+using Assets.Scripts.Frontends.ExtendingTools;
 
 public class HexCell : MonoBehaviour
 {
     public HexCoordinates Coordinates;    
 
-    [SerializeField]
-    HexCell[] Neighbors;
 
-    [HideInInspector]
+    [SerializeField]
     public RectTransform UIRect;
 
-    [HideInInspector]
+    [SerializeField]
     public HexGridChunk Chunk;
 
     public Vector3 Position { get { return transform.localPosition; } }
 
     public Color Color 
     {
-        get { return myColor; }
+        get { return color; }
         set 
         {
-            if (myColor == value)
+            if (color == value)
                 return;
 
-            myColor = value;
+            color = value;
             Refresh();
         }
     }
-    private Color myColor;
+    [SerializeField]
+    private Color color;
 
     public int Elevation 
     {
-        get { return myElavation; } 
+        get { return elavation; } 
         set 
         { 
-            if(myElavation == value)
+            if(elavation == value)
                 return;
 
-            myElavation = value;
+            elavation = value;
             Vector3 position = transform.localPosition;
             position.y = value * HexMetrics.ElevationStep;
             position.y += (HexMetrics.SampleNoise(position).y * 2f - 1f) * HexMetrics.ElevationPerturbStrength;
@@ -52,23 +51,50 @@ public class HexCell : MonoBehaviour
             uiPosition.z = -position.y;
             UIRect.localPosition = uiPosition;
 
+            if (myHasOutgoingRiver && elavation < GetNeighbor(myOutgoingRiver).elavation)
+                RemoveOutgoingRiver();
+
+            if (myHasIncomingRiver && elavation < GetNeighbor(myIncomingRiver).elavation)
+                RemoveIncomingRiver();
+
             Refresh();
         } 
     }
-    private int myElavation = int.MinValue;
+    [SerializeField]
+    private int elavation = int.MinValue;
 
     public bool HasIncomingRiver { get { return myHasIncomingRiver; } }
     public bool HasOutgoingRiver { get { return myHasOutgoingRiver; } }
 
     public bool HasRiver { get { return myHasIncomingRiver || myHasOutgoingRiver; } }
     public bool HasRiverBeginOrEnd { get { return myHasIncomingRiver != myHasOutgoingRiver; } }
-
+        
+    [SerializeField]
     private bool myHasIncomingRiver, myHasOutgoingRiver;
     
     public HexDirection IncomingRiver { get { return myIncomingRiver; } }
     public HexDirection OutgoingRiver { get { return myOutgoingRiver; } }
-
+    
+    [SerializeField]
     private HexDirection myIncomingRiver, myOutgoingRiver;
+
+    public float StreamBedY 
+    { 
+        get 
+        {
+            return (elavation + HexMetrics.StreamBedElevationOffset) * HexMetrics.ElevationStep;
+        } 
+    }
+    public float RiverSurfaceY 
+    { 
+        get 
+        { 
+            return (elavation + HexMetrics.RiverSurfaceElevationOffset) * HexMetrics.ElevationStep; 
+        } 
+    }
+
+    [SerializeField]
+    HexCell[] Neighbors;
 
     public HexCell GetNeighbor(HexDirection aDir)
     {
@@ -136,7 +162,7 @@ public class HexCell : MonoBehaviour
             return;
 
         HexCell neighbor = GetNeighbor(direction);
-        if (!neighbor || myElavation < neighbor.myElavation)
+        if (!neighbor || elavation < neighbor.elavation)
             return;
 
         RemoveOutgoingRiver();
