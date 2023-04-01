@@ -62,7 +62,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: cb542a06f748ee9429c50a48fef2132f, type: 2}
+  - {fileID: 2100000, guid: 14aea2b70bee5cd46b92e5b4c89f345a, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -149,6 +149,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   terrain: {fileID: 1352310152630374099}
   rivers: {fileID: 8719218813219525260}
+  roads: {fileID: 4170108906039797634}
 --- !u!1 &5750116695740682420
 GameObject:
   m_ObjectHideFlags: 0
