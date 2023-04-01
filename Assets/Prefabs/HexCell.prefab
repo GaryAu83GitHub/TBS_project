@@ -50,12 +50,12 @@ MonoBehaviour:
   UIRect: {fileID: 0}
   Chunk: {fileID: 0}
   color: {r: 0, g: 0, b: 0, a: 0}
-  elavation: -2147483648
+  elevation: -2147483648
   myHasIncomingRiver: 0
   myHasOutgoingRiver: 0
   myIncomingRiver: 0
   myOutgoingRiver: 0
-  Neighbors:
+  neighbors:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
