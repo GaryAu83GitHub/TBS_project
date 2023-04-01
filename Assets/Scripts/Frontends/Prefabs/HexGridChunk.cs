@@ -5,7 +5,7 @@ using Assets.Scripts.Backends.HexGrid.Tools;
 
 public class HexGridChunk : MonoBehaviour
 {
-    public HexMesh terrain, rivers;
+    public HexMesh terrain, rivers, roads;
     private HexCell[] myCells;
     //private HexMesh myHexMesh;
     Canvas myGridCanvas;
@@ -47,12 +47,14 @@ public class HexGridChunk : MonoBehaviour
     {
         terrain.Clear();
         rivers.Clear();
+        roads.Clear();
 
         for (int i = 0; i < myCells.Length; i++)
             Triangulate(myCells[i]);
 
         terrain.Apply();
         rivers.Apply();
+        roads.Apply();
     }
 
     private void Triangulate(HexCell aCell)
