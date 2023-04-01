@@ -452,9 +452,9 @@ public class HexGridChunk : MonoBehaviour
     {
         TriangulateEdgeFan(center, e, aCell.Color);
 
-        if(aCell.HasRoadThroughEdge(aDir))
+        if(aCell.HasRoads)
         {
-            TriangulateRoad(center, Vector3.Lerp(center, e.v1, .5f), Vector3.Lerp(center, e.v5, .5f), e);
+            TriangulateRoad(center, Vector3.Lerp(center, e.v1, .5f), Vector3.Lerp(center, e.v5, .5f), e, aCell.HasRoadThroughEdge(aDir));
         }
     }
 
@@ -529,6 +529,12 @@ public class HexGridChunk : MonoBehaviour
             rivers.AddQuadUV(0f, 1f, v, v +.2f);
     }
 
+    private void TriangulateRoadEdge(Vector3 center, Vector3 mL, Vector3 mR)
+    {
+        roads.AddTriangle(center, mL, mR);
+        roads.AddTriangleUV(new Vector2(1f, 0f), new Vector2(0f, 0f), new Vector2(0f, 0f));
+    }
+
     private void TriangulateRoadSegment(Vector3 v1, Vector3 v2, Vector3 v3, Vector3 v4, Vector3 v5, Vector3 v6)
     {
         roads.AddQuad(v1, v2, v4, v5);
@@ -537,15 +543,20 @@ public class HexGridChunk : MonoBehaviour
         roads.AddQuadUV(1f, 0f, 0f, 0f);
     }
 
-    private void TriangulateRoad(Vector3 center, Vector3 mL, Vector3 mR, EdgeVertices e)
+    private void TriangulateRoad(Vector3 center, Vector3 mL, Vector3 mR, EdgeVertices e, bool hasRoadThroughCellEdge)
     {
-        Vector3 mC = Vector3.Lerp(mL, mR, .5f);
-        TriangulateRoadSegment(mL, mC, mR, e.v2, e.v3, e.v4);
-        
-        roads.AddTriangle(center, mL, mC);
-        roads.AddTriangle(center, mC, mR);
+        if (hasRoadThroughCellEdge)
+        {
+            Vector3 mC = Vector3.Lerp(mL, mR, .5f);
+            TriangulateRoadSegment(mL, mC, mR, e.v2, e.v3, e.v4);
 
-        roads.AddTriangleUV(new Vector2(1f, 0f), new Vector2(0f, 0f), new Vector2(1f, 0f));
-        roads.AddTriangleUV(new Vector2(1f, 0f), new Vector2(1f, 0f), new Vector2(0f, 0f));
+            roads.AddTriangle(center, mL, mC);
+            roads.AddTriangle(center, mC, mR);
+
+            roads.AddTriangleUV(new Vector2(1f, 0f), new Vector2(0f, 0f), new Vector2(1f, 0f));
+            roads.AddTriangleUV(new Vector2(1f, 0f), new Vector2(1f, 0f), new Vector2(0f, 0f));
+        }
+        else
+            TriangulateRoadEdge(center, mL, mR);
     }
 }
