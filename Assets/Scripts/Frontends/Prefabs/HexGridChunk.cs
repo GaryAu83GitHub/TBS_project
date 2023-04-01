@@ -567,9 +567,24 @@ public class HexGridChunk : MonoBehaviour
         bool hasRoadThroughCellEdge = aCell.HasRoadThroughEdge(aDir);
         Vector2 interpolators = GetRoadInterpolators(aDir, aCell);
         Vector3 roadCenter = center;
+
+        if(aCell.HasRiverBeginOrEnd)
+        {
+            roadCenter += HexMetrics.GetSolidEdgeMiddle(aCell.RiverBeginOrEndDirection.Opposite()) * (1f / 3f);
+        }
+
         Vector3 mL = Vector3.Lerp(roadCenter, e.v1, interpolators.x);
         Vector3 mR = Vector3.Lerp(roadCenter, e.v5, interpolators.y);
         TriangulateRoad(roadCenter, mL, mR, e, hasRoadThroughCellEdge);
+
+        if(aCell.HasRiverThroughEdge(aDir.Previous()))
+        {
+            TriangulateRoadEdge(roadCenter, center, mL);
+        }
+        if(aCell.HasRiverThroughEdge(aDir.Next()))
+        {
+            TriangulateRoadEdge(roadCenter, mR, center);
+        }
     }
 
     private Vector2 GetRoadInterpolators(HexDirection aDir, HexCell aCell)

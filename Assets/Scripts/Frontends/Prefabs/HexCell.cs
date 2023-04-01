@@ -81,6 +81,8 @@ public class HexCell : MonoBehaviour
     
     public HexDirection IncomingRiver { get { return myIncomingRiver; } }
     public HexDirection OutgoingRiver { get { return myOutgoingRiver; } }
+
+    public HexDirection RiverBeginOrEndDirection { get { return myHasIncomingRiver ? myIncomingRiver : myOutgoingRiver; } }
     
     [SerializeField]
     private HexDirection myIncomingRiver, myOutgoingRiver;
