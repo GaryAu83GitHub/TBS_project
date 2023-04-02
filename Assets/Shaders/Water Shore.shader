@@ -1,4 +1,4 @@
-Shader "Custom/Water"
+Shader "Custom/Water Shore"
 {
     Properties
     {
@@ -18,9 +18,7 @@ Shader "Custom/Water"
 
         // Use shader model 3.0 target, to get nicer looking lighting
         #pragma target 3.0
-
         #include "Water.cginc"
-
         sampler2D _MainTex;
 
         struct Input
@@ -36,25 +34,26 @@ Shader "Custom/Water"
         void surf (Input IN, inout SurfaceOutputStandard o)
         {
             /*
-            float2 uv1 = IN.worldPos.xz;
-            uv1.y += _Time.y;
-            float4 noise1 = tex2D(_MainTex, uv1 * .025);
+            float shore = IN.uv_MainTex.y;
+            shore = sqrt(shore);
 
-            float2 uv2 = IN.worldPos.xz;
-            uv2.x += _Time.y;
-            float4 noise2 = tex2D(_MainTex, uv2 * .025);
+            float2 noiseUV = IN.worldPos.xz + _Time.y * .25;
+            float4 noise = tex2D(_MainTex, noiseUV * .015);
 
-            float blendWave = sin((IN.worldPos.x + IN.worldPos.z) * .1 + (noise1.y + noise2.z) + _Time.y);
-            blendWave *= blendWave;
+            float distortion1 = noise.x * (1 - shore);
+            float foam1 = sin((shore + distortion1) * 10 - _Time.y);
+            foam1 *= foam1;
 
-            float waves = 
-                lerp(noise1.z, noise1.w, blendWave) + 
-                lerp(noise2.x, noise2.y, blendWave);
-            waves = smoothstep(.75, 2, waves);
+            float distortion2 = noise.y * (1 - shore);
+            float foam2 = sin((shore + distortion2) * 10 + _Time.y + 2);
+            foam2 *= foam2 * .7;
             */
+            float shore = IN.uv_MainTex.y;
+            float foam = Foam(shore, IN.worldPos.xz, _MainTex);
             float waves = Waves(IN.worldPos.xz, _MainTex);
+            waves *= 1 - shore;
 
-            fixed4 c = saturate(_Color + waves);
+            fixed4 c = saturate(_Color + max(foam, waves));
             o.Albedo = c.rgb;
             o.Metallic = _Metallic;
             o.Smoothness = _Glossiness;
