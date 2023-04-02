@@ -14,7 +14,7 @@ Shader "Custom/Road" {
 			Offset -1, -1
 
 			CGPROGRAM
-			#pragma surface surf Standard fullforwardshadows
+			#pragma surface surf Standard fullforwardshadows decal:blend
 			#pragma target 3.0
 
 			sampler2D _MainTex;
@@ -28,11 +28,14 @@ Shader "Custom/Road" {
 			fixed4 _Color;
 
 			void surf(Input IN, inout SurfaceOutputStandard o) {
-				fixed4 c = fixed4(IN.uv_MainTex, 1, 1);
+				fixed4 c = _Color;
+				float blend = IN.uv_MainTex.x;
+				blend = smoothstep(.4f, .7f, blend);
+
 				o.Albedo = c.rgb;
 				o.Metallic = _Metallic;
 				o.Smoothness = _Glossiness;
-				o.Alpha = c.a;
+				o.Alpha = blend;
 			}
 			ENDCG
 		}
