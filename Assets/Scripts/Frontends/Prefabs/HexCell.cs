@@ -35,13 +35,13 @@ public class HexCell : MonoBehaviour
 
     public int Elevation 
     {
-        get { return elavation; } 
+        get { return elevation; } 
         set 
         { 
-            if(elavation == value)
+            if(elevation == value)
                 return;
 
-            elavation = value;
+            elevation = value;
             Vector3 position = transform.localPosition;
             position.y = value * HexMetrics.ElevationStep;
             position.y += (HexMetrics.SampleNoise(position).y * 2f - 1f) * HexMetrics.ElevationPerturbStrength;
@@ -51,18 +51,25 @@ public class HexCell : MonoBehaviour
             uiPosition.z = -position.y;
             UIRect.localPosition = uiPosition;
 
-            if (myHasOutgoingRiver && elavation < GetNeighbor(myOutgoingRiver).elavation)
+            if (myHasOutgoingRiver && elevation < GetNeighbor(myOutgoingRiver).elevation)
                 RemoveOutgoingRiver();
 
-            if (myHasIncomingRiver && elavation < GetNeighbor(myIncomingRiver).elavation)
+            if (myHasIncomingRiver && elevation < GetNeighbor(myIncomingRiver).elevation)
                 RemoveIncomingRiver();
+
+            for(int i = 0; i < roads.Length; i++)
+            {
+                if (roads[i] && GetElevationDifference((HexDirection)i) > 1)
+                    SetRoad(i, false);
+            }
 
             Refresh();
         } 
     }
     [SerializeField]
-    private int elavation = int.MinValue;
+    private int elevation = int.MinValue;
 
+    // river stuffs
     public bool HasIncomingRiver { get { return myHasIncomingRiver; } }
     public bool HasOutgoingRiver { get { return myHasOutgoingRiver; } }
 
@@ -74,6 +81,8 @@ public class HexCell : MonoBehaviour
     
     public HexDirection IncomingRiver { get { return myIncomingRiver; } }
     public HexDirection OutgoingRiver { get { return myOutgoingRiver; } }
+
+    public HexDirection RiverBeginOrEndDirection { get { return myHasIncomingRiver ? myIncomingRiver : myOutgoingRiver; } }
     
     [SerializeField]
     private HexDirection myIncomingRiver, myOutgoingRiver;
@@ -82,39 +91,63 @@ public class HexCell : MonoBehaviour
     { 
         get 
         {
-            return (elavation + HexMetrics.StreamBedElevationOffset) * HexMetrics.ElevationStep;
+            return (elevation + HexMetrics.StreamBedElevationOffset) * HexMetrics.ElevationStep;
         } 
     }
     public float RiverSurfaceY 
     { 
         get 
         { 
-            return (elavation + HexMetrics.RiverSurfaceElevationOffset) * HexMetrics.ElevationStep; 
+            return (elevation + HexMetrics.RiverSurfaceElevationOffset) * HexMetrics.ElevationStep; 
         } 
     }
 
+    // neighbors stuffs
     [SerializeField]
-    HexCell[] Neighbors;
+    HexCell[] neighbors;
+
+    // roads stuff
+    public bool HasRoads 
+    {
+        get 
+        {
+            for(int i = 0; i < roads.Length; i++)
+            {
+                if (roads[i])
+                    return true;
+            }
+            return false;
+        }
+    }
+
+    [SerializeField]
+    bool[] roads;
 
     public HexCell GetNeighbor(HexDirection aDir)
     {
-        return Neighbors[(int)aDir];
+        return neighbors[(int)aDir];
     }
 
     public void SetNeighbor(HexDirection aDir, HexCell aCell)
     {
-        Neighbors[(int)aDir] = aCell;
-        aCell.Neighbors[(int)aDir.Opposite()] = this;
+        neighbors[(int)aDir] = aCell;
+        aCell.neighbors[(int)aDir.Opposite()] = this;
     }
 
     public HexEdgeType GetEdgeType(HexDirection aDir)
     {
-        return HexMetrics.GetEdgeType(Elevation, Neighbors[(int)aDir].Elevation);
+        return HexMetrics.GetEdgeType(Elevation, neighbors[(int)aDir].Elevation);
     }
 
     public HexEdgeType GetEdgeType(HexCell otherCell)
     {
         return HexMetrics.GetEdgeType(Elevation, otherCell.Elevation);
+    }
+
+    public int GetElevationDifference(HexDirection aDir)
+    {
+        int difference = elevation - GetNeighbor(aDir).elevation;
+        return difference >= 0 ? difference : -difference;
     }
 
     public bool HasRiverThroughEdge(HexDirection direction)
@@ -162,7 +195,7 @@ public class HexCell : MonoBehaviour
             return;
 
         HexCell neighbor = GetNeighbor(direction);
-        if (!neighbor || elavation < neighbor.elavation)
+        if (!neighbor || elevation < neighbor.elevation)
             return;
 
         RemoveOutgoingRiver();
@@ -171,12 +204,45 @@ public class HexCell : MonoBehaviour
 
         myHasOutgoingRiver = true;
         myOutgoingRiver = direction;
-        RefreshSelfOnly();
+        //RefreshSelfOnly();
 
         neighbor.RemoveIncomingRiver();
         neighbor.myHasIncomingRiver = true;
         neighbor.myIncomingRiver = direction.Opposite();
-        neighbor.RefreshSelfOnly();
+        //neighbor.RefreshSelfOnly();
+
+        SetRoad((int)direction, false);
+    }
+
+    public bool HasRoadThroughEdge(HexDirection aDir)
+    {
+        return roads[(int)aDir];
+    }
+
+    public void AddRoad(HexDirection aDir)
+    {
+        if (!roads[(int)aDir] && !HasRiverThroughEdge(aDir) && GetElevationDifference(aDir) <= 1)
+            SetRoad((int)aDir, true);
+
+    }
+
+    public void RemoveRoads()
+    {
+        for (int i = 0; i < neighbors.Length; i++)
+        {
+            if (roads[i])
+            {
+                SetRoad(i, false);
+            }
+        } 
+    }
+
+    private void SetRoad(int index, bool state)
+    {
+        roads[index] = state;
+        neighbors[index].roads[(int)((HexDirection)index).Opposite()] = state;
+        neighbors[index].RefreshSelfOnly();
+        RefreshSelfOnly();
     }
 
     private void Refresh()
@@ -185,9 +251,9 @@ public class HexCell : MonoBehaviour
         {
             Chunk.Refresh();
 
-            for(int i = 0; i < Neighbors.Length; i++)
+            for(int i = 0; i < neighbors.Length; i++)
             {
-                HexCell neighbor = Neighbors[i];
+                HexCell neighbor = neighbors[i];
                 if (neighbor != null && neighbor.Chunk != Chunk)
                     neighbor.Chunk.Refresh();
             }
