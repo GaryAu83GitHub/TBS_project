@@ -141,7 +141,7 @@ public class HexGridChunk : MonoBehaviour
             else if (!neighbor.IsUnderwater && neighbor.Elevation > aCell.WaterLevel)
             {
                 TriangulateWaterfallInWater(
-                    e1.v2, e1.v4, e2.v2, e2.v4,
+                    e2.v4, e2.v2, e1.v4, e1.v2,
                     neighbor.RiverSurfaceY, aCell.RiverSurfaceY,
                     aCell.WaterSurfaceY);
             }
