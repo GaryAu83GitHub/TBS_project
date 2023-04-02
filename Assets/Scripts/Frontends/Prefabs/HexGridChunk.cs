@@ -97,6 +97,9 @@ public class HexGridChunk : MonoBehaviour
         {
             TriangulateConnection(aDir, aCell, e);
         }
+
+        if(aCell.IsUnderwater)
+            TriangulateWater(aDir, aCell, center);
     }
 
     private void TriangulateConnection(HexDirection aDir, HexCell aCell, EdgeVertices e1)
@@ -648,6 +651,16 @@ public class HexGridChunk : MonoBehaviour
         {
             TriangulateRoadEdge(roadCenter, mR, center);
         }
+    }
+
+    private void TriangulateWater(HexDirection aDir, HexCell aCell, Vector3 center)
+    {
+        center.y = aCell.WaterSurfaceY;
+
+        Vector3 c1 = center + HexMetrics.GetFirstSolidCorner(aDir);
+        Vector3 c2 = center + HexMetrics.GetSecondSolidCorner(aDir);
+
+        water.AddTriangle(center, c1, c2);
     }
 
     private Vector2 GetRoadInterpolators(HexDirection aDir, HexCell aCell)
