@@ -1,4 +1,4 @@
-Shader "Custom/River"
+Shader "Custom/Estuary"
 {
     Properties
     {
@@ -9,11 +9,14 @@ Shader "Custom/River"
     }
     SubShader
     {
-        Tags { "RenderType"="Transparent" "Queue"="Transparent+1" }
+        Tags { "RenderType" = "Transparent" "Queue" = "Transparent" }
         LOD 200
 
         CGPROGRAM
+        // Physically based Standard lighting model, and enable shadows on all light types
         #pragma surface surf Standard alpha
+
+        // Use shader model 3.0 target, to get nicer looking lighting
         #pragma target 3.0
         #include "Water.cginc"
         sampler2D _MainTex;
@@ -21,31 +24,21 @@ Shader "Custom/River"
         struct Input
         {
             float2 uv_MainTex;
+            float3 worldPos;
         };
 
         half _Glossiness;
         half _Metallic;
         fixed4 _Color;
 
-        UNITY_INSTANCING_BUFFER_START(Props)
-        UNITY_INSTANCING_BUFFER_END(Props)
-
         void surf (Input IN, inout SurfaceOutputStandard o)
-        {   
-            float river = River(IN.uv_MainTex, _MainTex);
-            /*
-            float2 uv = IN.uv_MainTex;
-            uv.x = uv.x * 0.0625 + _Time.y * 0.005;
-            uv.y -= _Time.y * 0.25;
-            float4 noise = tex2D(_MainTex, uv);
+        {
+            float shore = IN.uv_MainTex.y;
+            float foam = Foam(shore, IN.worldPos.xz, _MainTex);
+            float waves = Waves(IN.worldPos.xz, _MainTex);
+            waves *= 1 - shore;
 
-            float2 uv2 = IN.uv_MainTex;
-            uv2.x = uv2.x * 0.0625 - _Time.y * 0.0052;
-            uv2.y -= _Time.y * 0.23;
-            float4 noise2 = tex2D(_MainTex, uv2);
-            */
-
-            fixed4 c = saturate(_Color + river);
+            fixed4 c = saturate(_Color + max(foam, waves));
             o.Albedo = c.rgb;
             o.Metallic = _Metallic;
             o.Smoothness = _Glossiness;
