@@ -728,9 +728,6 @@ public class HexGridChunk : MonoBehaviour
         HexCell nextNeighbor = aCell.GetNeighbor(aDir.Next());
         if(nextNeighbor != null)
         {
-            //Vector3 center3 = nextNeighbor.Position;
-            //center3.y = center.y;
-
             Vector3 v3 = nextNeighbor.Position + (nextNeighbor.IsUnderwater ?
                 HexMetrics.GetFirstWaterCorner(aDir.Previous()) : 
                 HexMetrics.GetFirstSolidCorner(aDir.Previous()));
