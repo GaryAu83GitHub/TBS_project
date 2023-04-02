@@ -71,7 +71,20 @@ public class HexCell : MonoBehaviour
     private int elevation = int.MinValue;
 
     // water stuff
+    public int WaterLevel
+    {
+        get { return waterLevel; }
+        set
+        {
+            if (waterLevel == value)
+                return;
 
+            waterLevel = value;
+            Refresh();
+        }
+    }
+    [SerializeField]
+    private int waterLevel;
 
     // river stuffs
     public bool HasIncomingRiver { get { return myHasIncomingRiver; } }
