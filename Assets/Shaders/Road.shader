@@ -21,6 +21,7 @@ Shader "Custom/Road" {
 
 			struct Input {
 				float2 uv_MainTex;
+				float3 worldPos;
 			};
 
 			half _Glossiness;
@@ -28,8 +29,11 @@ Shader "Custom/Road" {
 			fixed4 _Color;
 
 			void surf(Input IN, inout SurfaceOutputStandard o) {
-				fixed4 c = _Color;
+				float4 noise = tex2D(_MainTex, IN.worldPos.xz * .025);
+				fixed4 c = _Color * (noise.y * .75 + .25);
 				float blend = IN.uv_MainTex.x;
+
+				blend *= noise.x + .5;
 				blend = smoothstep(.4f, .7f, blend);
 
 				o.Albedo = c.rgb;
