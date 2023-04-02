@@ -18,6 +18,7 @@ public class HexCell : MonoBehaviour
 
     public Vector3 Position { get { return transform.localPosition; } }
 
+    // terrain stuff
     public Color Color 
     {
         get { return color; }
@@ -68,6 +69,9 @@ public class HexCell : MonoBehaviour
     }
     [SerializeField]
     private int elevation = int.MinValue;
+
+    // water stuff
+
 
     // river stuffs
     public bool HasIncomingRiver { get { return myHasIncomingRiver; } }
