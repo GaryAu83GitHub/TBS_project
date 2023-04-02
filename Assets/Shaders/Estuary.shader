@@ -24,6 +24,7 @@ Shader "Custom/Estuary"
         struct Input
         {
             float2 uv_MainTex;
+            float2 uv2_MainTex;
             float3 worldPos;
         };
 
@@ -38,7 +39,9 @@ Shader "Custom/Estuary"
             float waves = Waves(IN.worldPos.xz, _MainTex);
             waves *= 1 - shore;
 
-            fixed4 c = saturate(_Color + max(foam, waves));
+            float river = River(IN.uv2_MainTex, _MainTex);
+
+            fixed4 c = saturate(_Color + river);
             o.Albedo = c.rgb;
             o.Metallic = _Metallic;
             o.Smoothness = _Glossiness;
