@@ -708,10 +708,12 @@ public class HexGridChunk : MonoBehaviour
         water.AddTriangle(center, e1.v3, e1.v4);
         water.AddTriangle(center, e1.v4, e1.v5);
 
-        Vector3 bridge = HexMetrics.GetWaterBridge(aDir);
+        Vector3 center2 = neighbor.Position;
+        center2.y = center.y;
+
         EdgeVertices e2 = new EdgeVertices(
-            e1.v1 + bridge,
-            e1.v5 + bridge
+            center2 + HexMetrics.GetSecondSolidCorner(aDir.Opposite()),
+            center2 + HexMetrics.GetFirstSolidCorner(aDir.Opposite())
             );
 
         waterShore.AddQuad(e1.v1, e1.v2, e2.v1, e2.v2);
@@ -726,7 +728,15 @@ public class HexGridChunk : MonoBehaviour
         HexCell nextNeighbor = aCell.GetNeighbor(aDir.Next());
         if(nextNeighbor != null)
         {
-            waterShore.AddTriangle(e1.v5, e2.v5, e1.v5 + HexMetrics.GetWaterBridge(aDir.Next()));
+            //Vector3 center3 = nextNeighbor.Position;
+            //center3.y = center.y;
+
+            Vector3 v3 = nextNeighbor.Position + (nextNeighbor.IsUnderwater ?
+                HexMetrics.GetFirstWaterCorner(aDir.Previous()) : 
+                HexMetrics.GetFirstSolidCorner(aDir.Previous()));
+            v3.y = center.y;
+
+            waterShore.AddTriangle(e1.v5, e2.v5, v3);
             waterShore.AddTriangleUV(new Vector2(0f, 0f), new Vector2(0f, 1f), new Vector2(0f, nextNeighbor.IsUnderwater ? 0f : 1f));
         }
     }
