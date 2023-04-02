@@ -661,6 +661,28 @@ public class HexGridChunk : MonoBehaviour
         Vector3 c2 = center + HexMetrics.GetSecondSolidCorner(aDir);
 
         water.AddTriangle(center, c1, c2);
+
+        if(aDir <= HexDirection.SE)
+        {
+            HexCell neighbor = aCell.GetNeighbor(aDir);
+            if (neighbor == null || !neighbor.IsUnderwater)
+                return;
+
+            Vector3 bridge = HexMetrics.GetBridge(aDir);
+            Vector3 e1 = c1 + bridge;
+            Vector3 e2 = c2 + bridge;
+
+            water.AddQuad(c1, c2, e1, e2);
+
+            if(aDir <= HexDirection.E)
+            {
+                HexCell nextNeighbor = aCell.GetNeighbor(aDir.Next());
+                if (nextNeighbor == null || !nextNeighbor.IsUnderwater)
+                    return;
+
+                water.AddTriangle(c2, e2, c2 + HexMetrics.GetBridge(aDir.Next()));
+            }
+        }
     }
 
     private Vector2 GetRoadInterpolators(HexDirection aDir, HexCell aCell)
