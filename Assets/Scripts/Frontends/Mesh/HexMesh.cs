@@ -544,6 +544,23 @@ public class HexMesh : MonoBehaviour
         myTriangles.Add(vertexIndex + 3);
     }
 
+    public void AddQuadUnperturbed(Vector3 v1, Vector3 v2, Vector3 v3, Vector3 v4)
+    {
+        int vertexIndex = myVertices.Count;
+
+        myVertices.Add(v1);
+        myVertices.Add(v2);
+        myVertices.Add(v3);
+        myVertices.Add(v4);
+
+        myTriangles.Add(vertexIndex);
+        myTriangles.Add(vertexIndex + 2);
+        myTriangles.Add(vertexIndex + 1);
+        myTriangles.Add(vertexIndex + 1);
+        myTriangles.Add(vertexIndex + 2);
+        myTriangles.Add(vertexIndex + 3);
+    }
+
     public void AddTriangleColor(Color aColor)
     {
         myColors.Add(aColor);
