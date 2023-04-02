@@ -33,21 +33,6 @@ Shader "Custom/Water Shore"
 
         void surf (Input IN, inout SurfaceOutputStandard o)
         {
-            /*
-            float shore = IN.uv_MainTex.y;
-            shore = sqrt(shore);
-
-            float2 noiseUV = IN.worldPos.xz + _Time.y * .25;
-            float4 noise = tex2D(_MainTex, noiseUV * .015);
-
-            float distortion1 = noise.x * (1 - shore);
-            float foam1 = sin((shore + distortion1) * 10 - _Time.y);
-            foam1 *= foam1;
-
-            float distortion2 = noise.y * (1 - shore);
-            float foam2 = sin((shore + distortion2) * 10 + _Time.y + 2);
-            foam2 *= foam2 * .7;
-            */
             float shore = IN.uv_MainTex.y;
             float foam = Foam(shore, IN.worldPos.xz, _MainTex);
             float waves = Waves(IN.worldPos.xz, _MainTex);
