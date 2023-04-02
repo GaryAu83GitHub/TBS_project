@@ -71,6 +71,10 @@ public class HexCell : MonoBehaviour
     private int elevation = int.MinValue;
 
     // water stuff
+    public bool IsUnderwater { get { return waterLevel > elevation; } }
+
+    public float WaterSurfaceY { get { return (waterLevel + HexMetrics.WaterElevationOffset) * HexMetrics.ElevationStep; } }
+
     public int WaterLevel
     {
         get { return waterLevel; }
@@ -104,20 +108,8 @@ public class HexCell : MonoBehaviour
     [SerializeField]
     private HexDirection myIncomingRiver, myOutgoingRiver;
 
-    public float StreamBedY 
-    { 
-        get 
-        {
-            return (elevation + HexMetrics.StreamBedElevationOffset) * HexMetrics.ElevationStep;
-        } 
-    }
-    public float RiverSurfaceY 
-    { 
-        get 
-        { 
-            return (elevation + HexMetrics.RiverSurfaceElevationOffset) * HexMetrics.ElevationStep; 
-        } 
-    }
+    public float StreamBedY { get { return (elevation + HexMetrics.StreamBedElevationOffset) * HexMetrics.ElevationStep; } }
+    public float RiverSurfaceY { get { return (elevation + HexMetrics.WaterElevationOffset) * HexMetrics.ElevationStep; } }
 
     // neighbors stuffs
     [SerializeField]
