@@ -672,14 +672,14 @@ public class HexGridChunk : MonoBehaviour
 
     private void TriangulateOpenWater(HexDirection aDir, HexCell aCell, HexCell neighbor, Vector3 center)
     {
-        Vector3 c1 = center + HexMetrics.GetFirstSolidCorner(aDir);
-        Vector3 c2 = center + HexMetrics.GetSecondSolidCorner(aDir);
+        Vector3 c1 = center + HexMetrics.GetFirstWaterCorner(aDir);
+        Vector3 c2 = center + HexMetrics.GetSecondWaterCorner(aDir);
 
         water.AddTriangle(center, c1, c2);
 
         if (aDir <= HexDirection.SE && neighbor != null)
         {
-            Vector3 bridge = HexMetrics.GetBridge(aDir);
+            Vector3 bridge = HexMetrics.GetWaterBridge(aDir);
             Vector3 e1 = c1 + bridge;
             Vector3 e2 = c2 + bridge;
 
@@ -691,7 +691,7 @@ public class HexGridChunk : MonoBehaviour
                 if (nextNeighbor == null || !nextNeighbor.IsUnderwater)
                     return;
 
-                water.AddTriangle(c2, e2, c2 + HexMetrics.GetBridge(aDir.Next()));
+                water.AddTriangle(c2, e2, c2 + HexMetrics.GetWaterBridge(aDir.Next()));
             }
         }
     }
@@ -699,8 +699,8 @@ public class HexGridChunk : MonoBehaviour
     private void TriangulateWaterShore(HexDirection aDir, HexCell aCell, HexCell neighbor, Vector3 center)
     {
         EdgeVertices e1 = new EdgeVertices(
-            center + HexMetrics.GetFirstSolidCorner(aDir),
-            center + HexMetrics.GetSecondSolidCorner(aDir)
+            center + HexMetrics.GetFirstWaterCorner(aDir),
+            center + HexMetrics.GetSecondWaterCorner(aDir)
             );
 
         water.AddTriangle(center, e1.v1, e1.v2);
@@ -708,7 +708,7 @@ public class HexGridChunk : MonoBehaviour
         water.AddTriangle(center, e1.v3, e1.v4);
         water.AddTriangle(center, e1.v4, e1.v5);
 
-        Vector3 bridge = HexMetrics.GetBridge(aDir);
+        Vector3 bridge = HexMetrics.GetWaterBridge(aDir);
         EdgeVertices e2 = new EdgeVertices(
             e1.v1 + bridge,
             e1.v5 + bridge
@@ -726,7 +726,7 @@ public class HexGridChunk : MonoBehaviour
         HexCell nextNeighbor = aCell.GetNeighbor(aDir.Next());
         if(nextNeighbor != null)
         {
-            waterShore.AddTriangle(e1.v5, e2.v5, e1.v5 + HexMetrics.GetBridge(aDir.Next()));
+            waterShore.AddTriangle(e1.v5, e2.v5, e1.v5 + HexMetrics.GetWaterBridge(aDir.Next()));
             waterShore.AddTriangleUV(new Vector2(0f, 0f), new Vector2(0f, 1f), new Vector2(0f, nextNeighbor.IsUnderwater ? 0f : 1f));
         }
     }
