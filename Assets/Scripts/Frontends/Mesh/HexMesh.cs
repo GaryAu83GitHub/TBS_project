@@ -20,7 +20,6 @@ public class HexMesh : MonoBehaviour
 
     void Awake()
     {
-        string hej = "hej";
         GetComponent<MeshFilter>().mesh = myHexMesh = new Mesh();
         if(useCollider)
             myCollider = gameObject.AddComponent<MeshCollider>();
