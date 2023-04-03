@@ -26,7 +26,11 @@ namespace Assets.Scripts.Backends.HexGrid
 
         public const float StreamBedElevationOffset = -1.75f;
 
-        public const float RiverSurfaceElevationOffset = -.5f;
+        public const float WaterElevationOffset = -.5f;
+
+        public const float WaterFactor = .6f;
+
+        public const float WaterBlendFactor = 1f - WaterFactor;
 
         public const int TerracesPerSlope = 2;
 
@@ -57,19 +61,29 @@ namespace Assets.Scripts.Backends.HexGrid
             return Corners[(int)aDir];
         }
 
-        public static Vector3 GetSecondCorner(HexDirection aDir)
-        {
-            return Corners[(int)aDir + 1];
-        }
-
         public static Vector3 GetFirstSolidCorner(HexDirection aDir)
         {
             return Corners[(int)aDir] * SolidFactor;
         }
 
+        public static Vector3 GetFirstWaterCorner(HexDirection aDir)
+        {
+            return Corners[(int)aDir] * WaterFactor;
+        }
+
+        public static Vector3 GetSecondCorner(HexDirection aDir)
+        {
+            return Corners[(int)aDir + 1];
+        }
+
         public static Vector3 GetSecondSolidCorner(HexDirection aDir)
         {
             return Corners[(int)aDir + 1] * SolidFactor;
+        }
+        
+        public static Vector3 GetSecondWaterCorner(HexDirection aDir)
+        {
+            return Corners[(int)aDir + 1] * WaterFactor;
         }
 
         public static Vector3 GetSolidEdgeMiddle(HexDirection aDir)
@@ -80,6 +94,11 @@ namespace Assets.Scripts.Backends.HexGrid
         public static Vector3 GetBridge(HexDirection aDir)
         {
             return (Corners[(int)aDir] + Corners[(int)aDir + 1]) * BlendFactor;
+        }
+
+        public static Vector3 GetWaterBridge(HexDirection aDir)
+        {
+            return (Corners[(int)aDir] + Corners[(int)aDir + 1]) * WaterBlendFactor;
         }
 
         public static Vector3 TerraceLerp(Vector3 aA, Vector3 aB, int aStep)

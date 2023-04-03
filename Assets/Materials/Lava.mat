@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Road
-  m_Shader: {fileID: 4800000, guid: eae1cb2f53142a64fbffec067d72e54f, type: 3}
+  m_Name: Lava
+  m_Shader: {fileID: 4800000, guid: ef1f7b07474b1d24d818e4aafac82e19, type: 3}
   m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 4
@@ -75,6 +75,6 @@ Material:
     - _UVSec: 0
     - _ZWrite: 1
     m_Colors:
-    - _Color: {r: 0.6981132, g: 0, b: 0, a: 1}
+    - _Color: {r: 1, g: 0.27450982, b: 0, a: 0.2901961}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
   m_BuildTextureStacks: []
