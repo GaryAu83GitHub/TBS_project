@@ -6,6 +6,8 @@ using Assets.Scripts.Backends.HexGrid.Tools;
 public class HexGridChunk : MonoBehaviour
 {
     public HexMesh terrain, rivers, roads, water, waterShore, estuaries;
+    public HexFeatureManager features;
+
     private HexCell[] myCells;
     //private HexMesh myHexMesh;
     Canvas myGridCanvas;
@@ -51,6 +53,7 @@ public class HexGridChunk : MonoBehaviour
         water.Clear();
         waterShore.Clear();
         estuaries.Clear();
+        features.Clear();
 
         for (int i = 0; i < myCells.Length; i++)
             Triangulate(myCells[i]);
@@ -61,6 +64,7 @@ public class HexGridChunk : MonoBehaviour
         water.Apply();
         waterShore.Apply();
         estuaries.Apply();
+        features.Apply();
     }
 
     private void Triangulate(HexCell aCell)
@@ -69,6 +73,7 @@ public class HexGridChunk : MonoBehaviour
         {
             Triangulate(d, aCell);
         }
+        features.AddFeature(aCell.Position);
     }
 
     private void Triangulate(HexDirection aDir, HexCell aCell)

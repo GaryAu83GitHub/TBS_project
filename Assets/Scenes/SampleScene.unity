@@ -7648,7 +7648,7 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2122147716}
   m_CullTransparentMesh: 1
---- !u!1001 &8928454920276941195
+--- !u!1001 &205276506387806522
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
