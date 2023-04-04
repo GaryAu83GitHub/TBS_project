@@ -19,10 +19,12 @@ public class HexFeatureManager : MonoBehaviour
     public void Apply() { }
     public void AddFeature(Vector3 position) 
     {
+        float hash = HexMetrics.SampleHashGrid(position);
+
         Transform instance = Instantiate(featurePrefab);
         position.y += instance.localScale.y * .5f;
         instance.localPosition = HexMetrics.Perturb(position);
-        instance.localRotation = Quaternion.Euler(0f, 360 * Random.value, 0f);
+        instance.localRotation = Quaternion.Euler(0f, 360 * hash, 0f);
         instance.SetParent(container, false);
     }
 }

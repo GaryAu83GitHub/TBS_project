@@ -48,6 +48,8 @@ namespace Assets.Scripts.Backends.HexGrid
 
         public const int HashGridSize = 256;
 
+        public const float HashGridScale = .25f;
+
         static float[] hashGrid;
 
         static Vector3[] Corners = { 
@@ -159,6 +161,19 @@ namespace Assets.Scripts.Backends.HexGrid
             for (int i = 0; i < hashGrid.Length; i++)
                 hashGrid[i] = Random.value;
             Random.state = currentState;
+        }
+
+        public static float SampleHashGrid(Vector3 position)
+        {
+            int x = (int)(position.x * HashGridScale) % HashGridSize;
+            if (x < 0)
+                x += HashGridSize;
+
+            int z = (int)(position.z * HashGridScale) % HashGridSize;
+            if (z < 0)
+                z += HashGridSize;
+
+            return hashGrid[x + z * HashGridSize];
         }
     }
 }
