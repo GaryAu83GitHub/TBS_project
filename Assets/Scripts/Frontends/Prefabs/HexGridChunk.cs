@@ -6,6 +6,8 @@ using Assets.Scripts.Backends.HexGrid.Tools;
 public class HexGridChunk : MonoBehaviour
 {
     public HexMesh terrain, rivers, roads, water, waterShore, estuaries;
+    public HexFeatureManager features;
+
     private HexCell[] myCells;
     //private HexMesh myHexMesh;
     Canvas myGridCanvas;
@@ -51,6 +53,7 @@ public class HexGridChunk : MonoBehaviour
         water.Clear();
         waterShore.Clear();
         estuaries.Clear();
+        features.Clear();
 
         for (int i = 0; i < myCells.Length; i++)
             Triangulate(myCells[i]);
@@ -61,6 +64,7 @@ public class HexGridChunk : MonoBehaviour
         water.Apply();
         waterShore.Apply();
         estuaries.Apply();
+        features.Apply();
     }
 
     private void Triangulate(HexCell aCell)
@@ -69,6 +73,9 @@ public class HexGridChunk : MonoBehaviour
         {
             Triangulate(d, aCell);
         }
+
+        if(!aCell.IsUnderwater && !aCell.HasRiver && !aCell.HasRoads)
+            features.AddFeature(aCell.Position);
     }
 
     private void Triangulate(HexDirection aDir, HexCell aCell)
@@ -95,7 +102,12 @@ public class HexGridChunk : MonoBehaviour
             }
         }
         else
+        {
             TriangulateWithoutRiver(aDir, aCell, center, e);
+
+            if (!aCell.IsUnderwater && !aCell.HasRoadThroughEdge(aDir))
+                features.AddFeature((center + e.v1 + e.v5) * (1f / 3f));
+        }
 
         if (aDir <= HexDirection.SE)
         {
@@ -548,6 +560,9 @@ public class HexGridChunk : MonoBehaviour
 
         TriangulateEdgeStrip(m, aCell.Color, e, aCell.Color);
         TriangulateEdgeFan(center, m, aCell.Color);
+
+        if (!aCell.IsUnderwater && !aCell.HasRoadThroughEdge(aDir))
+            features.AddFeature((center + e.v1 + e.v5) * (1f / 3f));
     }
 
     private void TriangulateRiverQuad(Vector3 v1, Vector3 v2, Vector3 v3, Vector3 v4, float y, float v, bool reversed)

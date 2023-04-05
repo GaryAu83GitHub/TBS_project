@@ -46,6 +46,12 @@ namespace Assets.Scripts.Backends.HexGrid
 
         public const int ChunkSizeX = 5, ChunkSizeZ = 5;
 
+        public const int HashGridSize = 256;
+
+        public const float HashGridScale = .25f;
+
+        static HexHash[] hashGrid;
+
         static Vector3[] Corners = { 
             new Vector3 (0f, 0f, OuterRadius),
             new Vector3 (InnerRadius, 0f, .5f * OuterRadius),
@@ -144,6 +150,30 @@ namespace Assets.Scripts.Backends.HexGrid
             aPosition.z += (sample.z * 2f - 1f) * CellPerturbStrength;
 
             return aPosition;
+        }
+
+        public static void InitializeHashGrid(int seed)
+        {
+            hashGrid = new HexHash[HashGridSize * HashGridSize];
+
+            Random.State currentState = Random.state;
+            Random.InitState(seed);
+            for (int i = 0; i < hashGrid.Length; i++)
+                hashGrid[i] = HexHash.Create();
+            Random.state = currentState;
+        }
+
+        public static HexHash SampleHashGrid(Vector3 position)
+        {
+            int x = (int)(position.x * HashGridScale) % HashGridSize;
+            if (x < 0)
+                x += HashGridSize;
+
+            int z = (int)(position.z * HashGridScale) % HashGridSize;
+            if (z < 0)
+                z += HashGridSize;
+
+            return hashGrid[x + z * HashGridSize];
         }
     }
 }

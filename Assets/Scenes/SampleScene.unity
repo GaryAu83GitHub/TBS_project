@@ -3101,10 +3101,11 @@ MonoBehaviour:
   ChunkCountX: 4
   ChunkCountZ: 3
   DefaultColor: {r: 1, g: 1, b: 1, a: 1}
-  CellPrefab: {fileID: 6589022703536304834, guid: 2d9a5cb8e3672dc42872faf35467610a, type: 3}
-  CellLabelPrefab: {fileID: 2967145994133076617, guid: 37cf0449e28b015498db6a7f22543386, type: 3}
-  ChunkPrefab: {fileID: 7642142513600218051, guid: f52fdb9a5da3a9a4fa653ff8293b6669, type: 3}
-  NoiseSource: {fileID: 2800000, guid: 46e63e427702b6846ac9af6942bc4c02, type: 3}
+  cellPrefab: {fileID: 6589022703536304834, guid: 2d9a5cb8e3672dc42872faf35467610a, type: 3}
+  cellLabelPrefab: {fileID: 2967145994133076617, guid: 37cf0449e28b015498db6a7f22543386, type: 3}
+  chunkPrefab: {fileID: 7642142513600218051, guid: f52fdb9a5da3a9a4fa653ff8293b6669, type: 3}
+  noiseSource: {fileID: 2800000, guid: 46e63e427702b6846ac9af6942bc4c02, type: 3}
+  seed: 1234
 --- !u!4 &943571974
 Transform:
   m_ObjectHideFlags: 0
@@ -7648,7 +7649,7 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2122147716}
   m_CullTransparentMesh: 1
---- !u!1001 &8928454920276941195
+--- !u!1001 &205276506387806522
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
