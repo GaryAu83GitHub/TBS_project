@@ -22,18 +22,45 @@ public class HexFeatureManager : MonoBehaviour
         HexHash hash = HexMetrics.SampleHashGrid(position);
         //if (hash.A >= aCell.UrbanLevel * .25f)
         //    return;
-        Transform prefab = PickPrefab(aCell.UrbanLevel, hash.A, hash.B);
-        if (!prefab)
+        Transform prefab = PickPrefab(urbanCollections, aCell.UrbanLevel, hash.A, hash.D);
+        Transform otherPrefab = PickPrefab(farmCollections, aCell.FarmLevel, hash.B, hash.D);
+
+        float usedHash = hash.A;
+        if (prefab)
+        {
+            if (otherPrefab && hash.B < hash.A)
+            {
+                prefab = otherPrefab;
+                usedHash = hash.B;
+            }
+        }
+        else if (otherPrefab)
+        {
+            prefab = otherPrefab;
+            usedHash = hash.B;
+        }
+
+        otherPrefab = PickPrefab(plantCollections, aCell.PlantLevel, hash.C, hash.D);
+        if (prefab)
+        {
+            if (otherPrefab && hash.C < usedHash)
+            {
+                prefab = otherPrefab;
+            }
+        }
+        else if (otherPrefab)
+            prefab = otherPrefab;
+        else
             return;
 
         Transform instance = Instantiate(prefab);
         position.y += instance.localScale.y * .5f;
         instance.localPosition = HexMetrics.Perturb(position);
-        instance.localRotation = Quaternion.Euler(0f, 360 * hash.C, 0f);
+        instance.localRotation = Quaternion.Euler(0f, 360 * hash.E, 0f);
         instance.SetParent(container, false);
     }
 
-    private Transform PickPrefab(int aLevel, float aHash, float choice)
+    private Transform PickPrefab(HexFeatureCollection[] collection, int aLevel, float aHash, float choice)
     {
         if(aLevel > 0)
         {
@@ -42,7 +69,7 @@ public class HexFeatureManager : MonoBehaviour
             {
                 if(aHash < thresholds[i])
                 {
-                    return urbanCollections[i].Pick(choice);
+                    return collection[i].Pick(choice);
                 }
             }
         }
