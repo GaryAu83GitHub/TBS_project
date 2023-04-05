@@ -21,13 +21,32 @@ public class HexFeatureManager : MonoBehaviour
     public void AddFeature(HexCell aCell, Vector3 position) 
     {
         HexHash hash = HexMetrics.SampleHashGrid(position);
-        if (hash.A >= aCell.UrbanLevel * .25f)
+        //if (hash.A >= aCell.UrbanLevel * .25f)
+        //    return;
+        Transform prefab = PickPrefab(aCell.UrbanLevel, hash.A);
+        if (!prefab)
             return;
 
-        Transform instance = Instantiate(urbanPrefabs[aCell.UrbanLevel - 1]);
+        Transform instance = Instantiate(prefab);
         position.y += instance.localScale.y * .5f;
         instance.localPosition = HexMetrics.Perturb(position);
         instance.localRotation = Quaternion.Euler(0f, 360 * hash.B, 0f);
         instance.SetParent(container, false);
+    }
+
+    private Transform PickPrefab(int aLevel, float aHash)
+    {
+        if(aLevel > 0)
+        {
+            float[] thresholds = HexMetrics.GetFeatureThresholds(aLevel - 1);
+            for(int i = 0; i < thresholds.Length; i++)
+            {
+                if(aHash < thresholds[i])
+                {
+                    return urbanPrefabs[i];
+                }
+            }
+        }
+        return null;
     }
 }
