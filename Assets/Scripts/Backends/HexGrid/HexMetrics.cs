@@ -62,6 +62,13 @@ namespace Assets.Scripts.Backends.HexGrid
             new Vector3 (0f, 0f, OuterRadius)
         };
 
+        static float[][] featureThresholds =
+        {
+            new float[]{0f, 0f, .4f},
+            new float[]{0f, .4f, .6f},
+            new float[]{.4f, .6f, .8f}
+        };
+
         public static Vector3 GetFirstCorner(HexDirection aDir)
         {
             return Corners[(int)aDir];
@@ -174,6 +181,11 @@ namespace Assets.Scripts.Backends.HexGrid
                 z += HashGridSize;
 
             return hashGrid[x + z * HashGridSize];
+        }
+
+        public static float[] GetFeatureThresholds(int aLevel)
+        {
+            return featureThresholds[aLevel];
         }
     }
 }
