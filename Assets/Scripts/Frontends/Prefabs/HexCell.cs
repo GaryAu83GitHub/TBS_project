@@ -134,6 +134,22 @@ public class HexCell : MonoBehaviour
     [SerializeField]
     bool[] roads;
 
+    // feature stuffs
+    public int UrbanLevel
+    {
+        get { return urbanLevel; }
+        set
+        {
+            if(urbanLevel != value)
+            {
+                urbanLevel = value;
+                RefreshSelfOnly();
+            }
+        }
+    }
+
+    private int urbanLevel;
+
     public HexCell GetNeighbor(HexDirection aDir)
     {
         return neighbors[(int)aDir];
