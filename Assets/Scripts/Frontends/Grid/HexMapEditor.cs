@@ -18,10 +18,16 @@ public class HexMapEditor : MonoBehaviour
     private Color myActiveColor;
     private int myActiveElevation;
     private int myActiveWaterLevel;
+    private int myActiveUrbanLevel;
+    private int myActiveFarmLevel;
+    private int myActivePlantLevel;
 
     private bool myApplyColor;
     private bool myApplyElevation = true;
     private bool myApplyWaterLevel = true;
+    private bool myApplyUrbanLevel = true;
+    private bool myApplyFarmLevel = true;
+    private bool myApplyPlantLevel = true;
 
     private int myBrushSize;
 
@@ -102,6 +108,15 @@ public class HexMapEditor : MonoBehaviour
             if(myApplyWaterLevel)
                 aCell.WaterLevel = myActiveWaterLevel;
 
+            if (myApplyUrbanLevel)
+                aCell.UrbanLevel = myActiveUrbanLevel;
+
+            if (myApplyFarmLevel)
+                aCell.FarmLevel = myActiveFarmLevel;
+
+            if (myApplyPlantLevel)
+                aCell.PlantLevel = myActivePlantLevel;
+
             if (myRiverMode == OptionalToggle.NO)
                 aCell.RemoveRiver();
             
@@ -161,6 +176,36 @@ public class HexMapEditor : MonoBehaviour
     public void SetWaterLevel(float aLevel)
     {
         myActiveWaterLevel = (int)aLevel;
+    }
+
+    public void SetApplyUrbanLevel(bool toggle)
+    {
+        myApplyUrbanLevel = toggle;
+    }
+    
+    public void SetUrbanLevel(float aLevel)
+    {
+        myActiveUrbanLevel = (int)aLevel;
+    }
+
+    public void SetApplyFarmLevel(bool toggle)
+    {
+        myApplyFarmLevel = toggle;
+    }
+
+    public void SetFarmLevel(float aLevel)
+    {
+        myActiveFarmLevel = (int)aLevel;
+    }
+
+    public void SetApplyPlantLevel(bool toggle)
+    {
+        myApplyPlantLevel = toggle;
+    }
+
+    public void SetPlantLevel(float aLevel)
+    {
+        myActivePlantLevel = (int)aLevel;
     }
 
     public void SetBrushSize(float aSize)

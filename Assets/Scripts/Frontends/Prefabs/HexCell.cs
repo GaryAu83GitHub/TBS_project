@@ -134,6 +134,48 @@ public class HexCell : MonoBehaviour
     [SerializeField]
     bool[] roads;
 
+    // feature stuffs
+    public int UrbanLevel
+    {
+        get { return urbanLevel; }
+        set
+        {
+            if(urbanLevel != value)
+            {
+                urbanLevel = value;
+                RefreshSelfOnly();
+            }
+        }
+    }
+
+    public int FarmLevel
+    {
+        get { return farmLevel; }
+        set
+        {
+            if(farmLevel != value)
+            {
+                farmLevel = value;
+                RefreshSelfOnly();
+            }
+        }
+    }
+
+    public int PlantLevel
+    {
+        get { return plantLevel; }
+        set
+        {
+            if(plantLevel != value)
+            {
+                plantLevel = value;
+                RefreshSelfOnly();
+            }
+        }
+    }
+
+    private int urbanLevel, farmLevel, plantLevel;
+
     public HexCell GetNeighbor(HexDirection aDir)
     {
         return neighbors[(int)aDir];
