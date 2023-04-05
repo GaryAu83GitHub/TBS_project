@@ -50,7 +50,7 @@ namespace Assets.Scripts.Backends.HexGrid
 
         public const float HashGridScale = .25f;
 
-        static float[] hashGrid;
+        static HexHash[] hashGrid;
 
         static Vector3[] Corners = { 
             new Vector3 (0f, 0f, OuterRadius),
@@ -154,16 +154,16 @@ namespace Assets.Scripts.Backends.HexGrid
 
         public static void InitializeHashGrid(int seed)
         {
-            hashGrid = new float[HashGridSize * HashGridSize];
+            hashGrid = new HexHash[HashGridSize * HashGridSize];
 
             Random.State currentState = Random.state;
             Random.InitState(seed);
             for (int i = 0; i < hashGrid.Length; i++)
-                hashGrid[i] = Random.value;
+                hashGrid[i] = HexHash.Create();
             Random.state = currentState;
         }
 
-        public static float SampleHashGrid(Vector3 position)
+        public static HexHash SampleHashGrid(Vector3 position)
         {
             int x = (int)(position.x * HashGridScale) % HashGridSize;
             if (x < 0)
