@@ -4,8 +4,7 @@ using Assets.Scripts.Backends.HexGrid;
 public class HexFeatureManager : MonoBehaviour
 {
     [SerializeField]
-    private Transform[] urbanPrefabs;
-    //private Transform featurePrefab;
+    private HexFeatureCollection[] urbanCollections;
 
     private Transform container;
 
@@ -23,18 +22,18 @@ public class HexFeatureManager : MonoBehaviour
         HexHash hash = HexMetrics.SampleHashGrid(position);
         //if (hash.A >= aCell.UrbanLevel * .25f)
         //    return;
-        Transform prefab = PickPrefab(aCell.UrbanLevel, hash.A);
+        Transform prefab = PickPrefab(aCell.UrbanLevel, hash.A, hash.B);
         if (!prefab)
             return;
 
         Transform instance = Instantiate(prefab);
         position.y += instance.localScale.y * .5f;
         instance.localPosition = HexMetrics.Perturb(position);
-        instance.localRotation = Quaternion.Euler(0f, 360 * hash.B, 0f);
+        instance.localRotation = Quaternion.Euler(0f, 360 * hash.C, 0f);
         instance.SetParent(container, false);
     }
 
-    private Transform PickPrefab(int aLevel, float aHash)
+    private Transform PickPrefab(int aLevel, float aHash, float choice)
     {
         if(aLevel > 0)
         {
@@ -43,7 +42,7 @@ public class HexFeatureManager : MonoBehaviour
             {
                 if(aHash < thresholds[i])
                 {
-                    return urbanPrefabs[i];
+                    return urbanCollections[i].Pick(choice);
                 }
             }
         }
