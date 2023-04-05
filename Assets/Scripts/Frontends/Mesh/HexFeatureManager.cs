@@ -4,7 +4,7 @@ using Assets.Scripts.Backends.HexGrid;
 public class HexFeatureManager : MonoBehaviour
 {
     [SerializeField]
-    private HexFeatureCollection[] urbanCollections;
+    private HexFeatureCollection[] urbanCollections, farmCollections, plantCollections;
 
     private Transform container;
 
