@@ -138,18 +138,23 @@ public class HexFeatureManager : MonoBehaviour
         Vector3 leftThicknessOffset = HexMetrics.WallThicknessOffset(nearLeft, farLeft);
         Vector3 rightThicknessOffset = HexMetrics.WallThicknessOffset(nearRight, farRight);
 
+        float leftTop = left.y + HexMetrics.WallHeight;
+        float rightTop = right.y + HexMetrics.WallHeight;
+
         Vector3 v1, v2, v3, v4;
 
         v1 = v3 = left - leftThicknessOffset;
         v2 = v4 = right - rightThicknessOffset;
-        v3.y = v4.y = left.y + HexMetrics.WallHeight;
+        v3.y = leftTop;
+        v4.y = rightTop; ;
         walls.AddQuad(v1, v2, v3, v4);
 
         Vector3 t1 = v3, t2 = v4;
 
         v1 = v3 = left + leftThicknessOffset;
         v2 = v4 = right + rightThicknessOffset;
-        v3.y = v4.y = left.y + HexMetrics.WallHeight;
+        v3.y = leftTop;
+        v4.y = rightTop;
         walls.AddQuad(v2, v1, v4, v3);
 
         walls.AddQuad(t1, t2, v3, v4);
