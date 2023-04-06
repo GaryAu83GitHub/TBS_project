@@ -262,6 +262,8 @@ public class HexGridChunk : MonoBehaviour
             terrain.AddTriangle(bottom, left, rigth);
             terrain.AddTriangleColor(bottomCell.Color, leftCell.Color, rightCell.Color);
         }
+
+        features.AddWall(bottom, bottomCell, left, leftCell, rigth, rightCell);
     }
 
     private void TriangulateCornerTerraces(Vector3 begin, HexCell beginCell, Vector3 left, HexCell leftCell, Vector3 rigth, HexCell rightCell)
