@@ -6,6 +6,9 @@ public class HexFeatureManager : MonoBehaviour
     [SerializeField]
     private HexFeatureCollection[] urbanCollections, farmCollections, plantCollections;
 
+    [SerializeField]
+    private HexMesh walls;
+
     private Transform container;
 
     public void Clear() 
@@ -15,8 +18,14 @@ public class HexFeatureManager : MonoBehaviour
 
         container = new GameObject("Features Container").transform;
         container.SetParent(transform, false);
+
+        walls.Clear();
     }
-    public void Apply() { }
+    public void Apply() 
+    {
+        walls.Apply();
+    }
+
     public void AddFeature(HexCell aCell, Vector3 position) 
     {
         HexHash hash = HexMetrics.SampleHashGrid(position);
@@ -58,6 +67,11 @@ public class HexFeatureManager : MonoBehaviour
         instance.localPosition = HexMetrics.Perturb(position);
         instance.localRotation = Quaternion.Euler(0f, 360 * hash.E, 0f);
         instance.SetParent(container, false);
+    }
+
+    public void AddWall(EdgeVertices near, HexCell nearCell, EdgeVertices far, HexCell farCell)
+    {
+
     }
 
     private Transform PickPrefab(HexFeatureCollection[] collection, int aLevel, float aHash, float choice)

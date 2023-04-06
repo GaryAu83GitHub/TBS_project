@@ -274,6 +274,7 @@ MonoBehaviour:
   - Prefabs:
     - {fileID: 1404411483980274344, guid: 50b3ed049faccbd46970f96549a811c7, type: 3}
     - {fileID: 1404411483980274344, guid: 979f98817ee9b4a468dd5dc7ce769840, type: 3}
+  walls: {fileID: 7156634179849450639}
 --- !u!1 &1016059478678797969
 GameObject:
   m_ObjectHideFlags: 0
