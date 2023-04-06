@@ -9,6 +9,9 @@ public class HexFeatureManager : MonoBehaviour
     [SerializeField]
     private HexMesh walls;
 
+    [SerializeField]
+    private Transform wallTower;
+
     private Transform container;
 
     public void Clear() 
