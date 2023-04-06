@@ -56,6 +56,8 @@ namespace Assets.Scripts.Backends.HexGrid
 
         public const float WallElevationOffset = VerticalTerraceStepSize;
 
+        public const float WallTowerThreshold = .5f;
+
         static HexHash[] hashGrid;
 
         static Vector3[] Corners = { 
