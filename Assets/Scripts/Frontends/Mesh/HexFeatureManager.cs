@@ -96,14 +96,21 @@ public class HexFeatureManager : MonoBehaviour
     private void AddWallSegment(Vector3 nearLeft, Vector3 farLeft, Vector3 nearRight, Vector3 farRight)
     {
         Vector3 left = Vector3.Lerp(nearLeft, farLeft, .5f);
-        Vector3 rigth = Vector3.Lerp(nearRight, farRight, .5f);
+        Vector3 right = Vector3.Lerp(nearRight, farRight, .5f);
+
+        Vector3 leftThicknessOffset = HexMetrics.WallThicknessOffset(nearLeft, farLeft);
+        Vector3 rightThicknessOffset = HexMetrics.WallThicknessOffset(nearRight, farRight);
 
         Vector3 v1, v2, v3, v4;
-        v1 = v3 = left;
-        v2 = v4 = rigth;
 
-        v3.y = v4.y = left.y = HexMetrics.WallHeight;
+        v1 = v3 = left - leftThicknessOffset;
+        v2 = v4 = right - rightThicknessOffset;
+        v3.y = v4.y = left.y + HexMetrics.WallHeight;
         walls.AddQuad(v1, v2, v3, v4);
+
+        v1 = v3 = left + leftThicknessOffset;
+        v2 = v4 = right + rightThicknessOffset;
+        v3.y = v4.y = left.y + HexMetrics.WallHeight;
         walls.AddQuad(v2, v1, v4, v3);
     }
 }
