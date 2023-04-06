@@ -180,7 +180,14 @@ public class HexFeatureManager : MonoBehaviour
 
     private void AddWallSegment(Vector3 pivot, HexCell pivotCell, Vector3 left, HexCell leftCell, Vector3 right, HexCell rightCell)
     {
-        AddWallSegment(pivot, left, pivot, right);
+        if (pivotCell.IsUnderwater)
+            return;
+
+        bool hasLeftWall = !leftCell.IsUnderwater && pivotCell.GetEdgeType(leftCell) != HexEdgeType.CLIFF;
+        bool hasRightWall = !rightCell.IsUnderwater && pivotCell.GetEdgeType(rightCell) != HexEdgeType.CLIFF;
+
+        if(hasLeftWall || hasRightWall)
+            AddWallSegment(pivot, left, pivot, right);
     }
 
     private void AddWallCap(Vector3 near, Vector3 far)
