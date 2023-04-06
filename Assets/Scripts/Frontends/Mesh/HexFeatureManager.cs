@@ -71,7 +71,9 @@ public class HexFeatureManager : MonoBehaviour
 
     public void AddWall(EdgeVertices near, HexCell nearCell, EdgeVertices far, HexCell farCell, bool hasRiver, bool hasRoad)
     {
-        if(nearCell.Walled != farCell.Walled)
+        if(nearCell.Walled != farCell.Walled && 
+            !nearCell.IsUnderwater && !farCell.IsUnderwater && 
+            nearCell.GetEdgeType(farCell) != HexEdgeType.CLIFF)
         {
             AddWallSegment(near.v1, far.v1, near.v2, far.v2);
             if (hasRiver || hasRoad)
