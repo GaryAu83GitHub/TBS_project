@@ -131,7 +131,10 @@ public class HexGridChunk : MonoBehaviour
             e1.v5 + bridge
             );
 
-        if (aCell.HasRiverThroughEdge(aDir))
+        bool hasRiver = aCell.HasRiverThroughEdge(aDir);
+        bool hasRoad = aCell.HasRoadThroughEdge(aDir);
+
+        if (hasRiver)
         {
             e2.v3.y = neighbor.StreamBedY;
 
@@ -163,12 +166,14 @@ public class HexGridChunk : MonoBehaviour
 
         if (aCell.GetEdgeType(aDir) == HexEdgeType.SLOPE)
         {
-            TriangulateEdgeTerraces(e1, aCell, e2, neighbor, aCell.HasRoadThroughEdge(aDir));
+            TriangulateEdgeTerraces(e1, aCell, e2, neighbor, hasRoad);
         }
         else
         {
-            TriangulateEdgeStrip(e1, aCell.Color, e2, neighbor.Color, aCell.HasRoadThroughEdge(aDir));
+            TriangulateEdgeStrip(e1, aCell.Color, e2, neighbor.Color, hasRoad);
         }
+
+        features.AddWall(e1, aCell, e2, neighbor, hasRiver, hasRoad);
 
         HexCell nextNeighbor = aCell.GetNeighbor(aDir.Next());
         if (aDir <= HexDirection.E && nextNeighbor != null)
@@ -260,6 +265,8 @@ public class HexGridChunk : MonoBehaviour
             terrain.AddTriangle(bottom, left, rigth);
             terrain.AddTriangleColor(bottomCell.Color, leftCell.Color, rightCell.Color);
         }
+
+        features.AddWall(bottom, bottomCell, left, leftCell, rigth, rightCell);
     }
 
     private void TriangulateCornerTerraces(Vector3 begin, HexCell beginCell, Vector3 left, HexCell leftCell, Vector3 rigth, HexCell rightCell)
