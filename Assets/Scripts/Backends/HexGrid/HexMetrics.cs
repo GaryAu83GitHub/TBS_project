@@ -50,6 +50,8 @@ namespace Assets.Scripts.Backends.HexGrid
 
         public const float HashGridScale = .25f;
 
+        public const float WallHeight = 3f;
+
         static HexHash[] hashGrid;
 
         static Vector3[] Corners = { 

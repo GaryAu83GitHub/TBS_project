@@ -71,7 +71,10 @@ public class HexFeatureManager : MonoBehaviour
 
     public void AddWall(EdgeVertices near, HexCell nearCell, EdgeVertices far, HexCell farCell)
     {
-
+        if(nearCell.Walled != farCell.Walled)
+        {
+            AddWallSegment(near.v1, far.v1, near.v5, far.v5);
+        }
     }
 
     private Transform PickPrefab(HexFeatureCollection[] collection, int aLevel, float aHash, float choice)
@@ -88,5 +91,19 @@ public class HexFeatureManager : MonoBehaviour
             }
         }
         return null;
+    }
+
+    private void AddWallSegment(Vector3 nearLeft, Vector3 farLeft, Vector3 nearRight, Vector3 farRight)
+    {
+        Vector3 left = Vector3.Lerp(nearLeft, farLeft, .5f);
+        Vector3 rigth = Vector3.Lerp(nearRight, farRight, .5f);
+
+        Vector3 v1, v2, v3, v4;
+        v1 = v3 = left;
+        v2 = v4 = rigth;
+
+        v3.y = v4.y = left.y = HexMetrics.WallHeight;
+        walls.AddQuad(v1, v2, v3, v4);
+        walls.AddQuad(v2, v1, v4, v3);
     }
 }
