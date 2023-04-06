@@ -108,9 +108,13 @@ public class HexFeatureManager : MonoBehaviour
         v3.y = v4.y = left.y + HexMetrics.WallHeight;
         walls.AddQuad(v1, v2, v3, v4);
 
+        Vector3 t1 = v3, t2 = v4;
+
         v1 = v3 = left + leftThicknessOffset;
         v2 = v4 = right + rightThicknessOffset;
         v3.y = v4.y = left.y + HexMetrics.WallHeight;
         walls.AddQuad(v2, v1, v4, v3);
+
+        walls.AddQuad(t1, t2, v3, v4);
     }
 }
