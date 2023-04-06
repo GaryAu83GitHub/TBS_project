@@ -176,6 +176,21 @@ public class HexCell : MonoBehaviour
 
     private int urbanLevel, farmLevel, plantLevel;
 
+    public bool Walled 
+    {
+        get { return walled; }
+        set
+        {
+            if(walled != value)
+            {
+                walled = value;
+                Refresh();
+            }
+        }
+    }
+
+    private bool walled;
+
     public HexCell GetNeighbor(HexDirection aDir)
     {
         return neighbors[(int)aDir];
