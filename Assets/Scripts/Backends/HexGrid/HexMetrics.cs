@@ -50,6 +50,10 @@ namespace Assets.Scripts.Backends.HexGrid
 
         public const float HashGridScale = .25f;
 
+        public const float WallHeight = 3f;
+
+        public const float WallThickness = .75f;
+
         static HexHash[] hashGrid;
 
         static Vector3[] Corners = { 
@@ -186,6 +190,16 @@ namespace Assets.Scripts.Backends.HexGrid
         public static float[] GetFeatureThresholds(int aLevel)
         {
             return featureThresholds[aLevel];
+        }
+
+        public static Vector3 WallThicknessOffset(Vector3 near, Vector3 far)
+        {
+            Vector3 offset;
+            offset.x = far.x - near.x;
+            offset.y = 0f;
+            offset.z = far.z - near.z;
+            
+            return offset.normalized * (WallThickness * .5f);
         }
     }
 }
