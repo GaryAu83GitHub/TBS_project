@@ -75,7 +75,10 @@ public class HexFeatureManager : MonoBehaviour
         {
             AddWallSegment(near.v1, far.v1, near.v2, far.v2);
             if (hasRiver || hasRoad)
-            { }
+            {
+                AddWallCap(near.v2, far.v2);
+                AddWallCap(far.v4, near.v4);
+            }
             else
             {
                 AddWallSegment(near.v2, far.v2, near.v3, far.v3);
@@ -176,5 +179,21 @@ public class HexFeatureManager : MonoBehaviour
     private void AddWallSegment(Vector3 pivot, HexCell pivotCell, Vector3 left, HexCell leftCell, Vector3 right, HexCell rightCell)
     {
         AddWallSegment(pivot, left, pivot, right);
+    }
+
+    private void AddWallCap(Vector3 near, Vector3 far)
+    {
+        near = HexMetrics.Perturb(near);
+        far = HexMetrics.Perturb(far);
+
+        Vector3 center = HexMetrics.WallLerp(near, far);
+        Vector3 thickness = HexMetrics.WallThicknessOffset(near, far);
+
+        Vector3 v1, v2, v3, v4;
+
+        v1 = v3 = center - thickness;
+        v2 = v4 = center + thickness;
+        v3.y = v4.y = center.y + HexMetrics.WallHeight;
+        walls.AddQuadUnperturbed(v1, v2, v3, v4);
     }
 }
