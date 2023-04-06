@@ -186,8 +186,19 @@ public class HexFeatureManager : MonoBehaviour
         bool hasLeftWall = !leftCell.IsUnderwater && pivotCell.GetEdgeType(leftCell) != HexEdgeType.CLIFF;
         bool hasRightWall = !rightCell.IsUnderwater && pivotCell.GetEdgeType(rightCell) != HexEdgeType.CLIFF;
 
-        if(hasLeftWall || hasRightWall)
-            AddWallSegment(pivot, left, pivot, right);
+        if (hasLeftWall)
+        {
+            if (hasRightWall)
+            {
+                AddWallSegment(pivot, left, pivot, right);
+            }
+            else
+            {
+                AddWallCap(pivot, left);
+            }
+        }
+        else if (hasRightWall)
+            AddWallCap(right, pivot);
     }
 
     private void AddWallCap(Vector3 near, Vector3 far)
