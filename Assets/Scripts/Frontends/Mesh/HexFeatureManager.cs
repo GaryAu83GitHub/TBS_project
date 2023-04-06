@@ -203,8 +203,12 @@ public class HexFeatureManager : MonoBehaviour
         {
             if (hasRightWall)
             {
-                HexHash hash = HexMetrics.SampleHashGrid((pivot + left + right) * (1f / 3f));
-                bool hasTower = hash.E < HexMetrics.WallTowerThreshold;
+                bool hasTower = false;
+                if (leftCell.Elevation == rightCell.Elevation)
+                {
+                    HexHash hash = HexMetrics.SampleHashGrid((pivot + left + right) * (1f / 3f));
+                    hasTower = hash.E < HexMetrics.WallTowerThreshold;
+                }
                 AddWallSegment(pivot, left, pivot, right, hasTower);
             }
             else if (leftCell.Elevation < rightCell.Elevation)
