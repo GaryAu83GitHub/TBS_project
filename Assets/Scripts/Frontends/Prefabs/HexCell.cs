@@ -47,20 +47,21 @@ public class HexCell : MonoBehaviour
                 return;
 
             elevation = value;
-            Vector3 position = transform.localPosition;
-            position.y = value * HexMetrics.ElevationStep;
-            position.y += (HexMetrics.SampleNoise(position).y * 2f - 1f) * HexMetrics.ElevationPerturbStrength;
-            transform.localPosition = position;
+            //Vector3 position = transform.localPosition;
+            //position.y = value * HexMetrics.ElevationStep;
+            //position.y += (HexMetrics.SampleNoise(position).y * 2f - 1f) * HexMetrics.ElevationPerturbStrength;
+            //transform.localPosition = position;
 
-            Vector3 uiPosition = UIRect.localPosition;
-            uiPosition.z = -position.y;
-            UIRect.localPosition = uiPosition;
+            //Vector3 uiPosition = UIRect.localPosition;
+            //uiPosition.z = -position.y;
+            //UIRect.localPosition = uiPosition;
 
             //if (myHasOutgoingRiver && elevation < GetNeighbor(myOutgoingRiver).elevation)
             //    RemoveOutgoingRiver();
 
             //if (myHasIncomingRiver && elevation < GetNeighbor(myIncomingRiver).elevation)
             //    RemoveIncomingRiver();
+            RefreshPosition();
             ValidateRivers();
 
             for (int i = 0; i < roads.Length; i++)
@@ -332,11 +333,24 @@ public class HexCell : MonoBehaviour
     public void Save(BinaryWriter writer)
     {
         writer.Write(terrainTypeIndex);
+        writer.Write(elevation);
+        writer.Write(waterLevel);
+        writer.Write(urbanLevel);
+        writer.Write(farmLevel);
+        writer.Write(plantLevel);
+        writer.Write(specialIndex);
     }
 
     public void Load(BinaryReader reader)
     {
         terrainTypeIndex = reader.ReadInt32();
+        elevation = reader.ReadInt32();
+        RefreshPosition();
+        waterLevel = reader.ReadInt32();
+        urbanLevel = reader.ReadInt32();
+        farmLevel = reader.ReadInt32();
+        plantLevel = reader.ReadInt32();
+        specialIndex = reader.ReadInt32();
     }
 
     private bool IsValidRiverDestination(HexCell neighbor)
@@ -382,5 +396,19 @@ public class HexCell : MonoBehaviour
     private void RefreshSelfOnly()
     {
         Chunk.Refresh();
+    }
+
+    private void RefreshPosition()
+    {
+        Vector3 position = transform.localPosition;
+        position.y = elevation * HexMetrics.ElevationStep;
+        position.y += 
+            (HexMetrics.SampleNoise(position).y * 2f - 1f) * 
+            HexMetrics.ElevationPerturbStrength;
+        transform.localPosition = position;
+
+        Vector3 uiPosition = UIRect.localPosition;
+        uiPosition.z = -position.y;
+        UIRect.localPosition = uiPosition;
     }
 }
