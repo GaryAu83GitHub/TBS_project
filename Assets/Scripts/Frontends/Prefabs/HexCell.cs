@@ -21,18 +21,23 @@ public class HexCell : MonoBehaviour
     // terrain stuff
     public Color Color 
     {
-        get { return color; }
-        set 
-        {
-            if (color == value)
-                return;
+        get { return HexMetrics.Colors[terrainTypeIndex]; }
+    }
 
-            color = value;
-            Refresh();
+    public int TerrainTypeIndex
+    {
+        get { return terrainTypeIndex; }
+        set
+        {
+            if(terrainTypeIndex != value)
+            {
+                terrainTypeIndex = value;
+                Refresh();
+            }
         }
     }
-    [SerializeField]
-    private Color color;
+
+    private int terrainTypeIndex;
 
     public int Elevation 
     {

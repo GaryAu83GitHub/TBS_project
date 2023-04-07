@@ -10,8 +10,6 @@ public class HexGrid : MonoBehaviour
     [SerializeField]
     public int ChunkCountX = 4, ChunkCountZ = 3;
 
-    public Color DefaultColor = Color.white;
- 
     public HexCell cellPrefab;
     public Text cellLabelPrefab;
 
@@ -20,6 +18,8 @@ public class HexGrid : MonoBehaviour
     public Texture2D noiseSource;
 
     public int seed;
+    
+    public Color[] colors;
 
     private HexGridChunk[] myChunks;
     private HexCell[] myCells;    
@@ -30,6 +30,7 @@ public class HexGrid : MonoBehaviour
     {
         HexMetrics.NoiseSource = noiseSource;
         HexMetrics.InitializeHashGrid(seed);
+        HexMetrics.Colors = colors;
 
         myCellCountX = ChunkCountX * HexMetrics.ChunkSizeX;
         myCellCountZ = ChunkCountZ * HexMetrics.ChunkSizeZ;
@@ -44,18 +45,19 @@ public class HexGrid : MonoBehaviour
         {
             HexMetrics.NoiseSource = noiseSource;
             HexMetrics.InitializeHashGrid(seed);
+            HexMetrics.Colors = colors;
         }
     }
 
-    public void ColorCell(Vector3 aPosition, Color aColor)
-    {
-        aPosition = transform.InverseTransformPoint(aPosition);
-        HexCoordinates coordinates = HexCoordinates.FromPosition(aPosition);
+    //public void ColorCell(Vector3 aPosition, Color aColor)
+    //{
+    //    aPosition = transform.InverseTransformPoint(aPosition);
+    //    HexCoordinates coordinates = HexCoordinates.FromPosition(aPosition);
 
-        int index = coordinates.X + coordinates.Z * myCellCountX + coordinates.Z / 2;
-        HexCell cell = myCells[index];
-        cell.Color = aColor;
-    }
+    //    int index = coordinates.X + coordinates.Z * myCellCountX + coordinates.Z / 2;
+    //    HexCell cell = myCells[index];
+    //    cell.Color = aColor;
+    //}
 
     public HexCell GetCell(Vector3 aPosition)
     {
@@ -103,11 +105,8 @@ public class HexGrid : MonoBehaviour
         position.z = z * (HexMetrics.OuterRadius * 1.5f);
 
         HexCell cell = myCells[i] = Instantiate<HexCell>(cellPrefab);
-        //cell.transform.SetParent(transform, false);
         cell.transform.localPosition = position;
         cell.Coordinates = HexCoordinates.FromOffsetCoordinates(x, z);
-        cell.Color = DefaultColor;
-
         
         if(x > 0)
         {
