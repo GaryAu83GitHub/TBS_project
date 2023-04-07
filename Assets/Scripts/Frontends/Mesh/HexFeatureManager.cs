@@ -130,6 +130,17 @@ public class HexFeatureManager : MonoBehaviour
         }
     }
 
+    public void AddBridge(Vector3 roadCenter1, Vector3 roadCenter2)
+    {
+        roadCenter1 = HexMetrics.Perturb(roadCenter1);
+        roadCenter2 = HexMetrics.Perturb(roadCenter2);
+
+        Transform instance = Instantiate(bridge);
+        instance.localPosition = (roadCenter1 + roadCenter2) * .5f;
+        instance.forward = roadCenter2 - roadCenter1;
+        instance.SetParent(container, false);
+    }
+
     private Transform PickPrefab(HexFeatureCollection[] collection, int aLevel, float aHash, float choice)
     {
         if(aLevel > 0)
@@ -267,14 +278,4 @@ public class HexFeatureManager : MonoBehaviour
         walls.AddTriangleUnperturbed(pointTop, v3, v4);
     }
 
-    private void AddBridge(Vector3 roadCenter1, Vector3 roadCenter2)
-    {
-        roadCenter1 = HexMetrics.Perturb(roadCenter1);
-        roadCenter2 = HexMetrics.Perturb(roadCenter2);
-
-        Transform instance = Instantiate(bridge);
-        instance.localPosition = (roadCenter1 + roadCenter2) * .5f;
-        instance.forward = roadCenter2 - roadCenter1;
-        instance.SetParent(container, false);
-    }
 }
