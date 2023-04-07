@@ -49,15 +49,15 @@ public class HexGrid : MonoBehaviour
         }
     }
 
-    public void ColorCell(Vector3 aPosition, Color aColor)
-    {
-        aPosition = transform.InverseTransformPoint(aPosition);
-        HexCoordinates coordinates = HexCoordinates.FromPosition(aPosition);
+    //public void ColorCell(Vector3 aPosition, Color aColor)
+    //{
+    //    aPosition = transform.InverseTransformPoint(aPosition);
+    //    HexCoordinates coordinates = HexCoordinates.FromPosition(aPosition);
 
-        int index = coordinates.X + coordinates.Z * myCellCountX + coordinates.Z / 2;
-        HexCell cell = myCells[index];
-        cell.Color = aColor;
-    }
+    //    int index = coordinates.X + coordinates.Z * myCellCountX + coordinates.Z / 2;
+    //    HexCell cell = myCells[index];
+    //    cell.Color = aColor;
+    //}
 
     public HexCell GetCell(Vector3 aPosition)
     {

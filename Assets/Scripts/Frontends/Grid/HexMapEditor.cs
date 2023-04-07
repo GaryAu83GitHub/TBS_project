@@ -101,8 +101,8 @@ public class HexMapEditor : MonoBehaviour
     {
         if (aCell)
         {
-            if (myApplyColor)
-                aCell.Color = myActiveColor;
+            //if (myApplyColor)
+            //    aCell.Color = myActiveColor;
 
             if (myApplyElevation)
                 aCell.Elevation = myActiveElevation;
