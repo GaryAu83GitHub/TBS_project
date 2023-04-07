@@ -250,5 +250,10 @@ public class HexMapEditor : MonoBehaviour
 
     public void Load() 
     {
+        string path = Path.Combine(Application.persistentDataPath, "test.map");
+        using(BinaryReader reader = new BinaryReader(File.OpenRead(path)))
+        {
+            Debug.Log(reader.ReadInt32());
+        }
     }
 }
