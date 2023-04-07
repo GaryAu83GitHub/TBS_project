@@ -199,6 +199,7 @@ public class HexCell : MonoBehaviour
             if (specialIndex != value && !HasRiver)
             {
                 specialIndex = value;
+                RemoveRoads();
                 RefreshSelfOnly();
             }
         }
@@ -308,7 +309,7 @@ public class HexCell : MonoBehaviour
 
     public void AddRoad(HexDirection aDir)
     {
-        if (!roads[(int)aDir] && !HasRiverThroughEdge(aDir) && GetElevationDifference(aDir) <= 1)
+        if (!roads[(int)aDir] && !HasRiverThroughEdge(aDir) && !IsSpecial && !GetNeighbor(aDir).IsSpecial && GetElevationDifference(aDir) <= 1)
             SetRoad((int)aDir, true);
 
     }
