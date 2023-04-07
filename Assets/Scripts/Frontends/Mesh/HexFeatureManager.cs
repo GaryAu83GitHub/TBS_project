@@ -138,6 +138,10 @@ public class HexFeatureManager : MonoBehaviour
         Transform instance = Instantiate(bridge);
         instance.localPosition = (roadCenter1 + roadCenter2) * .5f;
         instance.forward = roadCenter2 - roadCenter1;
+
+        float length = Vector3.Distance(roadCenter1, roadCenter2);
+        instance.localScale = new Vector3(1f, 1f, length * (1f / HexMetrics.BridgeDesignLength));
+
         instance.SetParent(container, false);
     }
 

@@ -60,6 +60,8 @@ namespace Assets.Scripts.Backends.HexGrid
 
         public const float WallTowerThreshold = .5f;
 
+        public const float BridgeDesignLength = 7;
+
         static HexHash[] hashGrid;
 
         static Vector3[] Corners = { 
