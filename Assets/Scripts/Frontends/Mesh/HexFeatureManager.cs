@@ -12,6 +12,9 @@ public class HexFeatureManager : MonoBehaviour
     [SerializeField]
     private Transform wallTower, bridge;
 
+    [SerializeField]
+    private Transform[] special;
+
     private Transform container;
 
     public void Clear() 
