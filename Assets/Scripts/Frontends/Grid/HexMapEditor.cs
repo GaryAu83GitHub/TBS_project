@@ -241,6 +241,7 @@ public class HexMapEditor : MonoBehaviour
 
     public void Save() 
     {
+        Debug.Log(Application.persistentDataPath);
     }
 
     public void Load() 
