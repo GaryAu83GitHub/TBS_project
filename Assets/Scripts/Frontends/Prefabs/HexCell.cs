@@ -196,7 +196,7 @@ public class HexCell : MonoBehaviour
         get { return specialIndex; }
         set
         {
-            if (specialIndex != value)
+            if (specialIndex != value && !HasRiver)
             {
                 specialIndex = value;
                 RefreshSelfOnly();
@@ -289,11 +289,13 @@ public class HexCell : MonoBehaviour
 
         hasOutgoingRiver = true;
         outgoingRiver = direction;
+        specialIndex = 0;
         //RefreshSelfOnly();
 
         neighbor.RemoveIncomingRiver();
         neighbor.hasIncomingRiver = true;
         neighbor.incomingRiver = direction.Opposite();
+        neighbor.specialIndex = 0;
         //neighbor.RefreshSelfOnly();
 
         SetRoad((int)direction, false);
