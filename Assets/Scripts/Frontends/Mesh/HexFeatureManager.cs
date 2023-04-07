@@ -12,6 +12,9 @@ public class HexFeatureManager : MonoBehaviour
     [SerializeField]
     private Transform wallTower, bridge;
 
+    [SerializeField]
+    private Transform[] special;
+
     private Transform container;
 
     public void Clear() 
@@ -31,9 +34,11 @@ public class HexFeatureManager : MonoBehaviour
 
     public void AddFeature(HexCell aCell, Vector3 position) 
     {
+        if (aCell.IsSpecial)
+            return;
+
         HexHash hash = HexMetrics.SampleHashGrid(position);
-        //if (hash.A >= aCell.UrbanLevel * .25f)
-        //    return;
+        
         Transform prefab = PickPrefab(urbanCollections, aCell.UrbanLevel, hash.A, hash.D);
         Transform otherPrefab = PickPrefab(farmCollections, aCell.FarmLevel, hash.B, hash.D);
 
@@ -141,6 +146,17 @@ public class HexFeatureManager : MonoBehaviour
 
         float length = Vector3.Distance(roadCenter1, roadCenter2);
         instance.localScale = new Vector3(1f, 1f, length * (1f / HexMetrics.BridgeDesignLength));
+
+        instance.SetParent(container, false);
+    }
+
+    public void AddSpecialFeature(HexCell aCell, Vector3 position)
+    {
+        Transform instance = Instantiate(special[aCell.SpecialIndex - 1]);
+        instance.localPosition = HexMetrics.Perturb(position);
+
+        HexHash hash = HexMetrics.SampleHashGrid(position);
+        instance.localRotation = Quaternion.Euler(0f, 360f * hash.E, 0f);
 
         instance.SetParent(container, false);
     }
@@ -281,5 +297,4 @@ public class HexFeatureManager : MonoBehaviour
         walls.AddQuadUnperturbed(point, v2, pointTop, v4);
         walls.AddTriangleUnperturbed(pointTop, v3, v4);
     }
-
 }
