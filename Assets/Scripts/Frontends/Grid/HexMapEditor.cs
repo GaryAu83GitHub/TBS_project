@@ -244,7 +244,7 @@ public class HexMapEditor : MonoBehaviour
         string path = Path.Combine(Application.persistentDataPath, "test.map");
         using (BinaryWriter writter = new BinaryWriter(File.Open(path, FileMode.Create)))
         {
-            writter.Write(123);
+            HexGrid.Save(writter);
         }
     }
 
@@ -253,7 +253,7 @@ public class HexMapEditor : MonoBehaviour
         string path = Path.Combine(Application.persistentDataPath, "test.map");
         using(BinaryReader reader = new BinaryReader(File.OpenRead(path)))
         {
-            Debug.Log(reader.ReadInt32());
+            HexGrid.Load(reader);
         }
     }
 }

@@ -1,9 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Assets.Scripts.Backends.HexGrid;
 using Assets.Scripts.Backends.HexGrid.Tools;
 using Assets.Scripts.Frontends.ExtendingTools;
+using System.IO;
 
 public class HexCell : MonoBehaviour
 {
@@ -328,6 +327,14 @@ public class HexCell : MonoBehaviour
                 SetRoad(i, false);
             }
         } 
+    }
+
+    public void Save(BinaryWriter writer)
+    { }
+
+    public void Load(BinaryReader reader)
+    {
+        
     }
 
     private bool IsValidRiverDestination(HexCell neighbor)

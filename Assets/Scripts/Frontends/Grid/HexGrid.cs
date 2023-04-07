@@ -1,9 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Assets.Scripts.Backends.HexGrid;
 using Assets.Scripts.Backends.HexGrid.Tools;
+using System.IO;
 
 public class HexGrid : MonoBehaviour
 {
@@ -49,16 +48,6 @@ public class HexGrid : MonoBehaviour
         }
     }
 
-    //public void ColorCell(Vector3 aPosition, Color aColor)
-    //{
-    //    aPosition = transform.InverseTransformPoint(aPosition);
-    //    HexCoordinates coordinates = HexCoordinates.FromPosition(aPosition);
-
-    //    int index = coordinates.X + coordinates.Z * myCellCountX + coordinates.Z / 2;
-    //    HexCell cell = myCells[index];
-    //    cell.Color = aColor;
-    //}
-
     public HexCell GetCell(Vector3 aPosition)
     {
         aPosition = transform.InverseTransformPoint(aPosition);
@@ -86,6 +75,26 @@ public class HexGrid : MonoBehaviour
         for(int i = 0; i < myChunks.Length; i++)
         {
             myChunks[i].ShowUI(visible);
+        }
+    }
+
+    public void Save(BinaryWriter writer)
+    {
+        for(int i = 0; i < myCells.Length; i++)
+        {
+            myCells[i].Save(writer);
+        }
+    }
+
+    public void Load(BinaryReader reader)
+    {
+        for (int i = 0; i < myCells.Length; i++)
+        {
+            myCells[i].Load(reader);
+        }
+        for(int i = 0; i < myChunks.Length; i++)
+        {
+            myChunks[i].Refresh();
         }
     }
 
