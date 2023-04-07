@@ -148,6 +148,17 @@ public class HexFeatureManager : MonoBehaviour
         instance.SetParent(container, false);
     }
 
+    public void AddSpecialFeature(HexCell aCell, Vector3 position)
+    {
+        Transform instance = Instantiate(special[aCell.SpecialIndex - 1]);
+        instance.localPosition = HexMetrics.Perturb(position);
+
+        HexHash hash = HexMetrics.SampleHashGrid(position);
+        instance.localRotation = Quaternion.Euler(0f, 360f * hash.E, 0f);
+
+        instance.SetParent(container, false);
+    }
+
     private Transform PickPrefab(HexFeatureCollection[] collection, int aLevel, float aHash, float choice)
     {
         if(aLevel > 0)
@@ -284,5 +295,4 @@ public class HexFeatureManager : MonoBehaviour
         walls.AddQuadUnperturbed(point, v2, pointTop, v4);
         walls.AddTriangleUnperturbed(pointTop, v3, v4);
     }
-
 }
