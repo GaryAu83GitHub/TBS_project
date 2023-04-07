@@ -34,9 +34,11 @@ public class HexFeatureManager : MonoBehaviour
 
     public void AddFeature(HexCell aCell, Vector3 position) 
     {
+        if (aCell.IsSpecial)
+            return;
+
         HexHash hash = HexMetrics.SampleHashGrid(position);
-        //if (hash.A >= aCell.UrbanLevel * .25f)
-        //    return;
+        
         Transform prefab = PickPrefab(urbanCollections, aCell.UrbanLevel, hash.A, hash.D);
         Transform otherPrefab = PickPrefab(farmCollections, aCell.FarmLevel, hash.B, hash.D);
 

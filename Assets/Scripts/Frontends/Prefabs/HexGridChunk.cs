@@ -74,11 +74,14 @@ public class HexGridChunk : MonoBehaviour
             Triangulate(d, aCell);
         }
 
-        if(!aCell.IsUnderwater && !aCell.HasRiver && !aCell.HasRoads)
-            features.AddFeature(aCell, aCell.Position);
+        if (!aCell.IsUnderwater)
+        {
+            if (!aCell.HasRiver && !aCell.HasRoads)
+                features.AddFeature(aCell, aCell.Position);
 
-        if(aCell.IsSpecial)
-            features.AddSpecialFeature(aCell, aCell.Position);
+            if (aCell.IsSpecial)
+                features.AddSpecialFeature(aCell, aCell.Position);
+        }
     }
 
     private void Triangulate(HexDirection aDir, HexCell aCell)
