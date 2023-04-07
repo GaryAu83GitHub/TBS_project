@@ -10,12 +10,9 @@ public class HexMapEditor : MonoBehaviour
     private enum OptionalToggle { IGNORE, YES, NO }
 
     [SerializeField]
-    public Color[] Colors;
-
-    [SerializeField]
     public HexGrid HexGrid;
 
-    private Color myActiveColor;
+    private int myActiveTerrainTypeIndex;
     private int myActiveElevation;
     private int myActiveWaterLevel;
     private int myActiveUrbanLevel;
@@ -23,7 +20,6 @@ public class HexMapEditor : MonoBehaviour
     private int myActivePlantLevel;
     private int myActiveSpecialIndex;
 
-    private bool myApplyColor;
     private bool myApplyElevation = true;
     private bool myApplyWaterLevel = true;
     private bool myApplyUrbanLevel = true;
@@ -38,11 +34,6 @@ public class HexMapEditor : MonoBehaviour
     private bool myIsDrag;
     private HexDirection myDragDirection;
     private HexCell myPreviousCell;
-
-    void Awake()
-    {
-        SelectColor(-1);
-    }
 
     void Update()
     {
@@ -101,8 +92,8 @@ public class HexMapEditor : MonoBehaviour
     {
         if (aCell)
         {
-            //if (myApplyColor)
-            //    aCell.Color = myActiveColor;
+            if(myActiveTerrainTypeIndex >= 0)
+                aCell.TerrainTypeIndex = myActiveTerrainTypeIndex;
 
             if (myApplyElevation)
                 aCell.Elevation = myActiveElevation;
@@ -158,12 +149,9 @@ public class HexMapEditor : MonoBehaviour
         myIsDrag = false;
     }
 
-    public void SelectColor(int anIndex)
+    public void SetTerrainTypeIndex(int index)
     {
-        myApplyColor = anIndex >= 0;
-
-        if(myApplyColor)
-            myActiveColor = Colors[anIndex];
+        myActiveTerrainTypeIndex = index;
     }
 
     public void SetApplyElevation(bool toggle)
