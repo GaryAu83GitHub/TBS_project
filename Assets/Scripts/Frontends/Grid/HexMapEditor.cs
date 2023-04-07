@@ -238,4 +238,12 @@ public class HexMapEditor : MonoBehaviour
     {
         myActiveSpecialIndex = (int)index;
     }
+
+    public void Save() 
+    {
+    }
+
+    public void Load() 
+    {
+    }
 }
