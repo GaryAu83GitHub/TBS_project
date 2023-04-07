@@ -191,6 +191,23 @@ public class HexCell : MonoBehaviour
 
     private bool walled;
 
+    public int SpecialIndex 
+    {
+        get { return specialIndex; }
+        set
+        {
+            if (specialIndex != value)
+            {
+                specialIndex = value;
+                RefreshSelfOnly();
+            }
+        }
+    }
+
+    public bool IsSpecial { get { return specialIndex > 0; } }
+
+    private int specialIndex;
+
     public HexCell GetNeighbor(HexDirection aDir)
     {
         return neighbors[(int)aDir];
