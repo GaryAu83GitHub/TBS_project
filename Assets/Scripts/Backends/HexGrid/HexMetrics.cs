@@ -50,11 +50,15 @@ namespace Assets.Scripts.Backends.HexGrid
 
         public const float HashGridScale = .25f;
 
-        public const float WallHeight = 3f;
+        public const float WallHeight = 4f;
+
+        public const float WallYOffset = -1f;
 
         public const float WallThickness = .75f;
 
         public const float WallElevationOffset = VerticalTerraceStepSize;
+
+        public const float WallTowerThreshold = .5f;
 
         static HexHash[] hashGrid;
 
@@ -210,7 +214,7 @@ namespace Assets.Scripts.Backends.HexGrid
             near.z += (far.z - near.z) * .5f;
 
             float v = near.y < far.y ? WallElevationOffset : (1f - WallElevationOffset);
-            near.y += (far.y - near.y) * v;
+            near.y += (far.y - near.y) * v + WallYOffset;
 
             return near;
         }
