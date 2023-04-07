@@ -10,7 +10,7 @@ public class HexFeatureManager : MonoBehaviour
     private HexMesh walls;
 
     [SerializeField]
-    private Transform wallTower;
+    private Transform wallTower, bridge;
 
     private Transform container;
 
