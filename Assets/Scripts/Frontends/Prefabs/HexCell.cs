@@ -343,20 +343,26 @@ public class HexCell : MonoBehaviour
 
         //writer.Write(hasIncomingRiver);
         //writer.Write((byte)incomingRiver);
-        if(hasIncomingRiver)
+        if (hasIncomingRiver)
             writer.Write((byte)(incomingRiver + 128));
         else
             writer.Write((byte)0);
 
         //writer.Write(hasOutgoingRiver);
         //writer.Write((byte)outgoingRiver);
-        if(hasOutgoingRiver)
+        if (hasOutgoingRiver)
             writer.Write((byte)(outgoingRiver + 128));
         else
             writer.Write((byte)0);
 
+        int roadFlags = 0;
         for (int i = 0; i < roads.Length; i++)
-            writer.Write(roads[i]);
+        {
+            //writer.Write(roads[i]);
+            if(roads[i])
+                roadFlags |= 1 << i;
+        }
+        writer.Write((byte)roadFlags);
     }
 
     public void Load(BinaryReader reader)
@@ -393,8 +399,9 @@ public class HexCell : MonoBehaviour
         else
             hasOutgoingRiver = false;
 
+        int roadFlags = reader.ReadByte();
         for (int i = 0; i < roads.Length; i++)
-            roads[i] = reader.ReadBoolean();
+            roads[i] = (roadFlags & (1 << i)) != 0;
     }
 
     private bool IsValidRiverDestination(HexCell neighbor)
