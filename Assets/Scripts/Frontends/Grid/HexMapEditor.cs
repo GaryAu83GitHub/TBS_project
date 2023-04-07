@@ -1,9 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using Assets.Scripts.Backends.HexGrid;
 using Assets.Scripts.Backends.HexGrid.Tools;
+using System.IO;
+
 
 public class HexMapEditor : MonoBehaviour
 {
@@ -241,7 +241,9 @@ public class HexMapEditor : MonoBehaviour
 
     public void Save() 
     {
-        Debug.Log(Application.persistentDataPath);
+        string path = Path.Combine(Application.persistentDataPath, "test.map");
+        Stream fileStream = File.Open(path, FileMode.Create);
+        fileStream.Close();
     }
 
     public void Load() 
