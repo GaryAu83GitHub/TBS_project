@@ -10,7 +10,7 @@ public class HexFeatureManager : MonoBehaviour
     private HexMesh walls;
 
     [SerializeField]
-    private Transform wallTower;
+    private Transform wallTower, bridge;
 
     private Transform container;
 
@@ -128,6 +128,21 @@ public class HexFeatureManager : MonoBehaviour
         {
             AddWallSegment(c3, cell3, c1, cell1, c2, cell2);
         }
+    }
+
+    public void AddBridge(Vector3 roadCenter1, Vector3 roadCenter2)
+    {
+        roadCenter1 = HexMetrics.Perturb(roadCenter1);
+        roadCenter2 = HexMetrics.Perturb(roadCenter2);
+
+        Transform instance = Instantiate(bridge);
+        instance.localPosition = (roadCenter1 + roadCenter2) * .5f;
+        instance.forward = roadCenter2 - roadCenter1;
+
+        float length = Vector3.Distance(roadCenter1, roadCenter2);
+        instance.localScale = new Vector3(1f, 1f, length * (1f / HexMetrics.BridgeDesignLength));
+
+        instance.SetParent(container, false);
     }
 
     private Transform PickPrefab(HexFeatureCollection[] collection, int aLevel, float aHash, float choice)
@@ -266,4 +281,5 @@ public class HexFeatureManager : MonoBehaviour
         walls.AddQuadUnperturbed(point, v2, pointTop, v4);
         walls.AddTriangleUnperturbed(pointTop, v3, v4);
     }
+
 }
