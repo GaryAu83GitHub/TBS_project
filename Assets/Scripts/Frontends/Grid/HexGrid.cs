@@ -83,6 +83,7 @@ public class HexGrid : MonoBehaviour
 
     public void Load(BinaryReader reader)
     {
+        CreateMap(20, 15);
         for (int i = 0; i < myCells.Length; i++)
         {
             myCells[i].Load(reader);
