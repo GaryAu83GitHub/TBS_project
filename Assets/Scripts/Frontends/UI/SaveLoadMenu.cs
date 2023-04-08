@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
@@ -7,6 +8,10 @@ public class SaveLoadMenu : MonoBehaviour
     public Text menuLabel, actionButtonLabel;
 
     public InputField nameInput;
+
+    public RectTransform listContent;
+
+    public SaveLoadItem itemPrefab;
 
     public HexGrid hexGrid;
 
@@ -26,6 +31,7 @@ public class SaveLoadMenu : MonoBehaviour
             actionButtonLabel.text = "Load";
         }
 
+        FillList();
         gameObject.SetActive(true);
         HexMapCamera.Looked = true;
     }
@@ -93,6 +99,24 @@ public class SaveLoadMenu : MonoBehaviour
             {
                 Debug.LogWarning("Unknown map format " + header);
             }
+        }
+    }
+
+    private void FillList()
+    {
+        for(int i = 0; i < listContent.childCount; i++)
+        {
+            Destroy(listContent.GetChild(i).gameObject);
+        }
+
+        string[] paths = Directory.GetFiles(Application.persistentDataPath, "*.map");
+        Array.Sort(paths);
+        for(int i = 0; i < paths.Length; i++)
+        {
+            SaveLoadItem item = Instantiate(itemPrefab);
+            item.menu = this;
+            item.MapName = Path.GetFileNameWithoutExtension(paths[i]);
+            item.transform.SetParent(listContent, false);
         }
     }
 }
