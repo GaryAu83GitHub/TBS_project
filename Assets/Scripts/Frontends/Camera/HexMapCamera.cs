@@ -20,18 +20,27 @@ public class HexMapCamera : MonoBehaviour
     [SerializeField]
     private HexGrid Grid;
 
+    public static bool Looked { set { instance.enabled = !value; } }
+
     private Transform mySwivel;
     private Transform myStick;
 
     private float myZoom = 1f;
     private float rotationAngle;
 
+    static HexMapCamera instance;
+
     private void Awake()
     {
         mySwivel = transform.GetChild(0);
         myStick = mySwivel.GetChild(0);
     }
-    
+
+    private void OnEnable()
+    {
+        instance = this;
+    }
+
     // Update is called once per frame
     void Update()
     {

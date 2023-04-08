@@ -7,11 +7,13 @@ public class NewMapMenu : MonoBehaviour
     public void Open()
     {
         gameObject.SetActive(true);
+        HexMapCamera.Looked = true;
     }
 
     public void Close()
     {
         gameObject.SetActive(false);
+        HexMapCamera.Looked = false;
     }
 
     public void CreateSmallMap()
