@@ -101,6 +101,14 @@ public class HexGrid : MonoBehaviour
 
     public void CreateMap()
     {
+        if(myChunks != null)
+        {
+            for(int i = 0; i < myChunks.Length; i++)
+            {
+                Destroy(myChunks[i].gameObject);
+            }
+        }
+
         myCellCountX = ChunkCountX * HexMetrics.ChunkSizeX;
         myCellCountZ = ChunkCountZ * HexMetrics.ChunkSizeZ;
         CreateChunks();
