@@ -93,7 +93,11 @@ public class HexGrid : MonoBehaviour
             z = reader.ReadInt32();
         }
 
-        CreateMap(x, z);
+        if (x != cellCountX || z != cellCountZ)
+        {
+            if (!CreateMap(x, z))
+                return;
+        }
 
         for (int i = 0; i < myCells.Length; i++)
         {
@@ -105,13 +109,13 @@ public class HexGrid : MonoBehaviour
         }
     }
 
-    public void CreateMap(int x, int z)
+    public bool CreateMap(int x, int z)
     {
         if (x <= 0 || x % HexMetrics.ChunkSizeX != 0 ||
             z <= 0 || z % HexMetrics.ChunkSizeZ != 0)
         {
             Debug.LogError("Unsupported map size");
-            return;
+            return false;
         }
 
         if(myChunks != null)
@@ -129,6 +133,8 @@ public class HexGrid : MonoBehaviour
         chunkCountZ = cellCountZ / HexMetrics.ChunkSizeZ;
         CreateChunks();
         CreateCells();
+
+        return true;
     }
 
     private void HandleInput()
