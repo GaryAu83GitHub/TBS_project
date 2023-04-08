@@ -480,19 +480,24 @@ public class HexGridChunk : MonoBehaviour
 
         m.v3.y = center.y = e.v3.y;
 
-        TriangulateEdgeStrip(m, aCell.Color, e, aCell.Color);
+        TriangulateEdgeStrip(m, color1/*aCell.Color*/, e, color1/*aCell.Color*/);
 
         terrain.AddTriangle(centerL, m.v1, m.v2);
-        terrain.AddTriangleColor(aCell.Color);
+        //terrain.AddTriangleColor(aCell.Color);
 
         terrain.AddQuad(centerL, center, m.v2, m.v3);
-        terrain.AddQuadColor(aCell.Color);
+        //terrain.AddQuadColor(aCell.Color);
 
         terrain.AddQuad(center, centerR, m.v3, m.v4);
-        terrain.AddQuadColor(aCell.Color);
+        //terrain.AddQuadColor(aCell.Color);
 
         terrain.AddTriangle(centerR, m.v4, m.v5);
-        terrain.AddTriangleColor(aCell.Color);
+        //terrain.AddTriangleColor(aCell.Color);
+
+        terrain.AddTriangleColor(color1/*aCell.Color*/);
+        terrain.AddQuadColor(color1/*aCell.Color*/);
+        terrain.AddQuadColor(color1/*aCell.Color*/);
+        terrain.AddTriangleColor(color1/*aCell.Color*/);
 
         if (!aCell.IsUnderwater)
         {
@@ -526,8 +531,8 @@ public class HexGridChunk : MonoBehaviour
 
         m.v3.y = e.v3.y;
 
-        TriangulateEdgeStrip(m, aCell.Color, e, aCell.Color);
-        TriangulateEdgeFan(center, m, aCell.Color);
+        TriangulateEdgeStrip(m, color1/*aCell.Color*/, e, color1/*aCell.Color*/);
+        TriangulateEdgeFan(center, m, color1/*aCell.Color*/);
 
         if (!aCell.IsUnderwater)
         {
