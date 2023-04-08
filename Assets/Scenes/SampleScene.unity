@@ -4603,6 +4603,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e71fd9f408700734f8ccf062a3109a0d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  menuLabel: {fileID: 1334989732}
+  actionButtonLabel: {fileID: 943650867}
   hexGrid: {fileID: 943571973}
 --- !u!1 &583477821
 GameObject:
