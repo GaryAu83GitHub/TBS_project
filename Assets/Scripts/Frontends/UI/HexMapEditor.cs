@@ -241,7 +241,7 @@ public class HexMapEditor : MonoBehaviour
 
     public void Save() 
     {
-        string path = Path.Combine(Application.persistentDataPath, "test.map");
+        string path = Path.Combine(Application.persistentDataPath, "testtest.map");
         using (BinaryWriter writter = new BinaryWriter(File.Open(path, FileMode.Create)))
         {
             writter.Write(1);
@@ -255,9 +255,9 @@ public class HexMapEditor : MonoBehaviour
         using(BinaryReader reader = new BinaryReader(File.OpenRead(path)))
         {
             int header = reader.ReadInt32();
-            if (header == 1)
+            if (header <= 1)
             {
-                HexGrid.Load(reader);
+                HexGrid.Load(reader, header);
                 HexMapCamera.ValidatePosition();
             }
             else
