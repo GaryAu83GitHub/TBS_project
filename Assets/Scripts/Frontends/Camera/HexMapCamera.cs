@@ -30,15 +30,18 @@ public class HexMapCamera : MonoBehaviour
 
     static HexMapCamera instance;
 
+    public static void ValidatePosition() { instance.AdjustPosition(0f, 0f); }
+
     private void Awake()
     {
+        instance = this;
         mySwivel = transform.GetChild(0);
         myStick = mySwivel.GetChild(0);
     }
 
     private void OnEnable()
     {
-        instance = this;
+        
     }
 
     // Update is called once per frame
@@ -96,10 +99,10 @@ public class HexMapCamera : MonoBehaviour
 
     private Vector3 ClampPosition(Vector3 position)
     {
-        float xMax = (Grid.cellCountX * HexMetrics.ChunkSizeX - .5f) * (2f * HexMetrics.InnerRadius);
+        float xMax = (Grid.cellCountX - .5f) * (2f * HexMetrics.InnerRadius);
         position.x = Mathf.Clamp(position.x, 0f, xMax);
 
-        float zMax = (Grid.cellCountZ * HexMetrics.ChunkSizeZ - 1f) * (2f * HexMetrics.OuterRadius);
+        float zMax = (Grid.cellCountZ - 1f) * (1.5f * HexMetrics.OuterRadius);
         position.z = Mathf.Clamp(position.z, 0f, zMax);
 
         return position;

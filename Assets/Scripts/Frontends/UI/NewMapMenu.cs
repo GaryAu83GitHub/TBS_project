@@ -34,6 +34,7 @@ public class NewMapMenu : MonoBehaviour
     private void CreateMap(int x, int z)
     {
         hexGrid.CreateMap(x, z);
+        HexMapCamera.ValidatePosition();
         Close();
     }
 }
