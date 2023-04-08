@@ -1,9 +1,12 @@
+using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class SaveLoadMenu : MonoBehaviour
 {
     public Text menuLabel, actionButtonLabel;
+
+    public InputField nameInput;
 
     public HexGrid hexGrid;
 
@@ -31,5 +34,14 @@ public class SaveLoadMenu : MonoBehaviour
     {
         gameObject.SetActive(false);
         HexMapCamera.Looked = false;
+    }
+
+    private string GetSelectedPath()
+    {
+        string mapName = nameInput.text;
+        if (mapName.Length == 0)
+            return null;
+
+        return Path.Combine(Application.persistentDataPath, mapName + ".map");
     }
 }
