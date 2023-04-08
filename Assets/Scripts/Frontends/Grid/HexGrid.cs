@@ -75,6 +75,9 @@ public class HexGrid : MonoBehaviour
 
     public void Save(BinaryWriter writer)
     {
+        writer.Write(cellCountX);
+        writer.Write(cellCountZ);
+
         for(int i = 0; i < myCells.Length; i++)
         {
             myCells[i].Save(writer);
@@ -83,7 +86,8 @@ public class HexGrid : MonoBehaviour
 
     public void Load(BinaryReader reader)
     {
-        CreateMap(20, 15);
+        CreateMap(reader.ReadInt32(), reader.ReadInt32());
+
         for (int i = 0; i < myCells.Length; i++)
         {
             myCells[i].Load(reader);
