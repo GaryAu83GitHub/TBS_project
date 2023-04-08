@@ -1913,7 +1913,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 271158095}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1210891824}
+        m_TargetAssemblyTypeName: NewMapMenu, Assembly-CSharp
+        m_MethodName: CreateMediumMap
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &271158095
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5848,8 +5860,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce543ed0ab6410c45b53dad1f5368a7f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cellCountX: 0
-  cellCountZ: 0
+  cellCountX: 20
+  cellCountZ: 15
   cellPrefab: {fileID: 6589022703536304834, guid: 2d9a5cb8e3672dc42872faf35467610a, type: 3}
   cellLabelPrefab: {fileID: 2967145994133076617, guid: 37cf0449e28b015498db6a7f22543386, type: 3}
   chunkPrefab: {fileID: 7642142513600218051, guid: f52fdb9a5da3a9a4fa653ff8293b6669, type: 3}
@@ -7766,7 +7778,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1264811396}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1210891824}
+        m_TargetAssemblyTypeName: NewMapMenu, Assembly-CSharp
+        m_MethodName: CreateSmallMap
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1264811396
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10227,7 +10251,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1664830215}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1210891824}
+        m_TargetAssemblyTypeName: NewMapMenu, Assembly-CSharp
+        m_MethodName: CreateLargeMap
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1664830215
 MonoBehaviour:
   m_ObjectHideFlags: 0
