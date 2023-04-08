@@ -575,8 +575,8 @@ public class HexGridChunk : MonoBehaviour
             Vector3.Lerp(center, e.v5, .5f)
             );
 
-        TriangulateEdgeStrip(m, aCell.Color, e, aCell.Color);
-        TriangulateEdgeFan(center, m, aCell.Color);
+        TriangulateEdgeStrip(m, color1/*aCell.Color*/, e, color1);
+        TriangulateEdgeFan(center, m, color1/*aCell.Color*/);
 
         if (!aCell.IsUnderwater && !aCell.HasRoadThroughEdge(aDir))
             features.AddFeature(aCell, (center + e.v1 + e.v5) * (1f / 3f));
