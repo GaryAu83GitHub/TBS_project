@@ -504,7 +504,7 @@ public class HexGridChunk : MonoBehaviour
 
     private void TriangulateWithoutRiver(HexDirection aDir, HexCell aCell, Vector3 center, EdgeVertices e)
     {
-        TriangulateEdgeFan(center, e, aCell.Color);
+        TriangulateEdgeFan(center, e, color1/*aCell.Color*/);
 
         if(aCell.HasRoads)
         {
