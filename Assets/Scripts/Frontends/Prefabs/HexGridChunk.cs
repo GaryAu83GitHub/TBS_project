@@ -12,6 +12,10 @@ public class HexGridChunk : MonoBehaviour
     //private HexMesh myHexMesh;
     Canvas myGridCanvas;
 
+    static Color color1 = new Color(1f, 0f, 0f);
+    static Color color2 = new Color(0f, 1f, 0f);
+    static Color color3 = new Color(0f, 0f, 1f);
+
     private void Awake()
     {
         myGridCanvas = GetComponentInChildren<Canvas>();
