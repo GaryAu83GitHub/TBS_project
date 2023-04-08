@@ -56,6 +56,19 @@ public class SaveLoadMenu : MonoBehaviour
         Close();
     }
 
+    public void Delete()
+    {
+        string path = GetSelectedPath();
+        if (path == null)
+            return;
+
+        if(File.Exists(path))
+            File.Delete(path);
+
+        nameInput.text = "";
+        FillList();
+    }
+
     public void SelectItem(string name)
     {
         nameInput.text = name;
