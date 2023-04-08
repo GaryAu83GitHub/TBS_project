@@ -30,12 +30,13 @@ public class HexGrid : MonoBehaviour
         HexMetrics.NoiseSource = noiseSource;
         HexMetrics.InitializeHashGrid(seed);
         HexMetrics.Colors = colors;
+        CreateMap();
 
-        myCellCountX = ChunkCountX * HexMetrics.ChunkSizeX;
-        myCellCountZ = ChunkCountZ * HexMetrics.ChunkSizeZ;
+        //myCellCountX = ChunkCountX * HexMetrics.ChunkSizeX;
+        //myCellCountZ = ChunkCountZ * HexMetrics.ChunkSizeZ;
 
-        CreateChunks();
-        CreateCells();
+        //CreateChunks();
+        //CreateCells();
     }
 
     private void OnEnable()
@@ -96,6 +97,14 @@ public class HexGrid : MonoBehaviour
         {
             myChunks[i].Refresh();
         }
+    }
+
+    public void CreateMap()
+    {
+        myCellCountX = ChunkCountX * HexMetrics.ChunkSizeX;
+        myCellCountZ = ChunkCountZ * HexMetrics.ChunkSizeZ;
+        CreateChunks();
+        CreateCells();
     }
 
     private void HandleInput()
