@@ -180,7 +180,7 @@ public class HexGridChunk : MonoBehaviour
         }
         else
         {
-            TriangulateEdgeStrip(e1, aCell.Color, e2, neighbor.Color, hasRoad);
+            TriangulateEdgeStrip(e1, color1/*aCell.Color*/, e2, color2/*neighbor.Color*/, hasRoad);
         }
 
         features.AddWall(e1, aCell, e2, neighbor, hasRiver, hasRoad);
@@ -216,9 +216,9 @@ public class HexGridChunk : MonoBehaviour
     private void TriangulateEdgeTerraces(EdgeVertices begin, HexCell beginCell, EdgeVertices end, HexCell endCell, bool hasRoad)
     {
         EdgeVertices e2 = EdgeVertices.TerraceLerp(begin, end, 1);
-        Color c2 = HexMetrics.TerraceLerp(beginCell.Color, endCell.Color, 1);
+        Color c2 = HexMetrics.TerraceLerp(color1/*beginCell.Color*/, color2/*endCell.Color*/, 1);
 
-        TriangulateEdgeStrip(begin, beginCell.Color, e2, c2, hasRoad);
+        TriangulateEdgeStrip(begin, color1/*beginCell.Color*/, e2, c2, hasRoad);
 
         for (int i = 2; i < HexMetrics.TerraceSteps; i++)
         {
@@ -226,12 +226,12 @@ public class HexGridChunk : MonoBehaviour
             Color c1 = c2;
 
             e2 = EdgeVertices.TerraceLerp(begin, end, i);
-            c2 = HexMetrics.TerraceLerp(beginCell.Color, endCell.Color, i);
+            c2 = HexMetrics.TerraceLerp(color1/*beginCell.Color*/, color2/*endCell.Color*/, i);
 
             TriangulateEdgeStrip(e1, c1, e2, c2, hasRoad);
         }
 
-        TriangulateEdgeStrip(e2, c2, end, endCell.Color, hasRoad);
+        TriangulateEdgeStrip(e2, c2, end, color2/*endCell.Color*/, hasRoad);
     }
 
     private void TriangulateCorner(Vector3 bottom, HexCell bottomCell, Vector3 left, HexCell leftCell, Vector3 rigth, HexCell rightCell)
