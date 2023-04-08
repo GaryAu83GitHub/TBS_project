@@ -7,7 +7,7 @@ using System.IO;
 public class HexGrid : MonoBehaviour
 {
     [SerializeField]
-    public int ChunkCountX = 4, ChunkCountZ = 3;
+    public int cellCountX = 20, cellCountZ = 15;
 
     public HexCell cellPrefab;
     public Text cellLabelPrefab;
@@ -21,21 +21,16 @@ public class HexGrid : MonoBehaviour
     public Color[] colors;
 
     private HexGridChunk[] myChunks;
-    private HexCell[] myCells;    
+    private HexCell[] myCells;
 
-    private int myCellCountX, myCellCountZ;
+    private int chunkCountX, chunkCountZ;
 
     void Awake()
     {
         HexMetrics.NoiseSource = noiseSource;
         HexMetrics.InitializeHashGrid(seed);
         HexMetrics.Colors = colors;
-
-        myCellCountX = ChunkCountX * HexMetrics.ChunkSizeX;
-        myCellCountZ = ChunkCountZ * HexMetrics.ChunkSizeZ;
-
-        CreateChunks();
-        CreateCells();
+        CreateMap(cellCountX, cellCountZ);
     }
 
     private void OnEnable()
@@ -53,21 +48,21 @@ public class HexGrid : MonoBehaviour
         aPosition = transform.InverseTransformPoint(aPosition);
         HexCoordinates coordinates = HexCoordinates.FromPosition(aPosition);
 
-        int index = coordinates.X + coordinates.Z * myCellCountX + coordinates.Z / 2;
+        int index = coordinates.X + coordinates.Z * cellCountX + coordinates.Z / 2;
         return myCells[index];
     }
 
     public HexCell GetCell(HexCoordinates coordinates)
     {
         int z = coordinates.Z;
-        if(z < 0 || z >= myCellCountZ)
+        if(z < 0 || z >= cellCountZ)
             return null;
 
         int x = coordinates.X + z / 2;
-        if (x < 0 || x >= myCellCountX)
+        if (x < 0 || x >= cellCountX)
             return null;
 
-        return myCells[x + z * myCellCountX];
+        return myCells[x + z * cellCountX];
     }
 
     public void ShowUI(bool visible)
@@ -80,14 +75,30 @@ public class HexGrid : MonoBehaviour
 
     public void Save(BinaryWriter writer)
     {
+        writer.Write(cellCountX);
+        writer.Write(cellCountZ);
+
         for(int i = 0; i < myCells.Length; i++)
         {
             myCells[i].Save(writer);
         }
     }
 
-    public void Load(BinaryReader reader)
+    public void Load(BinaryReader reader, int header)
     {
+        int x = 20, z = 15;
+        if(header >= 1)
+        {
+            x = reader.ReadInt32();
+            z = reader.ReadInt32();
+        }
+
+        if (x != cellCountX || z != cellCountZ)
+        {
+            if (!CreateMap(x, z))
+                return;
+        }
+
         for (int i = 0; i < myCells.Length; i++)
         {
             myCells[i].Load(reader);
@@ -96,6 +107,34 @@ public class HexGrid : MonoBehaviour
         {
             myChunks[i].Refresh();
         }
+    }
+
+    public bool CreateMap(int x, int z)
+    {
+        if (x <= 0 || x % HexMetrics.ChunkSizeX != 0 ||
+            z <= 0 || z % HexMetrics.ChunkSizeZ != 0)
+        {
+            Debug.LogError("Unsupported map size");
+            return false;
+        }
+
+        if(myChunks != null)
+        {
+            for(int i = 0; i < myChunks.Length; i++)
+            {
+                Destroy(myChunks[i].gameObject);
+            }
+        }
+        
+        cellCountX = x;
+        cellCountZ = z;
+
+        chunkCountX = cellCountX / HexMetrics.ChunkSizeX;
+        chunkCountZ = cellCountZ / HexMetrics.ChunkSizeZ;
+        CreateChunks();
+        CreateCells();
+
+        return true;
     }
 
     private void HandleInput()
@@ -126,20 +165,20 @@ public class HexGrid : MonoBehaviour
         {
             if((z & 1) == 0)
             {
-                cell.SetNeighbor(HexDirection.SE, myCells[i - myCellCountX]);
+                cell.SetNeighbor(HexDirection.SE, myCells[i - cellCountX]);
                 
                 if(x > 0)
                 {
-                    cell.SetNeighbor(HexDirection.SW, myCells[i - myCellCountX - 1]);
+                    cell.SetNeighbor(HexDirection.SW, myCells[i - cellCountX - 1]);
                 }
             }
             else
             {
-                cell.SetNeighbor(HexDirection.SW, myCells[i - myCellCountX]);
+                cell.SetNeighbor(HexDirection.SW, myCells[i - cellCountX]);
 
-                if (x < myCellCountX - 1)
+                if (x < cellCountX - 1)
                 {
-                    cell.SetNeighbor(HexDirection.SE, myCells[i - myCellCountX + 1]);
+                    cell.SetNeighbor(HexDirection.SE, myCells[i - cellCountX + 1]);
                 }
             }
         }
@@ -161,7 +200,7 @@ public class HexGrid : MonoBehaviour
         int chunkX = x / HexMetrics.ChunkSizeX;
         int chunkZ = z / HexMetrics.ChunkSizeZ;
 
-        HexGridChunk chunk = myChunks[chunkX + chunkZ * ChunkCountX];
+        HexGridChunk chunk = myChunks[chunkX + chunkZ * chunkCountX];
 
         int localX = x - chunkX * HexMetrics.ChunkSizeX;
         int localZ = z - chunkZ * HexMetrics.ChunkSizeZ;
@@ -170,11 +209,11 @@ public class HexGrid : MonoBehaviour
 
     private void CreateChunks()
     {
-        myChunks = new HexGridChunk[ChunkCountX * ChunkCountZ];
+        myChunks = new HexGridChunk[chunkCountX * chunkCountZ];
 
-        for(int z = 0, i = 0; z < ChunkCountZ; z++)
+        for(int z = 0, i = 0; z < chunkCountZ; z++)
         {
-            for(int x = 0; x < ChunkCountX; x++)
+            for(int x = 0; x < chunkCountX; x++)
             {
                 HexGridChunk chunk = myChunks[i++] = Instantiate(chunkPrefab);
                 chunk.transform.SetParent(transform);
@@ -184,11 +223,11 @@ public class HexGrid : MonoBehaviour
 
     private void CreateCells()
     {
-        myCells = new HexCell[myCellCountZ * myCellCountX];
+        myCells = new HexCell[cellCountZ * cellCountX];
 
-        for (int z = 0, i = 0; z < myCellCountZ; z++)
+        for (int z = 0, i = 0; z < cellCountZ; z++)
         {
-            for (int x = 0; x < myCellCountX; x++)
+            for (int x = 0; x < cellCountX; x++)
             {
                 CreateCell(x, z, i++);
             }
@@ -200,7 +239,7 @@ public class HexGrid : MonoBehaviour
         aPosition = transform.InverseTransformPoint(aPosition);
         HexCoordinates coordinates = HexCoordinates.FromPosition(aPosition);
         
-        int index = coordinates.X + coordinates.Z * myCellCountX + coordinates.Z / 2;
+        int index = coordinates.X + coordinates.Z * cellCountX + coordinates.Z / 2;
         HexCell cell = myCells[index];
 
         //if(cell.Color == DefaultColor)

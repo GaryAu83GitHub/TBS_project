@@ -20,18 +20,30 @@ public class HexMapCamera : MonoBehaviour
     [SerializeField]
     private HexGrid Grid;
 
+    public static bool Looked { set { instance.enabled = !value; } }
+
     private Transform mySwivel;
     private Transform myStick;
 
     private float myZoom = 1f;
     private float rotationAngle;
 
+    static HexMapCamera instance;
+
+    public static void ValidatePosition() { instance.AdjustPosition(0f, 0f); }
+
     private void Awake()
     {
+        instance = this;
         mySwivel = transform.GetChild(0);
         myStick = mySwivel.GetChild(0);
     }
-    
+
+    private void OnEnable()
+    {
+        
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -87,10 +99,10 @@ public class HexMapCamera : MonoBehaviour
 
     private Vector3 ClampPosition(Vector3 position)
     {
-        float xMax = (Grid.ChunkCountX * HexMetrics.ChunkSizeX - .5f) * (2f * HexMetrics.InnerRadius);
+        float xMax = (Grid.cellCountX - .5f) * (2f * HexMetrics.InnerRadius);
         position.x = Mathf.Clamp(position.x, 0f, xMax);
 
-        float zMax = (Grid.ChunkCountZ * HexMetrics.ChunkSizeZ - 1f) * (2f * HexMetrics.OuterRadius);
+        float zMax = (Grid.cellCountZ - 1f) * (1.5f * HexMetrics.OuterRadius);
         position.z = Mathf.Clamp(position.z, 0f, zMax);
 
         return position;
