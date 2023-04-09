@@ -21,7 +21,7 @@ public class HexGridChunk : MonoBehaviour
         myGridCanvas = GetComponentInChildren<Canvas>();
 
         myCells = new HexCell[HexMetrics.ChunkSizeX * HexMetrics.ChunkSizeZ];
-        ShowUI(false);
+        //ShowUI(false);
     }
 
     private void LateUpdate()
