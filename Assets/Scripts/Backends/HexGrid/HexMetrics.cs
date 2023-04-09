@@ -8,8 +8,6 @@ namespace Assets.Scripts.Backends.HexGrid
     {
         public static Texture2D NoiseSource;
 
-        public static Color[] Colors;
-
         public const float OuterToInner = 0.866025404f;
 
         public const float InnerToOuter = 1f / OuterToInner;
