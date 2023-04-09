@@ -452,6 +452,6 @@ public class HexCell : MonoBehaviour
     private void UpdateDistanceLabel()
     {
         Text label = UIRect.GetComponent<Text>();
-        label.text = distance.ToString();
+        label.text = distance == int.MaxValue ? "" : distance.ToString();
     }
 }
