@@ -35,6 +35,8 @@ public class HexMapEditor : MonoBehaviour
     private OptionalToggle myRiverMode, myRoadMode, myWalledMode;
 
     private bool myIsDrag;
+    private bool myEditMode;
+
     private HexDirection myDragDirection;
     private HexCell myPreviousCell;
 
@@ -65,7 +67,9 @@ public class HexMapEditor : MonoBehaviour
             else
                 myIsDrag = false;
 
-            EditCells(currentCell);
+            if(myEditMode)
+                EditCells(currentCell);
+
             myPreviousCell = currentCell;
         }
         else
@@ -283,5 +287,10 @@ public class HexMapEditor : MonoBehaviour
         {
             terrainMaterial.DisableKeyword("GRID_ON");
         }
+    }
+
+    public void SetEditMode(bool toggle)
+    {
+        myEditMode = toggle;
     }
 }
