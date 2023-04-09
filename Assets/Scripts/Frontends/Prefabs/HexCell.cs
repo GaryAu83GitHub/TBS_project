@@ -18,11 +18,6 @@ public class HexCell : MonoBehaviour
     public Vector3 Position { get { return transform.localPosition; } }
 
     // terrain stuff
-    public Color Color 
-    {
-        get { return HexMetrics.Colors[terrainTypeIndex]; }
-    }
-
     public int TerrainTypeIndex
     {
         get { return terrainTypeIndex; }

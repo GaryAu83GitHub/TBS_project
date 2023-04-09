@@ -302,7 +302,7 @@ public class HexGridChunk : MonoBehaviour
         types.z = rightCell.TerrainTypeIndex;
 
         terrain.AddTriangle(begin, v3, v4);
-        terrain.AddTriangleColor(beginCell.Color, c3, c4);
+        terrain.AddTriangleColor(color1, c3, c4);
         terrain.AddTriangleTerrainTypes(types);
 
         for (int i = 2; i < HexMetrics.TerraceSteps; i++)
@@ -453,10 +453,10 @@ public class HexGridChunk : MonoBehaviour
         types.x = types.z = type1;
         types.y = type2;
 
-        terrain.AddTriangleTerrainTypes(types);
-        terrain.AddTriangleTerrainTypes(types);
-        terrain.AddTriangleTerrainTypes(types);
-        terrain.AddTriangleTerrainTypes(types);
+        terrain.AddQuadTerrainTypes(types);
+        terrain.AddQuadTerrainTypes(types);
+        terrain.AddQuadTerrainTypes(types);
+        terrain.AddQuadTerrainTypes(types);
 
         if (hasRoad)
             TriangulateRoadSegment(e1.v2, e1.v3, e1.v4, e2.v2, e2.v3, e2.v4);
@@ -531,7 +531,6 @@ public class HexGridChunk : MonoBehaviour
 
     private void TriangulateWithoutRiver(HexDirection aDir, HexCell aCell, Vector3 center, EdgeVertices e)
     {
-        //TriangulateEdgeFan(center, e, color1/*aCell.Color*/);
         TriangulateEdgeFan(center, e, aCell.TerrainTypeIndex);
 
         if(aCell.HasRoads)
