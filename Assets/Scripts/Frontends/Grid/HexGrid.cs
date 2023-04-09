@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using Assets.Scripts.Backends.HexGrid;
 using Assets.Scripts.Backends.HexGrid.Tools;
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 
 public class HexGrid : MonoBehaviour
@@ -253,11 +254,33 @@ public class HexGrid : MonoBehaviour
 
     private IEnumerator Search(HexCell aCell)
     {
-        WaitForSeconds delay = new WaitForSeconds(1 / 60f);
         for(int i = 0; i < myCells.Length; i++)
         {
-            yield return delay;
-            myCells[i].Distance = aCell.Coordinates.DistanceTo(myCells[i].Coordinates);
+            myCells[i].Distance = int.MaxValue;
         }
+
+        WaitForSeconds delay = new WaitForSeconds(1 / 60f);
+        Queue<HexCell> frontier = new Queue<HexCell>();
+        aCell.Distance = 0;
+        frontier.Enqueue(aCell);
+        while(frontier.Count > 0)
+        {
+            yield return delay;
+            HexCell current = frontier.Dequeue();
+            for(HexDirection d = HexDirection.NE; d < HexDirection.NW; d++)
+            {
+                HexCell neighbor = current.GetNeighbor(d);
+                if(neighbor != null && neighbor.Distance == int.MaxValue)
+                {
+                    neighbor.Distance = current.Distance + 1;
+                    frontier.Enqueue(neighbor);
+                }
+            }
+        }
+        //for(int i = 0; i < myCells.Length; i++)
+        //{
+        //    
+        //    myCells[i].Distance = aCell.Coordinates.DistanceTo(myCells[i].Coordinates);
+        //}
     }
 }
