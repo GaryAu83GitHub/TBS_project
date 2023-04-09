@@ -137,7 +137,7 @@ public class HexGrid : MonoBehaviour
     {
         for (int i = 0; i < myCells.Length; i++)
         {
-            myCells[i].Distance = 0;
+            myCells[i].Distance = cell.Coordinates.DistanceTo(myCells[i].Coordinates);
         }
     }
 
