@@ -133,6 +133,14 @@ public class HexGrid : MonoBehaviour
         return true;
     }
 
+    public void FindDistancesTo(HexCell cell)
+    {
+        for (int i = 0; i < myCells.Length; i++)
+        {
+            myCells[i].Distance = 0;
+        }
+    }
+
     private void HandleInput()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
