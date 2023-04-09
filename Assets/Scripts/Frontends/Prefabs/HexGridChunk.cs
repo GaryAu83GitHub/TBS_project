@@ -502,25 +502,24 @@ public class HexGridChunk : MonoBehaviour
 
         m.v3.y = center.y = e.v3.y;
 
-        //TriangulateEdgeStrip(m, color1/*aCell.Color*/, e, color1/*aCell.Color*/);
         TriangulateEdgeStrip(m, color1, aCell.TerrainTypeIndex, e, color1, aCell.TerrainTypeIndex);
 
         terrain.AddTriangle(centerL, m.v1, m.v2);
-        //terrain.AddTriangleColor(aCell.Color);
-
         terrain.AddQuad(centerL, center, m.v2, m.v3);
-        //terrain.AddQuadColor(aCell.Color);
-
         terrain.AddQuad(center, centerR, m.v3, m.v4);
-        //terrain.AddQuadColor(aCell.Color);
-
         terrain.AddTriangle(centerR, m.v4, m.v5);
-        //terrain.AddTriangleColor(aCell.Color);
 
-        terrain.AddTriangleColor(color1/*aCell.Color*/);
-        terrain.AddQuadColor(color1/*aCell.Color*/);
-        terrain.AddQuadColor(color1/*aCell.Color*/);
-        terrain.AddTriangleColor(color1/*aCell.Color*/);
+        terrain.AddTriangleColor(color1);
+        terrain.AddQuadColor(color1);
+        terrain.AddQuadColor(color1);
+        terrain.AddTriangleColor(color1);
+
+        Vector3 types;
+        types.x = types.y = types.z = aCell.TerrainTypeIndex;
+        terrain.AddTriangleTerrainTypes(types);
+        terrain.AddQuadTerrainTypes(types);
+        terrain.AddQuadTerrainTypes(types);
+        terrain.AddTriangleTerrainTypes(types);
 
         if (!aCell.IsUnderwater)
         {
