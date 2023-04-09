@@ -180,9 +180,8 @@ public class HexGrid : MonoBehaviour
         }
 
         Text label = Instantiate<Text>(cellLabelPrefab);
-        //label.rectTransform.SetParent(myGridCanvas.transform, false);
         label.rectTransform.anchoredPosition = new Vector2(position.x, position.z);
-        label.text = cell.Coordinates.ToStringOnSeperateLines();
+        //label.text = cell.Coordinates.ToStringOnSeperateLines();
 
         cell.UIRect = label.rectTransform;
 

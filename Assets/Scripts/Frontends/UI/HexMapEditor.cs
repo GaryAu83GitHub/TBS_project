@@ -10,7 +10,7 @@ public class HexMapEditor : MonoBehaviour
     private enum OptionalToggle { IGNORE, YES, NO }
 
     [SerializeField]
-    public HexGrid HexGrid;
+    public HexGrid hexGrid;
 
     [SerializeField]
     public Material terrainMaterial;
@@ -61,7 +61,7 @@ public class HexMapEditor : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit))
         {
-            HexCell currentCell = HexGrid.GetCell(hit.point);
+            HexCell currentCell = hexGrid.GetCell(hit.point);
             if (myPreviousCell && myPreviousCell != currentCell)
                 ValidateDrag(currentCell);
             else
@@ -87,7 +87,7 @@ public class HexMapEditor : MonoBehaviour
         {
             for(int x = centerX - r; x <= centerX + myBrushSize; x++)
             {
-                EditCell(HexGrid.GetCell(new HexCoordinates(x, z)));
+                EditCell(hexGrid.GetCell(new HexCoordinates(x, z)));
             }
         }
 
@@ -95,7 +95,7 @@ public class HexMapEditor : MonoBehaviour
         {
             for(int x = centerX - myBrushSize; x <= centerX + r; x++)
             {
-                EditCell(HexGrid.GetCell(new HexCoordinates(x, z)));
+                EditCell(hexGrid.GetCell(new HexCoordinates(x, z)));
             }
         }
     }
@@ -226,11 +226,6 @@ public class HexMapEditor : MonoBehaviour
         myBrushSize = (int)aSize;
     }
 
-    public void ShowUI(bool visible)
-    {
-        HexGrid.ShowUI(visible);
-    }
-
     public void SetRiverMode(int aMode)
     {
         myRiverMode = (OptionalToggle)aMode;
@@ -257,7 +252,7 @@ public class HexMapEditor : MonoBehaviour
         using (BinaryWriter writter = new BinaryWriter(File.Open(path, FileMode.Create)))
         {
             writter.Write(1);
-            HexGrid.Save(writter);
+            hexGrid.Save(writter);
         }
     }
 
@@ -269,7 +264,7 @@ public class HexMapEditor : MonoBehaviour
             int header = reader.ReadInt32();
             if (header <= 1)
             {
-                HexGrid.Load(reader, header);
+                hexGrid.Load(reader, header);
                 HexMapCamera.ValidatePosition();
             }
             else
@@ -292,5 +287,6 @@ public class HexMapEditor : MonoBehaviour
     public void SetEditMode(bool toggle)
     {
         myEditMode = toggle;
+        hexGrid.ShowUI(!toggle);
     }
 }
