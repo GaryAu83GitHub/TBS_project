@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Assets.Scripts.Backends.HexGrid;
 using Assets.Scripts.Backends.HexGrid.Tools;
+using System.Collections;
 using System.IO;
 
 public class HexGrid : MonoBehaviour
@@ -82,6 +83,8 @@ public class HexGrid : MonoBehaviour
 
     public void Load(BinaryReader reader, int header)
     {
+        StopAllCoroutines();
+
         int x = 20, z = 15;
         if(header >= 1)
         {
@@ -133,12 +136,14 @@ public class HexGrid : MonoBehaviour
         return true;
     }
 
-    public void FindDistancesTo(HexCell cell)
+    public void FindDistancesTo(HexCell aCell)
     {
-        for (int i = 0; i < myCells.Length; i++)
-        {
-            myCells[i].Distance = cell.Coordinates.DistanceTo(myCells[i].Coordinates);
-        }
+        //for (int i = 0; i < myCells.Length; i++)
+        //{
+        //    myCells[i].Distance = cell.Coordinates.DistanceTo(myCells[i].Coordinates);
+        //}
+        StopAllCoroutines();
+        StartCoroutine(Search(aCell));
     }
 
     private void HandleInput()
@@ -244,11 +249,15 @@ public class HexGrid : MonoBehaviour
         
         int index = coordinates.X + coordinates.Z * cellCountX + coordinates.Z / 2;
         HexCell cell = myCells[index];
+    }
 
-        //if(cell.Color == DefaultColor)
-        //    cell.Color = TouchedColor;
-        //else
-        //    cell.Color = DefaultColor;
-        
+    private IEnumerator Search(HexCell aCell)
+    {
+        WaitForSeconds delay = new WaitForSeconds(1 / 60f);
+        for(int i = 0; i < myCells.Length; i++)
+        {
+            yield return delay;
+            myCells[i].Distance = aCell.Coordinates.DistanceTo(myCells[i].Coordinates);
+        }
     }
 }
