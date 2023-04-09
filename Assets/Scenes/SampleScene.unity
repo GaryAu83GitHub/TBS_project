@@ -2853,8 +2853,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
+  m_Sprite: {fileID: 21300000, guid: 162bc0d25c9668e45a957b58fee94a87, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -3782,7 +3782,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Wh
+  m_Text: Sw
 --- !u!222 &503028209
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -3862,7 +3862,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Or
+  m_Text: Stn
 --- !u!222 &529909151
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -4875,7 +4875,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Ye
+  m_Text: Snd
 --- !u!222 &607249716
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -5462,7 +5462,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Gr
+  m_Text: Grs
 --- !u!222 &712714687
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -6680,12 +6680,6 @@ MonoBehaviour:
   chunkPrefab: {fileID: 7642142513600218051, guid: f52fdb9a5da3a9a4fa653ff8293b6669, type: 3}
   noiseSource: {fileID: 2800000, guid: 46e63e427702b6846ac9af6942bc4c02, type: 3}
   seed: 1234
-  colors:
-  - {r: 1, g: 0.86274517, b: 0, a: 1}
-  - {r: 0.003921569, g: 0.68235296, b: 0.03137255, a: 1}
-  - {r: 0.07450981, g: 0.21960786, b: 0.83921576, a: 1}
-  - {r: 1, g: 0.30588236, b: 0.10588236, a: 1}
-  - {r: 1, g: 1, b: 1, a: 1}
 --- !u!4 &943571974
 Transform:
   m_ObjectHideFlags: 0
@@ -7175,8 +7169,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
+  m_Sprite: {fileID: 21300000, guid: e65373f902717414486ba2aa014198ca, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -7442,7 +7436,7 @@ GameObject:
   - component: {fileID: 1068443787}
   - component: {fileID: 1068443788}
   m_Layer: 5
-  m_Name: Toggle Blue
+  m_Name: Toggle Mud
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8643,7 +8637,7 @@ GameObject:
   - component: {fileID: 1256692699}
   - component: {fileID: 1256692700}
   m_Layer: 5
-  m_Name: Toggle Yellow
+  m_Name: Toggle Sand
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9311,7 +9305,7 @@ GameObject:
   - component: {fileID: 1341518532}
   - component: {fileID: 1341518533}
   m_Layer: 5
-  m_Name: Toggle Orange
+  m_Name: Toggle Stone
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10051,8 +10045,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
+  m_Sprite: {fileID: 21300000, guid: 48bcf0981c8b089449a18eed9cc44923, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -10496,7 +10490,7 @@ GameObject:
   - component: {fileID: 1467224235}
   - component: {fileID: 1467224236}
   m_Layer: 5
-  m_Name: Toggle Green
+  m_Name: Toggle Grass
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -11500,8 +11494,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
+  m_Sprite: {fileID: 21300000, guid: 8bb7ae6452dad40449077f49d30e48b5, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -14586,8 +14580,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
+  m_Sprite: {fileID: 21300000, guid: 5297a3f3fd0527c4bb0e9d27f8928c7c, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -15093,7 +15087,7 @@ GameObject:
   - component: {fileID: 2055163146}
   - component: {fileID: 2055163147}
   m_Layer: 5
-  m_Name: Toggle White
+  m_Name: Toggle Snow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -16046,7 +16040,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Bl
+  m_Text: Md
 --- !u!222 &2122147719
 CanvasRenderer:
   m_ObjectHideFlags: 0
