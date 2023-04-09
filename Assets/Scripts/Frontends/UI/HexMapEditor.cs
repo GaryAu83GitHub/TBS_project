@@ -12,6 +12,9 @@ public class HexMapEditor : MonoBehaviour
     [SerializeField]
     public HexGrid HexGrid;
 
+    [SerializeField]
+    public Material terrainMaterial;
+
     private int myActiveTerrainTypeIndex;
     private int myActiveElevation;
     private int myActiveWaterLevel;
@@ -34,6 +37,11 @@ public class HexMapEditor : MonoBehaviour
     private bool myIsDrag;
     private HexDirection myDragDirection;
     private HexCell myPreviousCell;
+
+    private void Awake()
+    {
+        terrainMaterial.DisableKeyword("GRID_ON");
+    }
 
     void Update()
     {
@@ -262,6 +270,18 @@ public class HexMapEditor : MonoBehaviour
             }
             else
                 Debug.LogWarning("Unknown map format " + header);
+        }
+    }
+
+    public void ShowGrid(bool visible)
+    {
+        if(visible)
+        {
+            terrainMaterial.EnableKeyword("GRID_ON");
+        }
+        else
+        {
+            terrainMaterial.DisableKeyword("GRID_ON");
         }
     }
 }
