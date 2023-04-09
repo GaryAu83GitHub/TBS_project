@@ -270,17 +270,16 @@ public class HexGrid : MonoBehaviour
             for(HexDirection d = HexDirection.NE; d < HexDirection.NW; d++)
             {
                 HexCell neighbor = current.GetNeighbor(d);
-                if(neighbor != null && neighbor.Distance == int.MaxValue)
-                {
-                    neighbor.Distance = current.Distance + 1;
-                    frontier.Enqueue(neighbor);
-                }
+                if(neighbor == null || neighbor.Distance != int.MaxValue)
+                    continue;
+                if (neighbor.IsUnderwater)
+                    continue;
+                if (current.GetEdgeType(neighbor) == HexEdgeType.CLIFF)
+                    continue;
+
+                neighbor.Distance = current.Distance + 1;
+                frontier.Enqueue(neighbor);
             }
         }
-        //for(int i = 0; i < myCells.Length; i++)
-        //{
-        //    
-        //    myCells[i].Distance = aCell.Coordinates.DistanceTo(myCells[i].Coordinates);
-        //}
     }
 }
