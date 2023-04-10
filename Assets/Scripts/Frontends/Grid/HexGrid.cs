@@ -333,7 +333,15 @@ public class HexGrid : MonoBehaviour
             frontier.RemoveAt(0);
 
             if (current == toCell)
+            {
+                current = current.PathFrom;
+                while(current != fromCell)
+                {
+                    current.EnableHighlight(Color.white);
+                    current = current.PathFrom;
+                }
                 break;
+            }
 
             for (HexDirection d = HexDirection.NE; d <= HexDirection.NW; d++)
             {
@@ -363,11 +371,13 @@ public class HexGrid : MonoBehaviour
                 if (neighbor.Distance == int.MaxValue)
                 {
                     neighbor.Distance = distance;
+                    neighbor.PathFrom = current;
                     frontier.Add(neighbor);
                 }
                 else if (distance < neighbor.Distance)
                 {
                     neighbor.Distance = distance;
+                    neighbor.PathFrom = current;
                 }
 
 

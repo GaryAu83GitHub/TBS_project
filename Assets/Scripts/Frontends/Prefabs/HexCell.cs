@@ -196,7 +196,7 @@ public class HexCell : MonoBehaviour
 
     private int specialIndex;
 
-    // distance stuff
+    // path stuff
     public int Distance
     {
         get { return distance; }
@@ -208,6 +208,8 @@ public class HexCell : MonoBehaviour
     }
 
     private int distance;
+
+    public HexCell PathFrom { get; set; }
 
     public HexCell GetNeighbor(HexDirection aDir)
     {
