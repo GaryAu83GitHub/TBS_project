@@ -387,6 +387,19 @@ public class HexCell : MonoBehaviour
             roads[i] = (roadFlags & (1 << i)) != 0;
     }
 
+    public void DisableHighlight()
+    {
+        Image highlight = UIRect.GetChild(0).GetComponent<Image>();
+        highlight.enabled = false;
+    }
+
+    public void EnableHighlight(Color color)
+    {
+        Image highlight = UIRect.GetChild(0).GetComponent<Image>();
+        highlight.color = color;
+        highlight.enabled = true;
+    }
+
     private bool IsValidRiverDestination(HexCell neighbor)
     {   
         return neighbor && (elevation >= neighbor.elevation || waterLevel == neighbor.elevation);
