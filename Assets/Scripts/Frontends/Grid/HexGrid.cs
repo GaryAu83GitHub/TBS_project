@@ -331,6 +331,10 @@ public class HexGrid : MonoBehaviour
             yield return delay;
             HexCell current = frontier[0];
             frontier.RemoveAt(0);
+
+            if (current == toCell)
+                break;
+
             for (HexDirection d = HexDirection.NE; d <= HexDirection.NW; d++)
             {
                 HexCell neighbor = current.GetNeighbor(d);
