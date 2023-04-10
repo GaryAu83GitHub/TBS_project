@@ -349,6 +349,7 @@ public class HexGrid : MonoBehaviour
                 break;
             }
 
+            int currentTurn = current.Distance / speed;
             for (HexDirection d = HexDirection.NE; d <= HexDirection.NW; d++)
             {
                 HexCell neighbor = current.GetNeighbor(d);
@@ -373,6 +374,8 @@ public class HexGrid : MonoBehaviour
                     distance += edgeType == HexEdgeType.FLAT ? 5 : 10;
                     distance += neighbor.UrbanLevel + neighbor.FarmLevel + neighbor.PlantLevel;
                 }
+
+                int turn = distance / speed;
 
                 if (neighbor.Distance == int.MaxValue)
                 {
