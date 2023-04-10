@@ -260,13 +260,14 @@ public class HexGrid : MonoBehaviour
         }
 
         WaitForSeconds delay = new WaitForSeconds(1 / 60f);
-        Queue<HexCell> frontier = new Queue<HexCell>();
+        List<HexCell> frontier = new List<HexCell>();
         aCell.Distance = 0;
-        frontier.Enqueue(aCell);
+        frontier.Add(aCell);
         while(frontier.Count > 0)
         {
             yield return delay;
-            HexCell current = frontier.Dequeue();
+            HexCell current = frontier[0];
+            frontier.RemoveAt(0);
             for(HexDirection d = HexDirection.NE; d < HexDirection.NW; d++)
             {
                 HexCell neighbor = current.GetNeighbor(d);
@@ -286,10 +287,9 @@ public class HexGrid : MonoBehaviour
                 {
                     distance += 10;
                 }
-                neighbor.Distance = distance;
-                
-                
-                frontier.Enqueue(neighbor);
+                neighbor.Distance = distance;                
+                frontier.Add(neighbor);
+                frontier.Sort((x,y) => x.Distance.CompareTo(y.Distance));
             }
         }
     }

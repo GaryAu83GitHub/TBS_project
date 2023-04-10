@@ -453,5 +453,6 @@ public class HexCell : MonoBehaviour
     {
         Text label = UIRect.GetComponent<Text>();
         label.text = distance == int.MaxValue ? "" : distance.ToString();
+        //label.fontSize = distance < 100 ? 8 : 4;
     }
 }
