@@ -146,10 +146,10 @@ public class HexGrid : MonoBehaviour
         StartCoroutine(Search(aCell));
     }
 
-    public void FindPath(HexCell fromCell, HexCell toCell)
+    public void FindPath(HexCell fromCell, HexCell toCell, int speed)
     {
         StopAllCoroutines();
-        StartCoroutine(Search(fromCell, toCell));
+        StartCoroutine(Search(fromCell, toCell, speed));
     }
 
     private void HandleInput()
@@ -314,7 +314,7 @@ public class HexGrid : MonoBehaviour
         }
     }
 
-    private IEnumerator Search(HexCell fromCell, HexCell toCell)
+    private IEnumerator Search(HexCell fromCell, HexCell toCell, int speed)
     {
         if (searchFrontier == null)
             searchFrontier = new HexCellPriorityQueue();
