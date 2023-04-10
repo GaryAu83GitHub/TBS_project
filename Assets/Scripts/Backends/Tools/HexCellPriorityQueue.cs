@@ -10,10 +10,14 @@ namespace Assets.Scripts.Backends.Tools
 
         private int count = 0;
 
+        private int minimum = int.MaxValue;
+
         public void Enqueue(HexCell cell)
         {
             count += 1;
             int priority = cell.SearchPriority;
+            if(priority < minimum)
+                minimum = priority;
 
             while (priority >= list.Count)
             {
@@ -26,12 +30,12 @@ namespace Assets.Scripts.Backends.Tools
         public HexCell Dequeue()
         {
             count -= 1;
-            for (int i = 0; i < list.Count; i++)
+            for (; minimum < list.Count; minimum++)
             {
-                HexCell cell = list[i];
+                HexCell cell = list[minimum];
                 if (cell != null)
                 {
-                    list[i] = cell.NextWithSamePriority;
+                    list[minimum] = cell.NextWithSamePriority;
                     return cell;
                 }
             }
@@ -45,6 +49,7 @@ namespace Assets.Scripts.Backends.Tools
         {
             list.Clear();
             count = 0;
+            minimum = int.MaxValue;
         }
     }
 }
