@@ -271,7 +271,7 @@ public class HexGrid : MonoBehaviour
             for(HexDirection d = HexDirection.NE; d < HexDirection.NW; d++)
             {
                 HexCell neighbor = current.GetNeighbor(d);
-                if(neighbor == null || neighbor.Distance != int.MaxValue)
+                if(neighbor == null)
                     continue;
                 if (neighbor.IsUnderwater)
                     continue;
@@ -287,9 +287,19 @@ public class HexGrid : MonoBehaviour
                 {
                     distance += 10;
                 }
-                neighbor.Distance = distance;                
-                frontier.Add(neighbor);
-                frontier.Sort((x,y) => x.Distance.CompareTo(y.Distance));
+
+                if (neighbor.Distance == int.MaxValue)
+                {
+                    neighbor.Distance = distance;
+                    frontier.Add(neighbor);
+                }
+                else if(distance < neighbor.Distance)
+                {
+                    neighbor.Distance = distance;
+                }
+
+                
+                frontier.Sort((x, y) => x.Distance.CompareTo(y.Distance));
             }
         }
     }
