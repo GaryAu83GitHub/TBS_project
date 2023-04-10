@@ -372,6 +372,7 @@ public class HexGrid : MonoBehaviour
                 {
                     neighbor.Distance = distance;
                     neighbor.PathFrom = current;
+                    neighbor.SearchHeuristic = neighbor.Coordinates.DistanceTo(toCell.Coordinates);
                     frontier.Add(neighbor);
                 }
                 else if (distance < neighbor.Distance)
