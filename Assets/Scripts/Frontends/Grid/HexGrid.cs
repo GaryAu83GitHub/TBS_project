@@ -277,7 +277,18 @@ public class HexGrid : MonoBehaviour
                 if (current.GetEdgeType(neighbor) == HexEdgeType.CLIFF)
                     continue;
 
-                neighbor.Distance = current.Distance + 1;
+                int distance = current.Distance;
+                if(current.HasRoadThroughEdge(d))
+                {
+                    distance += 1;
+                }
+                else
+                {
+                    distance += 10;
+                }
+                neighbor.Distance = distance;
+                
+                
                 frontier.Enqueue(neighbor);
             }
         }
