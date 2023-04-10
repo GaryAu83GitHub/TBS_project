@@ -382,7 +382,7 @@ public class HexGrid : MonoBehaviour
                 }
 
 
-                frontier.Sort((x, y) => x.Distance.CompareTo(y.Distance));
+                frontier.Sort((x, y) => x.SearchPriority.CompareTo(y.SearchPriority));
             }
         }
     }
