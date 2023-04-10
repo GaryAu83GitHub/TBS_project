@@ -13,6 +13,14 @@ namespace Assets.Scripts.Backends.Tools
         public void Enqueue(HexCell cell)
         {
             count += 1;
+            int priority = cell.SearchPriority;
+
+            while (priority >= list.Count)
+            {
+                list.Add(null);
+            }
+            cell.NextWithSamePriority = list[priority];
+            list[priority] = cell;
         }
 
         public HexCell Dequeue()
