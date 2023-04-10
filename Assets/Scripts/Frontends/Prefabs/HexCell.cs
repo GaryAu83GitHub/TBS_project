@@ -211,6 +211,13 @@ public class HexCell : MonoBehaviour
 
     public HexCell PathFrom { get; set; }
 
+    public int SearchHeuristic { get; set; }
+
+    public int SearchPriority 
+    {
+        get { return distance + SearchHeuristic; }
+    }
+
     public HexCell GetNeighbor(HexDirection aDir)
     {
         return neighbors[(int)aDir];
