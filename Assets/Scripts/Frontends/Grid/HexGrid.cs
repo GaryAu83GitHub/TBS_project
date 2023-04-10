@@ -2,6 +2,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using Assets.Scripts.Backends.HexGrid;
 using Assets.Scripts.Backends.HexGrid.Tools;
+using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 
 public class HexGrid : MonoBehaviour
@@ -19,7 +21,7 @@ public class HexGrid : MonoBehaviour
     public int seed;
     
     private HexGridChunk[] myChunks;
-    private HexCell[] myCells;
+    private HexCell[] cells;
 
     private int chunkCountX, chunkCountZ;
 
@@ -45,7 +47,7 @@ public class HexGrid : MonoBehaviour
         HexCoordinates coordinates = HexCoordinates.FromPosition(aPosition);
 
         int index = coordinates.X + coordinates.Z * cellCountX + coordinates.Z / 2;
-        return myCells[index];
+        return cells[index];
     }
 
     public HexCell GetCell(HexCoordinates coordinates)
@@ -58,7 +60,7 @@ public class HexGrid : MonoBehaviour
         if (x < 0 || x >= cellCountX)
             return null;
 
-        return myCells[x + z * cellCountX];
+        return cells[x + z * cellCountX];
     }
 
     public void ShowUI(bool visible)
@@ -74,14 +76,16 @@ public class HexGrid : MonoBehaviour
         writer.Write(cellCountX);
         writer.Write(cellCountZ);
 
-        for(int i = 0; i < myCells.Length; i++)
+        for(int i = 0; i < cells.Length; i++)
         {
-            myCells[i].Save(writer);
+            cells[i].Save(writer);
         }
     }
 
     public void Load(BinaryReader reader, int header)
     {
+        StopAllCoroutines();
+
         int x = 20, z = 15;
         if(header >= 1)
         {
@@ -95,9 +99,9 @@ public class HexGrid : MonoBehaviour
                 return;
         }
 
-        for (int i = 0; i < myCells.Length; i++)
+        for (int i = 0; i < cells.Length; i++)
         {
-            myCells[i].Load(reader);
+            cells[i].Load(reader);
         }
         for(int i = 0; i < myChunks.Length; i++)
         {
@@ -133,6 +137,16 @@ public class HexGrid : MonoBehaviour
         return true;
     }
 
+    public void FindDistancesTo(HexCell aCell)
+    {
+        //for (int i = 0; i < myCells.Length; i++)
+        //{
+        //    myCells[i].Distance = cell.Coordinates.DistanceTo(myCells[i].Coordinates);
+        //}
+        StopAllCoroutines();
+        StartCoroutine(Search(aCell));
+    }
+
     private void HandleInput()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -148,41 +162,40 @@ public class HexGrid : MonoBehaviour
         position.y = 0f;
         position.z = z * (HexMetrics.OuterRadius * 1.5f);
 
-        HexCell cell = myCells[i] = Instantiate<HexCell>(cellPrefab);
+        HexCell cell = cells[i] = Instantiate<HexCell>(cellPrefab);
         cell.transform.localPosition = position;
         cell.Coordinates = HexCoordinates.FromOffsetCoordinates(x, z);
         
         if(x > 0)
         {
-            cell.SetNeighbor(HexDirection.W, myCells[i - 1]);
+            cell.SetNeighbor(HexDirection.W, cells[i - 1]);
         }
 
         if(z > 0) 
         {
             if((z & 1) == 0)
             {
-                cell.SetNeighbor(HexDirection.SE, myCells[i - cellCountX]);
+                cell.SetNeighbor(HexDirection.SE, cells[i - cellCountX]);
                 
                 if(x > 0)
                 {
-                    cell.SetNeighbor(HexDirection.SW, myCells[i - cellCountX - 1]);
+                    cell.SetNeighbor(HexDirection.SW, cells[i - cellCountX - 1]);
                 }
             }
             else
             {
-                cell.SetNeighbor(HexDirection.SW, myCells[i - cellCountX]);
+                cell.SetNeighbor(HexDirection.SW, cells[i - cellCountX]);
 
                 if (x < cellCountX - 1)
                 {
-                    cell.SetNeighbor(HexDirection.SE, myCells[i - cellCountX + 1]);
+                    cell.SetNeighbor(HexDirection.SE, cells[i - cellCountX + 1]);
                 }
             }
         }
 
         Text label = Instantiate<Text>(cellLabelPrefab);
-        //label.rectTransform.SetParent(myGridCanvas.transform, false);
         label.rectTransform.anchoredPosition = new Vector2(position.x, position.z);
-        label.text = cell.Coordinates.ToStringOnSeperateLines();
+        //label.text = cell.Coordinates.ToStringOnSeperateLines();
 
         cell.UIRect = label.rectTransform;
 
@@ -219,7 +232,7 @@ public class HexGrid : MonoBehaviour
 
     private void CreateCells()
     {
-        myCells = new HexCell[cellCountZ * cellCountX];
+        cells = new HexCell[cellCountZ * cellCountX];
 
         for (int z = 0, i = 0; z < cellCountZ; z++)
         {
@@ -236,12 +249,63 @@ public class HexGrid : MonoBehaviour
         HexCoordinates coordinates = HexCoordinates.FromPosition(aPosition);
         
         int index = coordinates.X + coordinates.Z * cellCountX + coordinates.Z / 2;
-        HexCell cell = myCells[index];
+        HexCell cell = cells[index];
+    }
 
-        //if(cell.Color == DefaultColor)
-        //    cell.Color = TouchedColor;
-        //else
-        //    cell.Color = DefaultColor;
-        
+    private IEnumerator Search(HexCell aCell)
+    {
+        for (int i = 0; i < cells.Length; i++)
+        {
+            cells[i].Distance = int.MaxValue;
+        }
+
+        WaitForSeconds delay = new WaitForSeconds(1 / 60f);
+        List<HexCell> frontier = new List<HexCell>();
+        aCell.Distance = 0;
+        frontier.Add(aCell);
+        while (frontier.Count > 0)
+        {
+            yield return delay;
+            HexCell current = frontier[0];
+            frontier.RemoveAt(0);
+            for (HexDirection d = HexDirection.NE; d <= HexDirection.NW; d++)
+            {
+                HexCell neighbor = current.GetNeighbor(d);
+                if (neighbor == null)
+                    continue;
+                if (neighbor.IsUnderwater)
+                    continue;
+
+                HexEdgeType edgeType = current.GetEdgeType(neighbor);
+                if (edgeType == HexEdgeType.CLIFF)
+                    continue;
+
+                int distance = current.Distance;
+                if (current.HasRoadThroughEdge(d))
+                {
+                    distance += 1;
+                }
+                else if (current.Walled != neighbor.Walled)
+                    continue;
+                else
+                {
+                    distance += edgeType == HexEdgeType.FLAT ? 5 : 10;
+                    distance += neighbor.UrbanLevel + neighbor.FarmLevel + neighbor.PlantLevel;
+                }
+
+                if (neighbor.Distance == int.MaxValue)
+                {
+                    neighbor.Distance = distance;
+                    frontier.Add(neighbor);
+                }
+                else if (distance < neighbor.Distance)
+                {
+                    neighbor.Distance = distance;
+                }
+
+
+                frontier.Sort((x, y) => x.Distance.CompareTo(y.Distance));
+            }
+        }
     }
 }

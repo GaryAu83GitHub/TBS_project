@@ -10,7 +10,10 @@ public class HexMapEditor : MonoBehaviour
     private enum OptionalToggle { IGNORE, YES, NO }
 
     [SerializeField]
-    public HexGrid HexGrid;
+    public HexGrid hexGrid;
+
+    [SerializeField]
+    public Material terrainMaterial;
 
     private int myActiveTerrainTypeIndex;
     private int myActiveElevation;
@@ -31,9 +34,16 @@ public class HexMapEditor : MonoBehaviour
 
     private OptionalToggle myRiverMode, myRoadMode, myWalledMode;
 
-    private bool myIsDrag;
-    private HexDirection myDragDirection;
-    private HexCell myPreviousCell;
+    private bool isDrag;
+    private bool editMode;
+
+    private HexDirection dragDirection;
+    private HexCell previousCell;
+
+    private void Awake()
+    {
+        terrainMaterial.DisableKeyword("GRID_ON");
+    }
 
     void Update()
     {
@@ -41,7 +51,7 @@ public class HexMapEditor : MonoBehaviour
             HandleInput();
         else
         {
-            myPreviousCell = null;
+            previousCell = null;
         }
     }
 
@@ -51,18 +61,22 @@ public class HexMapEditor : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit))
         {
-            HexCell currentCell = HexGrid.GetCell(hit.point);
-            if (myPreviousCell && myPreviousCell != currentCell)
+            HexCell currentCell = hexGrid.GetCell(hit.point);
+            if (previousCell && previousCell != currentCell)
                 ValidateDrag(currentCell);
             else
-                myIsDrag = false;
+                isDrag = false;
 
-            EditCells(currentCell);
-            myPreviousCell = currentCell;
+            if (editMode)
+                EditCells(currentCell);
+            else
+                hexGrid.FindDistancesTo(currentCell);
+
+            previousCell = currentCell;
         }
         else
         {
-            myPreviousCell = null;
+            previousCell = null;
         }
     }
 
@@ -75,7 +89,7 @@ public class HexMapEditor : MonoBehaviour
         {
             for(int x = centerX - r; x <= centerX + myBrushSize; x++)
             {
-                EditCell(HexGrid.GetCell(new HexCoordinates(x, z)));
+                EditCell(hexGrid.GetCell(new HexCoordinates(x, z)));
             }
         }
 
@@ -83,7 +97,7 @@ public class HexMapEditor : MonoBehaviour
         {
             for(int x = centerX - myBrushSize; x <= centerX + r; x++)
             {
-                EditCell(HexGrid.GetCell(new HexCoordinates(x, z)));
+                EditCell(hexGrid.GetCell(new HexCoordinates(x, z)));
             }
         }
     }
@@ -122,15 +136,15 @@ public class HexMapEditor : MonoBehaviour
             if (myWalledMode != OptionalToggle.IGNORE)
                 aCell.Walled = myWalledMode == OptionalToggle.YES;
             
-            if (myIsDrag)
+            if (isDrag)
             {
-                HexCell otherCell = aCell.GetNeighbor(myDragDirection.Opposite());
+                HexCell otherCell = aCell.GetNeighbor(dragDirection.Opposite());
                 if (otherCell)
                 {
                     if(myRiverMode == OptionalToggle.YES)
-                        otherCell.SetOutgoingRiver(myDragDirection);
+                        otherCell.SetOutgoingRiver(dragDirection);
                     if (myRoadMode == OptionalToggle.YES)
-                        otherCell.AddRoad(myDragDirection);
+                        otherCell.AddRoad(dragDirection);
                 }
             }
         }
@@ -138,15 +152,15 @@ public class HexMapEditor : MonoBehaviour
 
     private void ValidateDrag(HexCell currentCell)
     {
-        for(myDragDirection = HexDirection.NE; myDragDirection <= HexDirection.NW; myDragDirection++)
+        for(dragDirection = HexDirection.NE; dragDirection <= HexDirection.NW; dragDirection++)
         {
-            if(myPreviousCell.GetNeighbor(myDragDirection) == currentCell)
+            if(previousCell.GetNeighbor(dragDirection) == currentCell)
             {
-                myIsDrag = true;
+                isDrag = true;
                 return;
             }
         }
-        myIsDrag = false;
+        isDrag = false;
     }
 
     public void SetTerrainTypeIndex(int index)
@@ -214,11 +228,6 @@ public class HexMapEditor : MonoBehaviour
         myBrushSize = (int)aSize;
     }
 
-    public void ShowUI(bool visible)
-    {
-        HexGrid.ShowUI(visible);
-    }
-
     public void SetRiverMode(int aMode)
     {
         myRiverMode = (OptionalToggle)aMode;
@@ -245,7 +254,7 @@ public class HexMapEditor : MonoBehaviour
         using (BinaryWriter writter = new BinaryWriter(File.Open(path, FileMode.Create)))
         {
             writter.Write(1);
-            HexGrid.Save(writter);
+            hexGrid.Save(writter);
         }
     }
 
@@ -257,11 +266,29 @@ public class HexMapEditor : MonoBehaviour
             int header = reader.ReadInt32();
             if (header <= 1)
             {
-                HexGrid.Load(reader, header);
+                hexGrid.Load(reader, header);
                 HexMapCamera.ValidatePosition();
             }
             else
                 Debug.LogWarning("Unknown map format " + header);
         }
+    }
+
+    public void ShowGrid(bool visible)
+    {
+        if(visible)
+        {
+            terrainMaterial.EnableKeyword("GRID_ON");
+        }
+        else
+        {
+            terrainMaterial.DisableKeyword("GRID_ON");
+        }
+    }
+
+    public void SetEditMode(bool toggle)
+    {
+        editMode = toggle;
+        hexGrid.ShowUI(!toggle);
     }
 }
