@@ -275,7 +275,9 @@ public class HexGrid : MonoBehaviour
                     continue;
                 if (neighbor.IsUnderwater)
                     continue;
-                if (current.GetEdgeType(neighbor) == HexEdgeType.CLIFF)
+
+                HexEdgeType edgeType = current.GetEdgeType(neighbor);
+                if (edgeType == HexEdgeType.CLIFF)
                     continue;
 
                 int distance = current.Distance;
@@ -285,7 +287,7 @@ public class HexGrid : MonoBehaviour
                 }
                 else
                 {
-                    distance += 10;
+                    distance += edgeType == HexEdgeType.FLAT ? 5 : 10;
                 }
 
                 if (neighbor.Distance == int.MaxValue)
