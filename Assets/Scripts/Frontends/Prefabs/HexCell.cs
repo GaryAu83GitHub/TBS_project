@@ -291,13 +291,11 @@ public class HexCell : MonoBehaviour
         hasOutgoingRiver = true;
         outgoingRiver = direction;
         specialIndex = 0;
-        //RefreshSelfOnly();
 
         neighbor.RemoveIncomingRiver();
         neighbor.hasIncomingRiver = true;
         neighbor.incomingRiver = direction.Opposite();
         neighbor.specialIndex = 0;
-        //neighbor.RefreshSelfOnly();
 
         SetRoad((int)direction, false);
     }
@@ -311,7 +309,6 @@ public class HexCell : MonoBehaviour
     {
         if (!roads[(int)aDir] && !HasRiverThroughEdge(aDir) && !IsSpecial && !GetNeighbor(aDir).IsSpecial && GetElevationDifference(aDir) <= 1)
             SetRoad((int)aDir, true);
-
     }
 
     public void RemoveRoads()
@@ -453,6 +450,6 @@ public class HexCell : MonoBehaviour
     {
         Text label = UIRect.GetComponent<Text>();
         label.text = distance == int.MaxValue ? "" : distance.ToString();
-        //label.fontSize = distance < 100 ? 8 : 4;
+        label.fontSize = distance < 100 ? 8 : 6;
     }
 }
