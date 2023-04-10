@@ -43,7 +43,25 @@ namespace Assets.Scripts.Backends.Tools
         }
 
         public void Change(HexCell cell, int oldPriority)
-        { }
+        {
+            HexCell current = list[oldPriority];
+            HexCell next = current.NextWithSamePriority;
+            if(current == cell)
+            {
+                list[oldPriority] = next;
+            }
+            else
+            {
+                while(next != cell)
+                {
+                    current = next;
+                    next = current.NextWithSamePriority;
+                }
+                current.NextWithSamePriority = cell.NextWithSamePriority;
+            }
+            Enqueue(cell);
+            count -= 1;
+        }
 
         public void Clear()
         {
