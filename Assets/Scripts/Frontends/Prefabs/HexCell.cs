@@ -196,7 +196,7 @@ public class HexCell : MonoBehaviour
 
     private int specialIndex;
 
-    // distance stuff
+    // path stuff
     public int Distance
     {
         get { return distance; }
@@ -208,6 +208,17 @@ public class HexCell : MonoBehaviour
     }
 
     private int distance;
+
+    public HexCell PathFrom { get; set; }
+
+    public int SearchHeuristic { get; set; }
+
+    public int SearchPriority 
+    {
+        get { return distance + SearchHeuristic; }
+    }
+
+    public HexCell NextWithSamePriority { get; set; }
 
     public HexCell GetNeighbor(HexDirection aDir)
     {
@@ -291,13 +302,11 @@ public class HexCell : MonoBehaviour
         hasOutgoingRiver = true;
         outgoingRiver = direction;
         specialIndex = 0;
-        //RefreshSelfOnly();
 
         neighbor.RemoveIncomingRiver();
         neighbor.hasIncomingRiver = true;
         neighbor.incomingRiver = direction.Opposite();
         neighbor.specialIndex = 0;
-        //neighbor.RefreshSelfOnly();
 
         SetRoad((int)direction, false);
     }
@@ -311,7 +320,6 @@ public class HexCell : MonoBehaviour
     {
         if (!roads[(int)aDir] && !HasRiverThroughEdge(aDir) && !IsSpecial && !GetNeighbor(aDir).IsSpecial && GetElevationDifference(aDir) <= 1)
             SetRoad((int)aDir, true);
-
     }
 
     public void RemoveRoads()
@@ -390,6 +398,19 @@ public class HexCell : MonoBehaviour
             roads[i] = (roadFlags & (1 << i)) != 0;
     }
 
+    public void DisableHighlight()
+    {
+        Image highlight = UIRect.GetChild(0).GetComponent<Image>();
+        highlight.enabled = false;
+    }
+
+    public void EnableHighlight(Color color)
+    {
+        Image highlight = UIRect.GetChild(0).GetComponent<Image>();
+        highlight.color = color;
+        highlight.enabled = true;
+    }
+
     private bool IsValidRiverDestination(HexCell neighbor)
     {   
         return neighbor && (elevation >= neighbor.elevation || waterLevel == neighbor.elevation);
@@ -453,6 +474,6 @@ public class HexCell : MonoBehaviour
     {
         Text label = UIRect.GetComponent<Text>();
         label.text = distance == int.MaxValue ? "" : distance.ToString();
-        //label.fontSize = distance < 100 ? 8 : 4;
+        label.fontSize = distance < 100 ? 8 : 6;
     }
 }
