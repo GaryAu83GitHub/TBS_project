@@ -69,13 +69,15 @@ public class HexMapEditor : MonoBehaviour
 
             if (editMode)
                 EditCells(currentCell);
-            else if(Input.GetKey(KeyCode.LeftShift))
+            else if (Input.GetKey(KeyCode.LeftShift))
             {
-                if(searchFromCell)
+                if (searchFromCell)
                     searchFromCell.DisableHighlight();
                 searchFromCell = currentCell;
                 searchFromCell.EnableHighlight(Color.blue);
             }
+            else if (searchFromCell && searchFromCell != currentCell)
+                hexGrid.FindPath(searchFromCell, currentCell);
             else
                 hexGrid.FindDistancesTo(currentCell);
 
