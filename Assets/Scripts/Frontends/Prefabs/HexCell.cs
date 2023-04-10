@@ -218,6 +218,8 @@ public class HexCell : MonoBehaviour
         get { return distance + SearchHeuristic; }
     }
 
+    public HexCell NextWithSamePriority { get; set; }
+
     public HexCell GetNeighbor(HexDirection aDir)
     {
         return neighbors[(int)aDir];
