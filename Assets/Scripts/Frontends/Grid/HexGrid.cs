@@ -324,7 +324,7 @@ public class HexGrid : MonoBehaviour
         }
 
         fromCell.EnableHighlight(Color.blue);
-        toCell.EnableHighlight(Color.red);
+        //toCell.EnableHighlight(Color.red);
 
         fromCell.Distance = 0;
         searchFrontier.Enqueue(fromCell);
@@ -334,12 +334,15 @@ public class HexGrid : MonoBehaviour
 
             if (current == toCell)
             {
-                current = current.PathFrom;
+                //current = current.PathFrom;
                 while(current != fromCell)
                 {
+                    int turn = current.Distance / speed;
+                    current.SetLabel(turn.ToString());
                     current.EnableHighlight(Color.gray);
                     current = current.PathFrom;
                 }
+                toCell.EnableHighlight(Color.red);
                 break;
             }
 
@@ -380,7 +383,6 @@ public class HexGrid : MonoBehaviour
                 if (neighbor.Distance == int.MaxValue)
                 {
                     neighbor.Distance = distance;
-                    neighbor.SetLabel(turn.ToString());
                     neighbor.PathFrom = current;
                     neighbor.SearchHeuristic = neighbor.Coordinates.DistanceTo(toCell.Coordinates);
                     searchFrontier.Enqueue(neighbor);
@@ -389,7 +391,6 @@ public class HexGrid : MonoBehaviour
                 {
                     int oldPriority = neighbor.SearchPriority;
                     neighbor.Distance = distance;
-                    neighbor.SetLabel(turn.ToString());
                     neighbor.PathFrom = current;
                     searchFrontier.Change(neighbor, oldPriority);
                 }
