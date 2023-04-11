@@ -50,12 +50,6 @@ public class HexMapEditor : MonoBehaviour
 
     void Update()
     {
-        //if (Input.GetMouseButton(0) && !EventSystem.current.IsPointerOverGameObject())
-        //    HandleInput();
-        //else
-        //{
-        //    previousCell = null;
-        //}
         if(!EventSystem.current.IsPointerOverGameObject())
         {
             if(Input.GetMouseButton(0))
@@ -195,6 +189,7 @@ public class HexMapEditor : MonoBehaviour
         {
             HexUnit unit = Instantiate(unitPrefab);
             unit.transform.SetParent(hexGrid.transform, false);
+            unit.Location = cell;
         }
     }
 
