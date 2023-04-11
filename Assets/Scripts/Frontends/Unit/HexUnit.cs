@@ -29,4 +29,10 @@ public class HexUnit : MonoBehaviour
     {
         transform.localPosition = location.Position;
     }
+
+    public void Die()
+    {
+        location.Unit = null;
+        Destroy(gameObject);
+    }
 }
