@@ -337,7 +337,7 @@ public class HexGrid : MonoBehaviour
                 current = current.PathFrom;
                 while(current != fromCell)
                 {
-                    current.EnableHighlight(Color.white);
+                    current.EnableHighlight(Color.gray);
                     current = current.PathFrom;
                 }
                 break;
