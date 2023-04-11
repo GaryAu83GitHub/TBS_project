@@ -28,6 +28,8 @@ public class HexGrid : MonoBehaviour
 
     private HexCellPriorityQueue searchFrontier;
 
+    private int searchFrontierPhase;
+
     void Awake()
     {
         HexMetrics.NoiseSource = noiseSource;
@@ -311,6 +313,8 @@ public class HexGrid : MonoBehaviour
 
     private void Search(HexCell fromCell, HexCell toCell, int speed)
     {
+        searchFrontierPhase += 2;
+
         if (searchFrontier == null)
             searchFrontier = new HexCellPriorityQueue();
         else
@@ -318,23 +322,22 @@ public class HexGrid : MonoBehaviour
 
         for (int i = 0; i < cells.Length; i++)
         {
-            cells[i].Distance = int.MaxValue;
             cells[i].SetLabel(null);
             cells[i].DisableHighlight();
         }
 
         fromCell.EnableHighlight(Color.blue);
-        //toCell.EnableHighlight(Color.red);
 
+        fromCell.SearchPhase = searchFrontierPhase;
         fromCell.Distance = 0;
         searchFrontier.Enqueue(fromCell);
         while (searchFrontier.Count > 0)
         {
             HexCell current = searchFrontier.Dequeue();
+            current.SearchPhase += 1;
 
             if (current == toCell)
             {
-                //current = current.PathFrom;
                 while(current != fromCell)
                 {
                     int turn = current.Distance / speed;
@@ -350,7 +353,7 @@ public class HexGrid : MonoBehaviour
             for (HexDirection d = HexDirection.NE; d <= HexDirection.NW; d++)
             {
                 HexCell neighbor = current.GetNeighbor(d);
-                if (neighbor == null)
+                if (neighbor == null || neighbor.SearchPhase > searchFrontierPhase)
                     continue;
                 if (neighbor.IsUnderwater)
                     continue;
@@ -359,7 +362,6 @@ public class HexGrid : MonoBehaviour
                 if (edgeType == HexEdgeType.CLIFF)
                     continue;
 
-                //int distance = current.Distance;
                 int moveCost;
                 if (current.HasRoadThroughEdge(d))
                 {
@@ -380,8 +382,9 @@ public class HexGrid : MonoBehaviour
                     distance = turn * speed + moveCost;
                 }
 
-                if (neighbor.Distance == int.MaxValue)
+                if (neighbor.SearchPhase < searchFrontierPhase)
                 {
+                    neighbor.SearchPhase = searchFrontierPhase;
                     neighbor.Distance = distance;
                     neighbor.PathFrom = current;
                     neighbor.SearchHeuristic = neighbor.Coordinates.DistanceTo(toCell.Coordinates);
