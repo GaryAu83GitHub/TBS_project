@@ -1,7 +1,11 @@
 using UnityEngine;
+using System.IO;
+using Assets.Scripts.Backends.HexGrid;
 
 public class HexUnit : MonoBehaviour
 {
+    public static HexUnit unitPrefab;
+
     public HexCell Location
     {
         get { return location; }
@@ -25,6 +29,13 @@ public class HexUnit : MonoBehaviour
     }
     private float orientation;
 
+    public static void Load(BinaryReader reader, HexGrid grid)
+    {
+        HexCoordinates coordinates = HexCoordinates.Load(reader);
+        float orientation = reader.ReadSingle();
+        grid.AddUnit(Instantiate(unitPrefab), grid.GetCell(coordinates), orientation);
+    }
+
     public void ValidateLocation()
     {
         transform.localPosition = location.Position;
@@ -34,5 +45,11 @@ public class HexUnit : MonoBehaviour
     {
         location.Unit = null;
         Destroy(gameObject);
+    }
+
+    public void Save(BinaryWriter writer)
+    {
+        location.Coordinates.Save(writer);
+        writer.Write(orientation);
     }
 }
