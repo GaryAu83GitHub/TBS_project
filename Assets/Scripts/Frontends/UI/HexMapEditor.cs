@@ -83,8 +83,8 @@ public class HexMapEditor : MonoBehaviour
                 searchToCell = currentCell;
                 hexGrid.FindPath(searchFromCell, currentCell, 24);
             }
-            else
-                hexGrid.FindDistancesTo(currentCell);
+            //else
+            //    hexGrid.FindDistancesTo(currentCell);
 
             previousCell = currentCell;
         }

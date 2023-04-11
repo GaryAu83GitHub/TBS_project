@@ -87,8 +87,6 @@ public class HexGrid : MonoBehaviour
 
     public void Load(BinaryReader reader, int header)
     {
-        StopAllCoroutines();
-
         int x = 20, z = 15;
         if(header >= 1)
         {
@@ -140,16 +138,9 @@ public class HexGrid : MonoBehaviour
         return true;
     }
 
-    public void FindDistancesTo(HexCell aCell)
-    {
-        StopAllCoroutines();
-        StartCoroutine(Search(aCell));
-    }
-
     public void FindPath(HexCell fromCell, HexCell toCell, int speed)
     {
-        StopAllCoroutines();
-        StartCoroutine(Search(fromCell, toCell, speed));
+        Search(fromCell, toCell, speed);
     }
 
     private void HandleInput()
@@ -314,7 +305,7 @@ public class HexGrid : MonoBehaviour
         }
     }
 
-    private IEnumerator Search(HexCell fromCell, HexCell toCell, int speed)
+    private void Search(HexCell fromCell, HexCell toCell, int speed)
     {
         if (searchFrontier == null)
             searchFrontier = new HexCellPriorityQueue();
@@ -331,12 +322,10 @@ public class HexGrid : MonoBehaviour
         fromCell.EnableHighlight(Color.blue);
         toCell.EnableHighlight(Color.red);
 
-        WaitForSeconds delay = new WaitForSeconds(1 / 60f);
         fromCell.Distance = 0;
         searchFrontier.Enqueue(fromCell);
         while (searchFrontier.Count > 0)
         {
-            yield return delay;
             HexCell current = searchFrontier.Dequeue();
 
             if (current == toCell)
