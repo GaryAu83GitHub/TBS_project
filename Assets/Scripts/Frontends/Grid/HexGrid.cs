@@ -17,6 +17,8 @@ public class HexGrid : MonoBehaviour
 
     public HexGridChunk chunkPrefab;
 
+    public HexUnit unitPrefab;
+
     public Texture2D noiseSource;
 
     public int seed;
@@ -39,6 +41,7 @@ public class HexGrid : MonoBehaviour
     {
         HexMetrics.NoiseSource = noiseSource;
         HexMetrics.InitializeHashGrid(seed);
+        HexUnit.unitPrefab = unitPrefab;
         CreateMap(cellCountX, cellCountZ);
     }
 
@@ -48,6 +51,7 @@ public class HexGrid : MonoBehaviour
         {
             HexMetrics.NoiseSource = noiseSource;
             HexMetrics.InitializeHashGrid(seed);
+            HexUnit.unitPrefab = unitPrefab;
         }
     }
 
@@ -123,6 +127,15 @@ public class HexGrid : MonoBehaviour
         for(int i = 0; i < myChunks.Length; i++)
         {
             myChunks[i].Refresh();
+        }
+
+        if (header >= 2)
+        {
+            int unitCount = reader.ReadInt32();
+            for (int i = 0; i < unitCount; i++)
+            {
+                HexUnit.Load(reader, this);
+            }
         }
     }
 

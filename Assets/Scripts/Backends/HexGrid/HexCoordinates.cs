@@ -39,6 +39,14 @@ namespace Assets.Scripts.Backends.HexGrid
             return new HexCoordinates(iX, iZ);
         }
 
+        public static HexCoordinates Load(BinaryReader reader)
+        {
+            HexCoordinates c;
+            c.x = reader.ReadInt32();
+            c.z = reader.ReadInt32();
+            return c;
+        }
+
         [SerializeField]
         private int x, z;
 

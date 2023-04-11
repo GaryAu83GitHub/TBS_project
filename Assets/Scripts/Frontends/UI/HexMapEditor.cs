@@ -15,9 +15,6 @@ public class HexMapEditor : MonoBehaviour
     [SerializeField]
     public Material terrainMaterial;
 
-    [SerializeField]
-    public HexUnit unitPrefab;
-
     private int myActiveTerrainTypeIndex;
     private int myActiveElevation;
     private int myActiveWaterLevel;
@@ -198,7 +195,7 @@ public class HexMapEditor : MonoBehaviour
             //unit.transform.SetParent(hexGrid.transform, false);
             //unit.Location = cell;
             //unit.Orientation = Random.Range(0f, 360f);
-            hexGrid.AddUnit(Instantiate(unitPrefab), cell, Random.Range(0f, 360f));
+            hexGrid.AddUnit(Instantiate(HexUnit.unitPrefab), cell, Random.Range(0f, 360f));
         }
     }
 
