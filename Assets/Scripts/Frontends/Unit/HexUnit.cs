@@ -24,4 +24,9 @@ public class HexUnit : MonoBehaviour
         }
     }
     private float orientation;
+
+    public void ValidateLocation()
+    {
+        transform.localPosition = location.Position;
+    }
 }

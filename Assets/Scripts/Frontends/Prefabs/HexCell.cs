@@ -455,12 +455,21 @@ public class HexCell : MonoBehaviour
                 if (neighbor != null && neighbor.Chunk != Chunk)
                     neighbor.Chunk.Refresh();
             }
+
+            if(Unit)
+            {
+                Unit.ValidateLocation();
+            }
         }
     }
 
     private void RefreshSelfOnly()
     {
         Chunk.Refresh();
+        if (Unit)
+        {
+            Unit.ValidateLocation();
+        }
     }
 
     private void RefreshPosition()
