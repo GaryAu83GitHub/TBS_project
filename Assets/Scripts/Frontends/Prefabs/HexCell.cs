@@ -218,6 +218,9 @@ public class HexCell : MonoBehaviour
 
     public int SearchPhase { get; set; }
 
+    // unit stuff
+    public HexUnit Unit { get; set; }
+
     public HexCell GetNeighbor(HexDirection aDir)
     {
         return neighbors[(int)aDir];
@@ -452,12 +455,21 @@ public class HexCell : MonoBehaviour
                 if (neighbor != null && neighbor.Chunk != Chunk)
                     neighbor.Chunk.Refresh();
             }
+
+            if(Unit)
+            {
+                Unit.ValidateLocation();
+            }
         }
     }
 
     private void RefreshSelfOnly()
     {
         Chunk.Refresh();
+        if (Unit)
+        {
+            Unit.ValidateLocation();
+        }
     }
 
     private void RefreshPosition()
