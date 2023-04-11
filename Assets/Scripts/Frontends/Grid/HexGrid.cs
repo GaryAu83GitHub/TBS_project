@@ -28,6 +28,8 @@ public class HexGrid : MonoBehaviour
 
     private HexCellPriorityQueue searchFrontier;
 
+    private int searchFrontierPhase;
+
     void Awake()
     {
         HexMetrics.NoiseSource = noiseSource;
@@ -311,6 +313,8 @@ public class HexGrid : MonoBehaviour
 
     private void Search(HexCell fromCell, HexCell toCell, int speed)
     {
+        searchFrontierPhase += 2;
+
         if (searchFrontier == null)
             searchFrontier = new HexCellPriorityQueue();
         else
@@ -325,6 +329,7 @@ public class HexGrid : MonoBehaviour
 
         fromCell.EnableHighlight(Color.blue);
 
+        fromCell.SearchPhase = searchFrontierPhase;
         fromCell.Distance = 0;
         searchFrontier.Enqueue(fromCell);
         while (searchFrontier.Count > 0)
@@ -379,6 +384,7 @@ public class HexGrid : MonoBehaviour
 
                 if (neighbor.Distance == int.MaxValue)
                 {
+                    neighbor.SearchPhase = searchFrontierPhase;
                     neighbor.Distance = distance;
                     neighbor.PathFrom = current;
                     neighbor.SearchHeuristic = neighbor.Coordinates.DistanceTo(toCell.Coordinates);
