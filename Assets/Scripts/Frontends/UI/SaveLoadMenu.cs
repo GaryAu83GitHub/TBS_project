@@ -87,7 +87,7 @@ public class SaveLoadMenu : MonoBehaviour
     {
         using (BinaryWriter writter = new BinaryWriter(File.Open(path, FileMode.Create)))
         {
-            writter.Write(1);
+            writter.Write(2);
             hexGrid.Save(writter);
         }
     }

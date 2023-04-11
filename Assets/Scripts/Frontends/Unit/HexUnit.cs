@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.IO;
 
 public class HexUnit : MonoBehaviour
 {
@@ -34,5 +35,11 @@ public class HexUnit : MonoBehaviour
     {
         location.Unit = null;
         Destroy(gameObject);
+    }
+
+    public void Save(BinaryWriter writer)
+    {
+        location.Coordinates.Save(writer);
+        writer.Write(orientation);
     }
 }
