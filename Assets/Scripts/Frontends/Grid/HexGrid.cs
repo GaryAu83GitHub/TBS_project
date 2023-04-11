@@ -322,7 +322,6 @@ public class HexGrid : MonoBehaviour
 
         for (int i = 0; i < cells.Length; i++)
         {
-            cells[i].Distance = int.MaxValue;
             cells[i].SetLabel(null);
             cells[i].DisableHighlight();
         }
@@ -382,7 +381,7 @@ public class HexGrid : MonoBehaviour
                     distance = turn * speed + moveCost;
                 }
 
-                if (neighbor.Distance == int.MaxValue)
+                if (neighbor.SearchPhase < searchFrontierPhase)
                 {
                     neighbor.SearchPhase = searchFrontierPhase;
                     neighbor.Distance = distance;
