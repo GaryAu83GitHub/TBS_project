@@ -33,6 +33,8 @@ public class HexGrid : MonoBehaviour
     private HexCell currentPathFrom, currentPathTo;
     private bool currentPathExists;
 
+    private List<HexUnit> units = new List<HexUnit>();
+
     void Awake()
     {
         HexMetrics.NoiseSource = noiseSource;
@@ -93,6 +95,7 @@ public class HexGrid : MonoBehaviour
     public void Load(BinaryReader reader, int header)
     {
         ClearPath();
+        ClearUnits();
 
         int x = 20, z = 15;
         if(header >= 1)
@@ -127,6 +130,8 @@ public class HexGrid : MonoBehaviour
         }
 
         ClearPath();
+        ClearUnits();
+
         if(myChunks != null)
         {
             for(int i = 0; i < myChunks.Length; i++)
@@ -330,14 +335,6 @@ public class HexGrid : MonoBehaviour
         else
             searchFrontier.Clear();
 
-        //for (int i = 0; i < cells.Length; i++)
-        //{
-        //    cells[i].SetLabel(null);
-        //    cells[i].DisableHighlight();
-        //}
-
-        //fromCell.EnableHighlight(Color.blue);
-
         fromCell.SearchPhase = searchFrontierPhase;
         fromCell.Distance = 0;
         searchFrontier.Enqueue(fromCell);
@@ -348,15 +345,6 @@ public class HexGrid : MonoBehaviour
 
             if (current == toCell)
             {
-                //while(current != fromCell)
-                //{
-                //    int turn = current.Distance / speed;
-                //    current.SetLabel(turn.ToString());
-                //    current.EnableHighlight(Color.gray);
-                //    current = current.PathFrom;
-                //}
-                //toCell.EnableHighlight(Color.red);
-                //break;
                 return true;
             }
 
@@ -452,5 +440,14 @@ public class HexGrid : MonoBehaviour
             currentPathTo.DisableHighlight();
         }
         currentPathFrom = currentPathTo = null;
+    }
+
+    private void ClearUnits()
+    {
+        for(int i = 0; i < units.Count; i++)
+        {
+            units[i].Die();
+        }
+        units.Clear();
     }
 }
