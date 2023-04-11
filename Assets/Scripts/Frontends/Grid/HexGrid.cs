@@ -164,6 +164,14 @@ public class HexGrid : MonoBehaviour
         //Debug.Log(sw.ElapsedMilliseconds);
     }
 
+    public void AddUnit(HexUnit unit, HexCell location, float orientation)
+    {
+        units.Add(unit);
+        unit.transform.SetParent(transform, false);
+        unit.Location = location;
+        unit.Orientation = orientation;
+    }
+
     private void HandleInput()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
