@@ -207,7 +207,7 @@ public class HexMapEditor : MonoBehaviour
         HexCell cell = GetCellUnderCursor();
         if(cell && cell.Unit)
         {
-            cell.Unit.Die();
+            hexGrid.RemoveUnit(cell.Unit);
         }
     }
 

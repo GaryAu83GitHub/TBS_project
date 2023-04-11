@@ -172,6 +172,12 @@ public class HexGrid : MonoBehaviour
         unit.Orientation = orientation;
     }
 
+    public void RemoveUnit(HexUnit unit)
+    {
+        units.Remove(unit);
+        unit.Die();
+    }
+
     private void HandleInput()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
