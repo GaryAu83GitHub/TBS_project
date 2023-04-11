@@ -30,6 +30,9 @@ public class HexGrid : MonoBehaviour
 
     private int searchFrontierPhase;
 
+    private HexCell currentPathFrom, currentPathTo;
+    private bool currentPathExists;
+
     void Awake()
     {
         HexMetrics.NoiseSource = noiseSource;
@@ -144,7 +147,9 @@ public class HexGrid : MonoBehaviour
     {
         System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
         sw.Start();
-        Search(fromCell, toCell, speed);
+        currentPathFrom = fromCell;
+        currentPathTo = toCell;
+        currentPathExists = Search(fromCell, toCell, speed);
         sw.Stop();
         Debug.Log(sw.ElapsedMilliseconds);
     }
@@ -311,7 +316,7 @@ public class HexGrid : MonoBehaviour
         }
     }
 
-    private void Search(HexCell fromCell, HexCell toCell, int speed)
+    private bool Search(HexCell fromCell, HexCell toCell, int speed)
     {
         searchFrontierPhase += 2;
 
@@ -320,13 +325,13 @@ public class HexGrid : MonoBehaviour
         else
             searchFrontier.Clear();
 
-        for (int i = 0; i < cells.Length; i++)
-        {
-            cells[i].SetLabel(null);
-            cells[i].DisableHighlight();
-        }
+        //for (int i = 0; i < cells.Length; i++)
+        //{
+        //    cells[i].SetLabel(null);
+        //    cells[i].DisableHighlight();
+        //}
 
-        fromCell.EnableHighlight(Color.blue);
+        //fromCell.EnableHighlight(Color.blue);
 
         fromCell.SearchPhase = searchFrontierPhase;
         fromCell.Distance = 0;
@@ -338,15 +343,16 @@ public class HexGrid : MonoBehaviour
 
             if (current == toCell)
             {
-                while(current != fromCell)
-                {
-                    int turn = current.Distance / speed;
-                    current.SetLabel(turn.ToString());
-                    current.EnableHighlight(Color.gray);
-                    current = current.PathFrom;
-                }
-                toCell.EnableHighlight(Color.red);
-                break;
+                //while(current != fromCell)
+                //{
+                //    int turn = current.Distance / speed;
+                //    current.SetLabel(turn.ToString());
+                //    current.EnableHighlight(Color.gray);
+                //    current = current.PathFrom;
+                //}
+                //toCell.EnableHighlight(Color.red);
+                //break;
+                return true;
             }
 
             int currentTurn = current.Distance / speed;
@@ -399,5 +405,6 @@ public class HexGrid : MonoBehaviour
                 }
             }
         }
+        return false;
     }
 }
