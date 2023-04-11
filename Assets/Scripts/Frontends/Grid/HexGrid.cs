@@ -324,7 +324,6 @@ public class HexGrid : MonoBehaviour
         }
 
         fromCell.EnableHighlight(Color.blue);
-        //toCell.EnableHighlight(Color.red);
 
         fromCell.Distance = 0;
         searchFrontier.Enqueue(fromCell);
@@ -334,7 +333,6 @@ public class HexGrid : MonoBehaviour
 
             if (current == toCell)
             {
-                //current = current.PathFrom;
                 while(current != fromCell)
                 {
                     int turn = current.Distance / speed;
@@ -359,7 +357,6 @@ public class HexGrid : MonoBehaviour
                 if (edgeType == HexEdgeType.CLIFF)
                     continue;
 
-                //int distance = current.Distance;
                 int moveCost;
                 if (current.HasRoadThroughEdge(d))
                 {
