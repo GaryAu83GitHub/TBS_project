@@ -28,6 +28,11 @@ public class HexGrid : MonoBehaviour
 
     private HexCellPriorityQueue searchFrontier;
 
+    private int searchFrontierPhase;
+
+    private HexCell currentPathFrom, currentPathTo;
+    private bool currentPathExists;
+
     void Awake()
     {
         HexMetrics.NoiseSource = noiseSource;
@@ -87,7 +92,7 @@ public class HexGrid : MonoBehaviour
 
     public void Load(BinaryReader reader, int header)
     {
-        StopAllCoroutines();
+        ClearPath();
 
         int x = 20, z = 15;
         if(header >= 1)
@@ -121,6 +126,7 @@ public class HexGrid : MonoBehaviour
             return false;
         }
 
+        ClearPath();
         if(myChunks != null)
         {
             for(int i = 0; i < myChunks.Length; i++)
@@ -140,16 +146,17 @@ public class HexGrid : MonoBehaviour
         return true;
     }
 
-    public void FindDistancesTo(HexCell aCell)
+    public void FindPath(HexCell fromCell, HexCell toCell, int speed)
     {
-        StopAllCoroutines();
-        StartCoroutine(Search(aCell));
-    }
-
-    public void FindPath(HexCell fromCell, HexCell toCell)
-    {
-        StopAllCoroutines();
-        StartCoroutine(Search(fromCell, toCell));
+        //System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
+        //sw.Start();
+        ClearPath();
+        currentPathFrom = fromCell;
+        currentPathTo = toCell;
+        currentPathExists = Search(fromCell, toCell, speed);
+        ShowPath(speed);
+        //sw.Stop();
+        //Debug.Log(sw.ElapsedMilliseconds);
     }
 
     private void HandleInput()
@@ -314,45 +321,50 @@ public class HexGrid : MonoBehaviour
         }
     }
 
-    private IEnumerator Search(HexCell fromCell, HexCell toCell)
+    private bool Search(HexCell fromCell, HexCell toCell, int speed)
     {
+        searchFrontierPhase += 2;
+
         if (searchFrontier == null)
             searchFrontier = new HexCellPriorityQueue();
         else
             searchFrontier.Clear();
 
-        for (int i = 0; i < cells.Length; i++)
-        {
-            cells[i].Distance = int.MaxValue;
-            cells[i].DisableHighlight();
-        }
+        //for (int i = 0; i < cells.Length; i++)
+        //{
+        //    cells[i].SetLabel(null);
+        //    cells[i].DisableHighlight();
+        //}
 
-        fromCell.EnableHighlight(Color.blue);
-        toCell.EnableHighlight(Color.red);
+        //fromCell.EnableHighlight(Color.blue);
 
-        WaitForSeconds delay = new WaitForSeconds(1 / 60f);
+        fromCell.SearchPhase = searchFrontierPhase;
         fromCell.Distance = 0;
         searchFrontier.Enqueue(fromCell);
         while (searchFrontier.Count > 0)
         {
-            yield return delay;
             HexCell current = searchFrontier.Dequeue();
+            current.SearchPhase += 1;
 
             if (current == toCell)
             {
-                current = current.PathFrom;
-                while(current != fromCell)
-                {
-                    current.EnableHighlight(Color.white);
-                    current = current.PathFrom;
-                }
-                break;
+                //while(current != fromCell)
+                //{
+                //    int turn = current.Distance / speed;
+                //    current.SetLabel(turn.ToString());
+                //    current.EnableHighlight(Color.gray);
+                //    current = current.PathFrom;
+                //}
+                //toCell.EnableHighlight(Color.red);
+                //break;
+                return true;
             }
 
+            int currentTurn = current.Distance / speed;
             for (HexDirection d = HexDirection.NE; d <= HexDirection.NW; d++)
             {
                 HexCell neighbor = current.GetNeighbor(d);
-                if (neighbor == null)
+                if (neighbor == null || neighbor.SearchPhase > searchFrontierPhase)
                     continue;
                 if (neighbor.IsUnderwater)
                     continue;
@@ -361,21 +373,29 @@ public class HexGrid : MonoBehaviour
                 if (edgeType == HexEdgeType.CLIFF)
                     continue;
 
-                int distance = current.Distance;
+                int moveCost;
                 if (current.HasRoadThroughEdge(d))
                 {
-                    distance += 1;
+                    moveCost = 1;
                 }
                 else if (current.Walled != neighbor.Walled)
                     continue;
                 else
                 {
-                    distance += edgeType == HexEdgeType.FLAT ? 5 : 10;
-                    distance += neighbor.UrbanLevel + neighbor.FarmLevel + neighbor.PlantLevel;
+                    moveCost = edgeType == HexEdgeType.FLAT ? 5 : 10;
+                    moveCost += neighbor.UrbanLevel + neighbor.FarmLevel + neighbor.PlantLevel;
                 }
 
-                if (neighbor.Distance == int.MaxValue)
+                int distance = current.Distance + moveCost;
+                int turn = distance / speed;
+                if (turn > currentTurn)
                 {
+                    distance = turn * speed + moveCost;
+                }
+
+                if (neighbor.SearchPhase < searchFrontierPhase)
+                {
+                    neighbor.SearchPhase = searchFrontierPhase;
                     neighbor.Distance = distance;
                     neighbor.PathFrom = current;
                     neighbor.SearchHeuristic = neighbor.Coordinates.DistanceTo(toCell.Coordinates);
@@ -390,5 +410,47 @@ public class HexGrid : MonoBehaviour
                 }
             }
         }
+        return false;
+    }
+
+    private void ShowPath(int speed)
+    {
+        if(currentPathExists)
+        {
+            HexCell current = currentPathTo;
+
+            while(current != currentPathFrom)
+            {
+                int turn = current.Distance / speed;
+                current.SetLabel(turn.ToString());
+                current.EnableHighlight(Color.gray);
+                current = current.PathFrom;
+            }
+        }
+        currentPathFrom.EnableHighlight(Color.blue);
+        currentPathTo.EnableHighlight(Color.red);
+    }
+
+    private void ClearPath()
+    {
+        if (currentPathExists)
+        {
+            HexCell current = currentPathTo;
+
+            while (current != currentPathFrom)
+            {
+                current.SetLabel(null);
+                current.DisableHighlight();
+                current = current.PathFrom;
+            }
+            current.DisableHighlight();
+            currentPathExists = false;
+        }
+        else if(currentPathFrom)
+        {
+            currentPathFrom.DisableHighlight();
+            currentPathTo.DisableHighlight();
+        }
+        currentPathFrom = currentPathTo = null;
     }
 }

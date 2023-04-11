@@ -200,11 +200,7 @@ public class HexCell : MonoBehaviour
     public int Distance
     {
         get { return distance; }
-        set
-        {
-            distance = value;
-            UpdateDistanceLabel();
-        }
+        set { distance = value; }
     }
 
     private int distance;
@@ -219,6 +215,8 @@ public class HexCell : MonoBehaviour
     }
 
     public HexCell NextWithSamePriority { get; set; }
+
+    public int SearchPhase { get; set; }
 
     public HexCell GetNeighbor(HexDirection aDir)
     {
@@ -411,6 +409,12 @@ public class HexCell : MonoBehaviour
         highlight.enabled = true;
     }
 
+    public void SetLabel(string text)
+    {
+        Text label = UIRect.GetComponent<Text>();
+        label.text = text;
+    }
+
     private bool IsValidRiverDestination(HexCell neighbor)
     {   
         return neighbor && (elevation >= neighbor.elevation || waterLevel == neighbor.elevation);
@@ -470,10 +474,10 @@ public class HexCell : MonoBehaviour
         UIRect.localPosition = uiPosition;
     }
 
-    private void UpdateDistanceLabel()
-    {
-        Text label = UIRect.GetComponent<Text>();
-        label.text = distance == int.MaxValue ? "" : distance.ToString();
-        label.fontSize = distance < 100 ? 8 : 6;
-    }
+    //private void UpdateDistanceLabel()
+    //{
+    //    Text label = UIRect.GetComponent<Text>();
+    //    label.text = distance == int.MaxValue ? "" : distance.ToString();
+    //    label.fontSize = distance < 100 ? 8 : 6;
+    //}
 }
