@@ -140,7 +140,11 @@ public class HexGrid : MonoBehaviour
 
     public void FindPath(HexCell fromCell, HexCell toCell, int speed)
     {
+        System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
+        sw.Start();
         Search(fromCell, toCell, speed);
+        sw.Stop();
+        Debug.Log(sw.ElapsedMilliseconds);
     }
 
     private void HandleInput()
