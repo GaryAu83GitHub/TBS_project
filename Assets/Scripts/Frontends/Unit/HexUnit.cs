@@ -8,6 +8,7 @@ public class HexUnit : MonoBehaviour
         set
         { 
             location = value;
+            value.Unit = this;
             transform.localPosition = value.Position;
         }
     }

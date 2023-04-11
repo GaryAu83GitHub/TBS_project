@@ -218,6 +218,9 @@ public class HexCell : MonoBehaviour
 
     public int SearchPhase { get; set; }
 
+    // unit stuff
+    public HexUnit Unit { get; set; }
+
     public HexCell GetNeighbor(HexDirection aDir)
     {
         return neighbors[(int)aDir];

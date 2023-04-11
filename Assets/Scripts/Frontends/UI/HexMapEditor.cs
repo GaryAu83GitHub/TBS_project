@@ -185,7 +185,7 @@ public class HexMapEditor : MonoBehaviour
     private void CreateUnit()
     {
         HexCell cell = GetCellUnderCursor();
-        if (cell)
+        if (cell && !cell.Unit)
         {
             HexUnit unit = Instantiate(unitPrefab);
             unit.transform.SetParent(hexGrid.transform, false);
