@@ -33,6 +33,8 @@ public class HexGrid : MonoBehaviour
     private int searchFrontierPhase;
 
     private HexCell currentPathFrom, currentPathTo;
+    public bool HasPath { get { return currentPathExists; } }
+
     private bool currentPathExists;
 
     private List<HexUnit> units = new List<HexUnit>();
