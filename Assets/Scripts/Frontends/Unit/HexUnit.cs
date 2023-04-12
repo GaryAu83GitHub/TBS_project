@@ -63,6 +63,12 @@ public class HexUnit : MonoBehaviour
         }
     }
 
+    private void OnEnable()
+    {
+        if (location)
+            transform.localPosition = location.Position;
+    }
+
     public void ValidateLocation()
     {
         transform.localPosition = location.Position;
