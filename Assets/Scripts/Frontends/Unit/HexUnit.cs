@@ -10,7 +10,10 @@ public class HexUnit : MonoBehaviour
     {
         get { return location; }
         set
-        { 
+        {
+            if (location)
+                location.Unit = null;
+
             location = value;
             value.Unit = this;
             transform.localPosition = value.Position;
@@ -51,5 +54,10 @@ public class HexUnit : MonoBehaviour
     {
         location.Coordinates.Save(writer);
         writer.Write(orientation);
+    }
+
+    public bool IsValidDestination(HexCell cell)
+    {
+        return !cell.IsUnderwater && !cell.Unit;
     }
 }

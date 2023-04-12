@@ -33,6 +33,8 @@ public class HexGrid : MonoBehaviour
     private int searchFrontierPhase;
 
     private HexCell currentPathFrom, currentPathTo;
+    public bool HasPath { get { return currentPathExists; } }
+
     private bool currentPathExists;
 
     private List<HexUnit> units = new List<HexUnit>();
@@ -195,6 +197,40 @@ public class HexGrid : MonoBehaviour
     {
         units.Remove(unit);
         unit.Die();
+    }
+
+    public HexCell GetCell(Ray ray)
+    {
+        RaycastHit hit;
+        if(Physics.Raycast(ray, out hit))
+        {
+            return GetCell(hit.point);
+        }
+
+        return null;
+    }
+
+    public void ClearPath()
+    {
+        if (currentPathExists)
+        {
+            HexCell current = currentPathTo;
+
+            while (current != currentPathFrom)
+            {
+                current.SetLabel(null);
+                current.DisableHighlight();
+                current = current.PathFrom;
+            }
+            current.DisableHighlight();
+            currentPathExists = false;
+        }
+        else if (currentPathFrom)
+        {
+            currentPathFrom.DisableHighlight();
+            currentPathTo.DisableHighlight();
+        }
+        currentPathFrom = currentPathTo = null;
     }
 
     private void HandleInput()
@@ -387,7 +423,7 @@ public class HexGrid : MonoBehaviour
                 HexCell neighbor = current.GetNeighbor(d);
                 if (neighbor == null || neighbor.SearchPhase > searchFrontierPhase)
                     continue;
-                if (neighbor.IsUnderwater)
+                if (neighbor.IsUnderwater || neighbor.Unit)
                     continue;
 
                 HexEdgeType edgeType = current.GetEdgeType(neighbor);
@@ -450,29 +486,6 @@ public class HexGrid : MonoBehaviour
         }
         currentPathFrom.EnableHighlight(Color.blue);
         currentPathTo.EnableHighlight(Color.red);
-    }
-
-    private void ClearPath()
-    {
-        if (currentPathExists)
-        {
-            HexCell current = currentPathTo;
-
-            while (current != currentPathFrom)
-            {
-                current.SetLabel(null);
-                current.DisableHighlight();
-                current = current.PathFrom;
-            }
-            current.DisableHighlight();
-            currentPathExists = false;
-        }
-        else if(currentPathFrom)
-        {
-            currentPathFrom.DisableHighlight();
-            currentPathTo.DisableHighlight();
-        }
-        currentPathFrom = currentPathTo = null;
     }
 
     private void ClearUnits()
