@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 using System.IO;
 using Assets.Scripts.Backends.HexGrid;
 
@@ -59,5 +60,10 @@ public class HexUnit : MonoBehaviour
     public bool IsValidDestination(HexCell cell)
     {
         return !cell.IsUnderwater && !cell.Unit;
+    }
+
+    public void Travel(List<HexCell> path)
+    {
+        Location = path[path.Count - 1];
     }
 }
