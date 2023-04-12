@@ -7,6 +7,7 @@ public class HexUnit : MonoBehaviour
 {
     public static HexUnit unitPrefab;
 
+
     public HexCell Location
     {
         get { return location; }
@@ -33,11 +34,31 @@ public class HexUnit : MonoBehaviour
     }
     private float orientation;
 
+    private List<HexCell> pathToTravel;
+
     public static void Load(BinaryReader reader, HexGrid grid)
     {
         HexCoordinates coordinates = HexCoordinates.Load(reader);
         float orientation = reader.ReadSingle();
         grid.AddUnit(Instantiate(unitPrefab), grid.GetCell(coordinates), orientation);
+    }
+
+    private void OnDrawGizmos()
+    {
+        if (pathToTravel == null || pathToTravel.Count == 0)
+        {
+            return;
+        }
+
+        for (int i = 1; i < pathToTravel.Count; i++)
+        {
+            Vector3 a = pathToTravel[i - 1].Position;
+            Vector3 b = pathToTravel[i].Position;
+            for (float t = 0f; t < 1f; t += .1f)
+            {
+                Gizmos.DrawSphere(Vector3.Lerp(a, b, t), 2f);
+            }
+        }
     }
 
     public void ValidateLocation()
@@ -65,5 +86,6 @@ public class HexUnit : MonoBehaviour
     public void Travel(List<HexCell> path)
     {
         Location = path[path.Count - 1];
+        pathToTravel = path;
     }
 }
