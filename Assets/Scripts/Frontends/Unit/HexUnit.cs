@@ -52,4 +52,9 @@ public class HexUnit : MonoBehaviour
         location.Coordinates.Save(writer);
         writer.Write(orientation);
     }
+
+    public bool IsValidDestination(HexCell cell)
+    {
+        return !cell.IsUnderwater && !cell.Unit;
+    }
 }
