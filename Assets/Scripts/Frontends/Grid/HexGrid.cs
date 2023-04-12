@@ -423,7 +423,7 @@ public class HexGrid : MonoBehaviour
                 HexCell neighbor = current.GetNeighbor(d);
                 if (neighbor == null || neighbor.SearchPhase > searchFrontierPhase)
                     continue;
-                if (neighbor.IsUnderwater)
+                if (neighbor.IsUnderwater || neighbor.Unit)
                     continue;
 
                 HexEdgeType edgeType = current.GetEdgeType(neighbor);
