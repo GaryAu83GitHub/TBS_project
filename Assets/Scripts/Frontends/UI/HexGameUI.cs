@@ -6,6 +6,16 @@ public class HexGameUI : MonoBehaviour
     public HexGrid grid;
 
     private HexCell currentCell;
+    private HexUnit selectedUnit;
+
+    void Update()
+    {
+        if(!EventSystem.current.IsPointerOverGameObject())
+        {
+            if(Input.GetMouseButtonDown(0))
+                DoSelection();
+        }
+    }
 
     public void SetEditMode(bool toggle)
     {
@@ -23,5 +33,15 @@ public class HexGameUI : MonoBehaviour
             return true;
         }
         return false;
+    }
+
+    private void DoSelection()
+    {
+        UpdateCurrentCell();
+
+        if(currentCell)
+        {
+            selectedUnit = currentCell.Unit;
+        }
     }
 }
