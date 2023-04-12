@@ -208,6 +208,29 @@ public class HexGrid : MonoBehaviour
         return null;
     }
 
+    public void ClearPath()
+    {
+        if (currentPathExists)
+        {
+            HexCell current = currentPathTo;
+
+            while (current != currentPathFrom)
+            {
+                current.SetLabel(null);
+                current.DisableHighlight();
+                current = current.PathFrom;
+            }
+            current.DisableHighlight();
+            currentPathExists = false;
+        }
+        else if (currentPathFrom)
+        {
+            currentPathFrom.DisableHighlight();
+            currentPathTo.DisableHighlight();
+        }
+        currentPathFrom = currentPathTo = null;
+    }
+
     private void HandleInput()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -461,29 +484,6 @@ public class HexGrid : MonoBehaviour
         }
         currentPathFrom.EnableHighlight(Color.blue);
         currentPathTo.EnableHighlight(Color.red);
-    }
-
-    private void ClearPath()
-    {
-        if (currentPathExists)
-        {
-            HexCell current = currentPathTo;
-
-            while (current != currentPathFrom)
-            {
-                current.SetLabel(null);
-                current.DisableHighlight();
-                current = current.PathFrom;
-            }
-            current.DisableHighlight();
-            currentPathExists = false;
-        }
-        else if(currentPathFrom)
-        {
-            currentPathFrom.DisableHighlight();
-            currentPathTo.DisableHighlight();
-        }
-        currentPathFrom = currentPathTo = null;
     }
 
     private void ClearUnits()
