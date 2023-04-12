@@ -197,6 +197,17 @@ public class HexGrid : MonoBehaviour
         unit.Die();
     }
 
+    public HexCell GetCell(Ray ray)
+    {
+        RaycastHit hit;
+        if(Physics.Raycast(ray, out hit))
+        {
+            return GetCell(hit.point);
+        }
+
+        return null;
+    }
+
     private void HandleInput()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);

@@ -35,14 +35,15 @@ public class HexMapEditor : MonoBehaviour
     private OptionalToggle myRiverMode, myRoadMode, myWalledMode;
 
     private bool isDrag;
-    private bool editMode;
+    //private bool editMode;
 
     private HexDirection dragDirection;
-    private HexCell previousCell, searchFromCell, searchToCell;
+    private HexCell previousCell;//, searchFromCell, searchToCell;
 
     private void Awake()
     {
         terrainMaterial.DisableKeyword("GRID_ON");
+        SetEditMode(false);
     }
 
     void Update()
@@ -70,167 +71,6 @@ public class HexMapEditor : MonoBehaviour
         previousCell = null;
     }
 
-    private void HandleInput()
-    {
-        //Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        //RaycastHit hit;
-        //if (Physics.Raycast(ray, out hit))
-        HexCell currentCell = GetCellUnderCursor();
-        if(currentCell)
-        {   
-            if (previousCell && previousCell != currentCell)
-                ValidateDrag(currentCell);
-            else
-                isDrag = false;
-
-            if (editMode)
-                EditCells(currentCell);
-            else if (Input.GetKey(KeyCode.LeftShift) && searchToCell != currentCell)
-            {
-                if (searchFromCell != currentCell)
-                {
-                    if (searchFromCell)
-                        searchFromCell.DisableHighlight();
-                    searchFromCell = currentCell;
-                    searchFromCell.EnableHighlight(Color.blue);
-                    if (searchToCell)
-                        hexGrid.FindPath(searchFromCell, searchToCell, 24);
-                }
-            }
-            else if (searchFromCell && searchFromCell != currentCell)
-            {
-                if (searchToCell != currentCell)
-                {
-                    searchToCell = currentCell;
-                    hexGrid.FindPath(searchFromCell, currentCell, 24);
-                }
-            }
-            //else
-            //    hexGrid.FindDistancesTo(currentCell);
-
-            previousCell = currentCell;
-        }
-        else
-        {
-            previousCell = null;
-        }
-    }
-
-    private void EditCells(HexCell center)
-    {
-        int centerX = center.Coordinates.X;
-        int centerZ = center.Coordinates.Z;
-
-        for(int r = 0, z = centerZ - myBrushSize; z <= centerZ; z++, r++)
-        {
-            for(int x = centerX - r; x <= centerX + myBrushSize; x++)
-            {
-                EditCell(hexGrid.GetCell(new HexCoordinates(x, z)));
-            }
-        }
-
-        for(int r = 0, z = centerZ + myBrushSize; z > centerZ; z--, r++)
-        {
-            for(int x = centerX - myBrushSize; x <= centerX + r; x++)
-            {
-                EditCell(hexGrid.GetCell(new HexCoordinates(x, z)));
-            }
-        }
-    }
-
-    private void EditCell(HexCell aCell)
-    {
-        if (aCell)
-        {
-            if(myActiveTerrainTypeIndex >= 0)
-                aCell.TerrainTypeIndex = myActiveTerrainTypeIndex;
-
-            if (myApplyElevation)
-                aCell.Elevation = myActiveElevation;
-
-            if (myApplyWaterLevel)
-                aCell.WaterLevel = myActiveWaterLevel;
-
-            if (myApplySpecialIndex)
-                aCell.SpecialIndex = myActiveSpecialIndex;
-
-            if (myApplyUrbanLevel)
-                aCell.UrbanLevel = myActiveUrbanLevel;
-
-            if (myApplyFarmLevel)
-                aCell.FarmLevel = myActiveFarmLevel;
-
-            if (myApplyPlantLevel)
-                aCell.PlantLevel = myActivePlantLevel;
-
-            if (myRiverMode == OptionalToggle.NO)
-                aCell.RemoveRiver();
-            
-            if (myRoadMode == OptionalToggle.NO)
-                aCell.RemoveRoads();
-
-            if (myWalledMode != OptionalToggle.IGNORE)
-                aCell.Walled = myWalledMode == OptionalToggle.YES;
-            
-            if (isDrag)
-            {
-                HexCell otherCell = aCell.GetNeighbor(dragDirection.Opposite());
-                if (otherCell)
-                {
-                    if(myRiverMode == OptionalToggle.YES)
-                        otherCell.SetOutgoingRiver(dragDirection);
-                    if (myRoadMode == OptionalToggle.YES)
-                        otherCell.AddRoad(dragDirection);
-                }
-            }
-        }
-    }
-
-    private void CreateUnit()
-    {
-        HexCell cell = GetCellUnderCursor();
-        if (cell && !cell.Unit)
-        {
-            //HexUnit unit = Instantiate(unitPrefab);
-            //unit.transform.SetParent(hexGrid.transform, false);
-            //unit.Location = cell;
-            //unit.Orientation = Random.Range(0f, 360f);
-            hexGrid.AddUnit(Instantiate(HexUnit.unitPrefab), cell, Random.Range(0f, 360f));
-        }
-    }
-
-    private void DestroyUnit()
-    {
-        HexCell cell = GetCellUnderCursor();
-        if(cell && cell.Unit)
-        {
-            hexGrid.RemoveUnit(cell.Unit);
-        }
-    }
-
-    private void ValidateDrag(HexCell currentCell)
-    {
-        for(dragDirection = HexDirection.NE; dragDirection <= HexDirection.NW; dragDirection++)
-        {
-            if(previousCell.GetNeighbor(dragDirection) == currentCell)
-            {
-                isDrag = true;
-                return;
-            }
-        }
-        isDrag = false;
-    }
-
-    private HexCell GetCellUnderCursor()
-    {
-        Ray inputRay = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit;
-        if(Physics.Raycast(inputRay, out hit))
-        {
-            return hexGrid.GetCell(hit.point);
-        }
-        return null;
-    }
 
     public void SetTerrainTypeIndex(int index)
     {
@@ -357,7 +197,162 @@ public class HexMapEditor : MonoBehaviour
 
     public void SetEditMode(bool toggle)
     {
-        editMode = toggle;
-        hexGrid.ShowUI(!toggle);
+        //editMode = toggle;
+        //hexGrid.ShowUI(!toggle);
+        enabled = toggle;
+    }
+
+    private void HandleInput()
+    {
+        HexCell currentCell = GetCellUnderCursor();
+        if(currentCell)
+        {   
+            if (previousCell && previousCell != currentCell)
+                ValidateDrag(currentCell);
+            else
+                isDrag = false;
+
+            //if (editMode)
+                EditCells(currentCell);
+            //else if (Input.GetKey(KeyCode.LeftShift) && searchToCell != currentCell)
+            //{
+            //    if (searchFromCell != currentCell)
+            //    {
+            //        if (searchFromCell)
+            //            searchFromCell.DisableHighlight();
+            //        searchFromCell = currentCell;
+            //        searchFromCell.EnableHighlight(Color.blue);
+            //        if (searchToCell)
+            //            hexGrid.FindPath(searchFromCell, searchToCell, 24);
+            //    }
+            //}
+            //else if (searchFromCell && searchFromCell != currentCell)
+            //{
+            //    if (searchToCell != currentCell)
+            //    {
+            //        searchToCell = currentCell;
+            //        hexGrid.FindPath(searchFromCell, currentCell, 24);
+            //    }
+            //}
+
+            previousCell = currentCell;
+        }
+        else
+        {
+            previousCell = null;
+        }
+    }
+
+    private void EditCells(HexCell center)
+    {
+        int centerX = center.Coordinates.X;
+        int centerZ = center.Coordinates.Z;
+
+        for(int r = 0, z = centerZ - myBrushSize; z <= centerZ; z++, r++)
+        {
+            for(int x = centerX - r; x <= centerX + myBrushSize; x++)
+            {
+                EditCell(hexGrid.GetCell(new HexCoordinates(x, z)));
+            }
+        }
+
+        for(int r = 0, z = centerZ + myBrushSize; z > centerZ; z--, r++)
+        {
+            for(int x = centerX - myBrushSize; x <= centerX + r; x++)
+            {
+                EditCell(hexGrid.GetCell(new HexCoordinates(x, z)));
+            }
+        }
+    }
+
+    private void EditCell(HexCell aCell)
+    {
+        if (aCell)
+        {
+            if(myActiveTerrainTypeIndex >= 0)
+                aCell.TerrainTypeIndex = myActiveTerrainTypeIndex;
+
+            if (myApplyElevation)
+                aCell.Elevation = myActiveElevation;
+
+            if (myApplyWaterLevel)
+                aCell.WaterLevel = myActiveWaterLevel;
+
+            if (myApplySpecialIndex)
+                aCell.SpecialIndex = myActiveSpecialIndex;
+
+            if (myApplyUrbanLevel)
+                aCell.UrbanLevel = myActiveUrbanLevel;
+
+            if (myApplyFarmLevel)
+                aCell.FarmLevel = myActiveFarmLevel;
+
+            if (myApplyPlantLevel)
+                aCell.PlantLevel = myActivePlantLevel;
+
+            if (myRiverMode == OptionalToggle.NO)
+                aCell.RemoveRiver();
+            
+            if (myRoadMode == OptionalToggle.NO)
+                aCell.RemoveRoads();
+
+            if (myWalledMode != OptionalToggle.IGNORE)
+                aCell.Walled = myWalledMode == OptionalToggle.YES;
+            
+            if (isDrag)
+            {
+                HexCell otherCell = aCell.GetNeighbor(dragDirection.Opposite());
+                if (otherCell)
+                {
+                    if(myRiverMode == OptionalToggle.YES)
+                        otherCell.SetOutgoingRiver(dragDirection);
+                    if (myRoadMode == OptionalToggle.YES)
+                        otherCell.AddRoad(dragDirection);
+                }
+            }
+        }
+    }
+
+    private void CreateUnit()
+    {
+        HexCell cell = GetCellUnderCursor();
+        if (cell && !cell.Unit)
+        {
+            hexGrid.AddUnit(Instantiate(HexUnit.unitPrefab), cell, Random.Range(0f, 360f));
+        }
+    }
+
+    private void DestroyUnit()
+    {
+        HexCell cell = GetCellUnderCursor();
+        if(cell && cell.Unit)
+        {
+            hexGrid.RemoveUnit(cell.Unit);
+        }
+    }
+
+    private void ValidateDrag(HexCell currentCell)
+    {
+        for(dragDirection = HexDirection.NE; dragDirection <= HexDirection.NW; dragDirection++)
+        {
+            if(previousCell.GetNeighbor(dragDirection) == currentCell)
+            {
+                isDrag = true;
+                return;
+            }
+        }
+        isDrag = false;
+    }
+
+    private HexCell GetCellUnderCursor()
+    {
+        return hexGrid.GetCell(Camera.main.ScreenPointToRay(Input.mousePosition));
+        //Ray inputRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+        //RaycastHit hit;
+        //if(Physics.Raycast(inputRay, out hit))
+        //{
+        //    return hexGrid.GetCell(hit.point);
+        //}
+        //return null;
     }
 }
