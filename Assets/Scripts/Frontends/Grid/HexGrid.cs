@@ -17,6 +17,8 @@ public class HexGrid : MonoBehaviour
 
     public HexGridChunk chunkPrefab;
 
+    public HexUnit unitPrefab;
+
     public Texture2D noiseSource;
 
     public int seed;
@@ -31,12 +33,17 @@ public class HexGrid : MonoBehaviour
     private int searchFrontierPhase;
 
     private HexCell currentPathFrom, currentPathTo;
+    public bool HasPath { get { return currentPathExists; } }
+
     private bool currentPathExists;
+
+    private List<HexUnit> units = new List<HexUnit>();
 
     void Awake()
     {
         HexMetrics.NoiseSource = noiseSource;
         HexMetrics.InitializeHashGrid(seed);
+        HexUnit.unitPrefab = unitPrefab;
         CreateMap(cellCountX, cellCountZ);
     }
 
@@ -46,6 +53,7 @@ public class HexGrid : MonoBehaviour
         {
             HexMetrics.NoiseSource = noiseSource;
             HexMetrics.InitializeHashGrid(seed);
+            HexUnit.unitPrefab = unitPrefab;
         }
     }
 
@@ -88,11 +96,18 @@ public class HexGrid : MonoBehaviour
         {
             cells[i].Save(writer);
         }
+
+        writer.Write(units.Count);
+        for(int i = 0; i < units.Count; i++)
+        {
+            units[i].Save(writer);
+        }
     }
 
     public void Load(BinaryReader reader, int header)
     {
         ClearPath();
+        ClearUnits();
 
         int x = 20, z = 15;
         if(header >= 1)
@@ -115,6 +130,15 @@ public class HexGrid : MonoBehaviour
         {
             myChunks[i].Refresh();
         }
+
+        if (header >= 2)
+        {
+            int unitCount = reader.ReadInt32();
+            for (int i = 0; i < unitCount; i++)
+            {
+                HexUnit.Load(reader, this);
+            }
+        }
     }
 
     public bool CreateMap(int x, int z)
@@ -127,6 +151,8 @@ public class HexGrid : MonoBehaviour
         }
 
         ClearPath();
+        ClearUnits();
+
         if(myChunks != null)
         {
             for(int i = 0; i < myChunks.Length; i++)
@@ -157,6 +183,54 @@ public class HexGrid : MonoBehaviour
         ShowPath(speed);
         //sw.Stop();
         //Debug.Log(sw.ElapsedMilliseconds);
+    }
+
+    public void AddUnit(HexUnit unit, HexCell location, float orientation)
+    {
+        units.Add(unit);
+        unit.transform.SetParent(transform, false);
+        unit.Location = location;
+        unit.Orientation = orientation;
+    }
+
+    public void RemoveUnit(HexUnit unit)
+    {
+        units.Remove(unit);
+        unit.Die();
+    }
+
+    public HexCell GetCell(Ray ray)
+    {
+        RaycastHit hit;
+        if(Physics.Raycast(ray, out hit))
+        {
+            return GetCell(hit.point);
+        }
+
+        return null;
+    }
+
+    public void ClearPath()
+    {
+        if (currentPathExists)
+        {
+            HexCell current = currentPathTo;
+
+            while (current != currentPathFrom)
+            {
+                current.SetLabel(null);
+                current.DisableHighlight();
+                current = current.PathFrom;
+            }
+            current.DisableHighlight();
+            currentPathExists = false;
+        }
+        else if (currentPathFrom)
+        {
+            currentPathFrom.DisableHighlight();
+            currentPathTo.DisableHighlight();
+        }
+        currentPathFrom = currentPathTo = null;
     }
 
     private void HandleInput()
@@ -330,14 +404,6 @@ public class HexGrid : MonoBehaviour
         else
             searchFrontier.Clear();
 
-        //for (int i = 0; i < cells.Length; i++)
-        //{
-        //    cells[i].SetLabel(null);
-        //    cells[i].DisableHighlight();
-        //}
-
-        //fromCell.EnableHighlight(Color.blue);
-
         fromCell.SearchPhase = searchFrontierPhase;
         fromCell.Distance = 0;
         searchFrontier.Enqueue(fromCell);
@@ -348,15 +414,6 @@ public class HexGrid : MonoBehaviour
 
             if (current == toCell)
             {
-                //while(current != fromCell)
-                //{
-                //    int turn = current.Distance / speed;
-                //    current.SetLabel(turn.ToString());
-                //    current.EnableHighlight(Color.gray);
-                //    current = current.PathFrom;
-                //}
-                //toCell.EnableHighlight(Color.red);
-                //break;
                 return true;
             }
 
@@ -366,7 +423,7 @@ public class HexGrid : MonoBehaviour
                 HexCell neighbor = current.GetNeighbor(d);
                 if (neighbor == null || neighbor.SearchPhase > searchFrontierPhase)
                     continue;
-                if (neighbor.IsUnderwater)
+                if (neighbor.IsUnderwater || neighbor.Unit)
                     continue;
 
                 HexEdgeType edgeType = current.GetEdgeType(neighbor);
@@ -431,26 +488,12 @@ public class HexGrid : MonoBehaviour
         currentPathTo.EnableHighlight(Color.red);
     }
 
-    private void ClearPath()
+    private void ClearUnits()
     {
-        if (currentPathExists)
+        for(int i = 0; i < units.Count; i++)
         {
-            HexCell current = currentPathTo;
-
-            while (current != currentPathFrom)
-            {
-                current.SetLabel(null);
-                current.DisableHighlight();
-                current = current.PathFrom;
-            }
-            current.DisableHighlight();
-            currentPathExists = false;
+            units[i].Die();
         }
-        else if(currentPathFrom)
-        {
-            currentPathFrom.DisableHighlight();
-            currentPathTo.DisableHighlight();
-        }
-        currentPathFrom = currentPathTo = null;
+        units.Clear();
     }
 }
