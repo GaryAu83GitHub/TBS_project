@@ -52,14 +52,23 @@ public class HexUnit : MonoBehaviour
             return;
         }
 
+        Vector3 a, b = pathToTravel[0].Position;
+
         for (int i = 1; i < pathToTravel.Count; i++)
         {
-            Vector3 a = pathToTravel[i - 1].Position;
-            Vector3 b = pathToTravel[i].Position;
-            for (float t = 0f; t < 1f; t += .1f)
+            a = b;
+            b = (pathToTravel[i - 1].Position + pathToTravel[i].Position) * 0.5f;
+            for (float t = 0f; t < 1f; t += 0.1f)
             {
                 Gizmos.DrawSphere(Vector3.Lerp(a, b, t), 2f);
             }
+        }
+
+        a = b;
+        b = pathToTravel[pathToTravel.Count - 1].Position;
+        for (float t = 0f; t < 1f; t += 0.1f)
+        {
+            Gizmos.DrawSphere(Vector3.Lerp(a, b, t), 2f);
         }
     }
 
@@ -101,15 +110,29 @@ public class HexUnit : MonoBehaviour
 
     private IEnumerator TravelPath()
     {
+        Vector3 a, b = pathToTravel[0].Position;
+
         for(int i = 1; i < pathToTravel.Count;i++)
         {
-            Vector3 a = pathToTravel[i - 1].Position;
-            Vector3 b = pathToTravel[i].Position;
+            //Vector3 a = pathToTravel[i - 1].Position;
+            //Vector3 b = pathToTravel[i].Position;
+            a = b;
+            b = (pathToTravel[i - 1].Position + pathToTravel[i].Position) * .5f;
+
             for (float t = 0f; t < 1f; t += Time.deltaTime * travelSpeed)
             {
                 transform.localPosition = Vector3.Lerp(a, b, t);
                 yield return null;
             }
+        }
+
+        a = b;
+        b = pathToTravel[pathToTravel.Count - 1].Position;
+
+        for (float t = 0f; t < 1f; t += Time.deltaTime * travelSpeed)
+        {
+            transform.localPosition = Vector3.Lerp(a, b, t);
+            yield return null;
         }
     }
 }
