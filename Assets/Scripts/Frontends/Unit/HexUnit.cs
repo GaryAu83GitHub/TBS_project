@@ -47,34 +47,34 @@ public class HexUnit : MonoBehaviour
         grid.AddUnit(Instantiate(unitPrefab), grid.GetCell(coordinates), orientation);
     }
 
-    private void OnDrawGizmos()
-    {
-        if (pathToTravel == null || pathToTravel.Count == 0)
-        {
-            return;
-        }
+    //private void OnDrawGizmos()
+    //{
+    //    if (pathToTravel == null || pathToTravel.Count == 0)
+    //    {
+    //        return;
+    //    }
 
-        Vector3 a, b, c = pathToTravel[0].Position;
+    //    Vector3 a, b, c = pathToTravel[0].Position;
 
-        for (int i = 1; i < pathToTravel.Count; i++)
-        {
-            a = c;
-            b = pathToTravel[i - 1].Position;
-            c = (b + pathToTravel[i].Position) * .5f;
-            for (float t = 0f; t < 1f; t += 0.1f)
-            {
-                Gizmos.DrawSphere(Bezier.GetPoint(a, b, c, t), 2f);
-            }
-        }
+    //    for (int i = 1; i < pathToTravel.Count; i++)
+    //    {
+    //        a = c;
+    //        b = pathToTravel[i - 1].Position;
+    //        c = (b + pathToTravel[i].Position) * .5f;
+    //        for (float t = 0f; t < 1f; t += 0.1f)
+    //        {
+    //            Gizmos.DrawSphere(Bezier.GetPoint(a, b, c, t), 2f);
+    //        }
+    //    }
 
-        a = c;
-        b = pathToTravel[pathToTravel.Count - 1].Position;
-        c = b;
-        for (float t = 0f; t < 1f; t += 0.1f)
-        {
-            Gizmos.DrawSphere(Bezier.GetPoint(a, b, c, t), 2f);
-        }
-    }
+    //    a = c;
+    //    b = pathToTravel[pathToTravel.Count - 1].Position;
+    //    c = b;
+    //    for (float t = 0f; t < 1f; t += 0.1f)
+    //    {
+    //        Gizmos.DrawSphere(Bezier.GetPoint(a, b, c, t), 2f);
+    //    }
+    //}
 
     private void OnEnable()
     {
@@ -151,6 +151,9 @@ public class HexUnit : MonoBehaviour
 
         transform.localPosition = location.Position;
         orientation = transform.localRotation.eulerAngles.y;
+
+        ListPool<HexCell>.Add(pathToTravel);
+        pathToTravel = null;
     }
 
     private IEnumerator LookAt(Vector3 point)
