@@ -27,7 +27,8 @@ public class HexCell : MonoBehaviour
             if(terrainTypeIndex != value)
             {
                 terrainTypeIndex = value;
-                Refresh();
+                //Refresh();
+                ShaderData.RefreshTerrain(this);
             }
         }
     }
@@ -221,6 +222,8 @@ public class HexCell : MonoBehaviour
     // unit stuff
     public HexUnit Unit { get; set; }
 
+    public HexCellShaderData ShaderData { get; set; }
+
     public HexCell GetNeighbor(HexDirection aDir)
     {
         return neighbors[(int)aDir];
@@ -367,6 +370,7 @@ public class HexCell : MonoBehaviour
     public void Load(BinaryReader reader)
     {
         terrainTypeIndex = reader.ReadByte();
+        ShaderData.RefreshTerrain(this);
         elevation = reader.ReadByte();
         RefreshPosition();
         waterLevel = reader.ReadByte();

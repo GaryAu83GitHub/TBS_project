@@ -28,4 +28,9 @@ public class HexCellShaderData : MonoBehaviour
             }
         }
     }
+
+    public void RefreshTerrain(HexCell cell)
+    {
+
+    }
 }

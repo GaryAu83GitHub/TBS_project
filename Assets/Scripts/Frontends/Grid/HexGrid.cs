@@ -272,6 +272,7 @@ public class HexGrid : MonoBehaviour
         HexCell cell = cells[i] = Instantiate<HexCell>(cellPrefab);
         cell.transform.localPosition = position;
         cell.Coordinates = HexCoordinates.FromOffsetCoordinates(x, z);
+        cell.ShaderData = cellShaderData;
         
         if(x > 0)
         {
@@ -302,7 +303,6 @@ public class HexGrid : MonoBehaviour
 
         Text label = Instantiate<Text>(cellLabelPrefab);
         label.rectTransform.anchoredPosition = new Vector2(position.x, position.z);
-        //label.text = cell.Coordinates.ToStringOnSeperateLines();
 
         cell.UIRect = label.rectTransform;
 
