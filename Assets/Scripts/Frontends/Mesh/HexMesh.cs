@@ -8,238 +8,288 @@ using Assets.Scripts.Backends.Tools;
 [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
 public class HexMesh : MonoBehaviour
 {
-    public bool useCollider, useColors, useUVCoordinates, useUV2Coordinates;
-    public bool useTerrainTypes;
+    public bool useCollider, useCellData, useUVCoordinates, useUV2Coordinates;
 
-    private Mesh myHexMesh;
+    private Mesh hexMesh;
     private MeshCollider myCollider;
 
-    [NonSerialized] List<Vector3> myVertices, terrainTypes;
-    [NonSerialized] List<Color> myColors;
-    [NonSerialized] List<int> myTriangles;
-    [NonSerialized] List<Vector2> myUVs, myUV2s;
+    //[NonSerialized] List<Vector3> vertices, terrainTypes;
+    //[NonSerialized] List<Color> colors;
+    [NonSerialized] List<Vector3> vertices, cellIndices;
+    [NonSerialized] List<Color> cellWeights;
+    [NonSerialized] List<Vector2> uvs, uv2s;
+    [NonSerialized] List<int> triangles;
 
     void Awake()
     {
-        GetComponent<MeshFilter>().mesh = myHexMesh = new Mesh();
+        GetComponent<MeshFilter>().mesh = hexMesh = new Mesh();
         if(useCollider)
             myCollider = gameObject.AddComponent<MeshCollider>();
 
-        myHexMesh.name = "Hex Mesh";
+        hexMesh.name = "Hex Mesh";
     }
 
     public void Clear()
     {
-        myHexMesh.Clear();
-        myVertices = ListPool<Vector3>.Get();
+        hexMesh.Clear();
+        vertices = ListPool<Vector3>.Get();
+        if(useCellData)
+        {
+            cellWeights = ListPool<Color>.Get();
+            cellIndices = ListPool<Vector3>.Get();
+        }
 
-        if(useColors)
-            myColors = ListPool<Color>.Get();
+        //if(useColors)
+        //    colors = ListPool<Color>.Get();
         
         if(useUVCoordinates)
-            myUVs = ListPool<Vector2>.Get();
+            uvs = ListPool<Vector2>.Get();
 
         if (useUV2Coordinates)
-            myUV2s = ListPool<Vector2>.Get();
+            uv2s = ListPool<Vector2>.Get();
 
-        if (useTerrainTypes)
-            terrainTypes = ListPool<Vector3>.Get();
+        //if (useTerrainTypes)
+        //    terrainTypes = ListPool<Vector3>.Get();
 
-        myTriangles = ListPool<int>.Get();
+        triangles = ListPool<int>.Get();
     }
 
     public void Apply()
     {
-        myHexMesh.SetVertices(myVertices);
-        ListPool<Vector3>.Add(myVertices);
-
-        if (useColors)
+        hexMesh.SetVertices(vertices);
+        ListPool<Vector3>.Add(vertices);
+        if(useCellData)
         {
-            myHexMesh.SetColors(myColors);
-            ListPool<Color>.Add(myColors);
+            hexMesh.SetColors(cellWeights);
+            ListPool<Color>.Add(cellWeights);
+            hexMesh.SetUVs(2, cellIndices);
+            ListPool<Vector3>.Add(cellIndices);
         }
+        //if (useColors)
+        //{
+        //    myHexMesh.SetColors(colors);
+        //    ListPool<Color>.Add(colors);
+        //}
 
         if(useUVCoordinates)
         {
-            myHexMesh.SetUVs(0, myUVs);
-            ListPool<Vector2>.Add(myUVs);
+            hexMesh.SetUVs(0, uvs);
+            ListPool<Vector2>.Add(uvs);
         }
 
         if(useUV2Coordinates)
         {
-            myHexMesh.SetUVs(1, myUV2s);
-            ListPool<Vector2>.Add(myUV2s);
+            hexMesh.SetUVs(1, uv2s);
+            ListPool<Vector2>.Add(uv2s);
         }
 
-        if(useTerrainTypes)
-        {
-            myHexMesh.SetUVs(2, terrainTypes);
-            ListPool<Vector3>.Add(terrainTypes);
-        }
+        //if(useTerrainTypes)
+        //{
+        //    hexMesh.SetUVs(2, terrainTypes);
+        //    ListPool<Vector3>.Add(terrainTypes);
+        //}
 
-        myHexMesh.SetTriangles(myTriangles, 0);
-        ListPool<int>.Add(myTriangles);
-        myHexMesh.RecalculateNormals();
+        hexMesh.SetTriangles(triangles, 0);
+        ListPool<int>.Add(triangles);
+        hexMesh.RecalculateNormals();
         if(useCollider)
-            myCollider.sharedMesh = myHexMesh;
+            myCollider.sharedMesh = hexMesh;
     }
 
     public void AddTriangle(Vector3 v1, Vector3 v2, Vector3 v3)
     {
-        int vertexIndex = myVertices.Count;
+        int vertexIndex = vertices.Count;
 
-        myVertices.Add(HexMetrics.Perturb(v1));
-        myVertices.Add(HexMetrics.Perturb(v2));
-        myVertices.Add(HexMetrics.Perturb(v3));
+        vertices.Add(HexMetrics.Perturb(v1));
+        vertices.Add(HexMetrics.Perturb(v2));
+        vertices.Add(HexMetrics.Perturb(v3));
 
-        myTriangles.Add(vertexIndex);
-        myTriangles.Add(vertexIndex + 1);
-        myTriangles.Add(vertexIndex + 2);
+        triangles.Add(vertexIndex);
+        triangles.Add(vertexIndex + 1);
+        triangles.Add(vertexIndex + 2);
     }
 
     public void AddTriangleUnperturbed(Vector3 v1, Vector3 v2, Vector3 v3)
     {
-        int vertexIndex = myVertices.Count;
+        int vertexIndex = vertices.Count;
 
-        myVertices.Add(v1);
-        myVertices.Add(v2);
-        myVertices.Add(v3);
+        vertices.Add(v1);
+        vertices.Add(v2);
+        vertices.Add(v3);
 
-        myTriangles.Add(vertexIndex);
-        myTriangles.Add(vertexIndex + 1);
-        myTriangles.Add(vertexIndex + 2);
+        triangles.Add(vertexIndex);
+        triangles.Add(vertexIndex + 1);
+        triangles.Add(vertexIndex + 2);
     }
 
     public void AddQuad(Vector3 v1, Vector3 v2, Vector3 v3, Vector3 v4)
     {
-        int vertexIndex = myVertices.Count;
+        int vertexIndex = vertices.Count;
 
-        myVertices.Add(HexMetrics.Perturb(v1));
-        myVertices.Add(HexMetrics.Perturb(v2));
-        myVertices.Add(HexMetrics.Perturb(v3));
-        myVertices.Add(HexMetrics.Perturb(v4));
+        vertices.Add(HexMetrics.Perturb(v1));
+        vertices.Add(HexMetrics.Perturb(v2));
+        vertices.Add(HexMetrics.Perturb(v3));
+        vertices.Add(HexMetrics.Perturb(v4));
 
-        myTriangles.Add(vertexIndex);
-        myTriangles.Add(vertexIndex + 2);
-        myTriangles.Add(vertexIndex + 1);
-        myTriangles.Add(vertexIndex + 1);
-        myTriangles.Add(vertexIndex + 2);
-        myTriangles.Add(vertexIndex + 3);
+        triangles.Add(vertexIndex);
+        triangles.Add(vertexIndex + 2);
+        triangles.Add(vertexIndex + 1);
+        triangles.Add(vertexIndex + 1);
+        triangles.Add(vertexIndex + 2);
+        triangles.Add(vertexIndex + 3);
     }
 
     public void AddQuadUnperturbed(Vector3 v1, Vector3 v2, Vector3 v3, Vector3 v4)
     {
-        int vertexIndex = myVertices.Count;
+        int vertexIndex = vertices.Count;
 
-        myVertices.Add(v1);
-        myVertices.Add(v2);
-        myVertices.Add(v3);
-        myVertices.Add(v4);
+        vertices.Add(v1);
+        vertices.Add(v2);
+        vertices.Add(v3);
+        vertices.Add(v4);
 
-        myTriangles.Add(vertexIndex);
-        myTriangles.Add(vertexIndex + 2);
-        myTriangles.Add(vertexIndex + 1);
-        myTriangles.Add(vertexIndex + 1);
-        myTriangles.Add(vertexIndex + 2);
-        myTriangles.Add(vertexIndex + 3);
+        triangles.Add(vertexIndex);
+        triangles.Add(vertexIndex + 2);
+        triangles.Add(vertexIndex + 1);
+        triangles.Add(vertexIndex + 1);
+        triangles.Add(vertexIndex + 2);
+        triangles.Add(vertexIndex + 3);
     }
 
-    public void AddTriangleColor(Color aColor)
+    //public void AddTriangleColor(Color aColor)
+    //{
+    //    colors.Add(aColor);
+    //    colors.Add(aColor);
+    //    colors.Add(aColor);
+    //}
+
+    //public void AddTriangleColor(Color aColor1, Color aColor2, Color aColor3)
+    //{
+    //    colors.Add(aColor1);
+    //    colors.Add(aColor2);
+    //    colors.Add(aColor3);
+    //}
+
+    //public void AddTriangleTerrainTypes(Vector3 types)
+    //{
+    //    terrainTypes.Add(types);
+    //    terrainTypes.Add(types);
+    //    terrainTypes.Add(types);
+    //}
+
+    public void AddTriangleCellData(Vector3 indices, Color weights1, Color weights2, Color weights3)
     {
-        myColors.Add(aColor);
-        myColors.Add(aColor);
-        myColors.Add(aColor);
+        cellIndices.Add(indices);
+        cellIndices.Add(indices);
+        cellIndices.Add(indices);
+        cellWeights.Add(weights1);
+        cellWeights.Add(weights2);
+        cellWeights.Add(weights3);
     }
 
-    public void AddTriangleColor(Color aColor1, Color aColor2, Color aColor3)
+    public void AddTriangleCellData(Vector3 indices, Color weights)
     {
-        myColors.Add(aColor1);
-        myColors.Add(aColor2);
-        myColors.Add(aColor3);
-    }
-
-    public void AddTriangleTerrainTypes(Vector3 types)
-    {
-        terrainTypes.Add(types);
-        terrainTypes.Add(types);
-        terrainTypes.Add(types);
+        AddTriangleCellData(indices, weights, weights, weights);
     }
 
     public void AddTriangleUV(Vector2 uv1, Vector2 uv2, Vector2 uv3)
     {
-        myUVs.Add(uv1);
-        myUVs.Add(uv2);
-        myUVs.Add(uv3);
+        uvs.Add(uv1);
+        uvs.Add(uv2);
+        uvs.Add(uv3);
     }
 
     public void AddTriangleUV2(Vector2 uv1, Vector2 uv2, Vector2 uv3)
     {
-        myUV2s.Add(uv1);
-        myUV2s.Add(uv2);
-        myUV2s.Add(uv3);
+        uv2s.Add(uv1);
+        uv2s.Add(uv2);
+        uv2s.Add(uv3);
     }
 
-    public void AddQuadColor(Color aColor)
+    //public void AddQuadColor(Color aColor)
+    //{
+    //    colors.Add(aColor);
+    //    colors.Add(aColor);
+    //    colors.Add(aColor);
+    //    colors.Add(aColor);
+    //}
+
+    //public void AddQuadColor(Color aColor1, Color aColor2)
+    //{
+    //    colors.Add(aColor1);
+    //    colors.Add(aColor1);
+    //    colors.Add(aColor2);
+    //    colors.Add(aColor2);
+    //}
+
+    //public void AddQuadColor(Color aColor1, Color aColor2, Color aColor3, Color aColor4)
+    //{
+    //    colors.Add(aColor1);
+    //    colors.Add(aColor2);
+    //    colors.Add(aColor3);
+    //    colors.Add(aColor4);
+    //}
+
+    //public void AddQuadTerrainTypes(Vector3 types)
+    //{
+    //    terrainTypes.Add(types);
+    //    terrainTypes.Add(types);
+    //    terrainTypes.Add(types);
+    //    terrainTypes.Add(types);
+    //}
+
+    public void AddQuadCellData(Vector3 indices, Color weights1, Color weights2, Color weights3, Color weights4)
     {
-        myColors.Add(aColor);
-        myColors.Add(aColor);
-        myColors.Add(aColor);
-        myColors.Add(aColor);
+        cellIndices.Add(indices);
+        cellIndices.Add(indices);
+        cellIndices.Add(indices);
+        cellIndices.Add(indices);
+
+        cellWeights.Add(weights1);
+        cellWeights.Add(weights2);
+        cellWeights.Add(weights3);
+        cellWeights.Add(weights4);
     }
 
-    public void AddQuadColor(Color aColor1, Color aColor2)
+    public void AddQuadCellData(Vector3 indices, Color weights1, Color weights2)
     {
-        myColors.Add(aColor1);
-        myColors.Add(aColor1);
-        myColors.Add(aColor2);
-        myColors.Add(aColor2);
+        AddQuadCellData(indices, weights1, weights1, weights2, weights2);
     }
 
-    public void AddQuadColor(Color aColor1, Color aColor2, Color aColor3, Color aColor4)
+    public void AddQuadCellData(Vector3 indices, Color weights)
     {
-        myColors.Add(aColor1);
-        myColors.Add(aColor2);
-        myColors.Add(aColor3);
-        myColors.Add(aColor4);
-    }
-
-    public void AddQuadTerrainTypes(Vector3 types)
-    {
-        terrainTypes.Add(types);
-        terrainTypes.Add(types);
-        terrainTypes.Add(types);
-        terrainTypes.Add(types);
+        AddQuadCellData(indices, weights, weights, weights, weights);
     }
 
     public void AddQuadUV(Vector2 uv1, Vector2 uv2, Vector2 uv3, Vector2 uv4)
     {
-        myUVs.Add(uv1);
-        myUVs.Add(uv2);
-        myUVs.Add(uv3);
-        myUVs.Add(uv4);
+        uvs.Add(uv1);
+        uvs.Add(uv2);
+        uvs.Add(uv3);
+        uvs.Add(uv4);
     }
 
     public void AddQuadUV2(Vector2 uv1, Vector2 uv2, Vector2 uv3, Vector2 uv4)
     {
-        myUV2s.Add(uv1);
-        myUV2s.Add(uv2);
-        myUV2s.Add(uv3);
-        myUV2s.Add(uv4);
+        uv2s.Add(uv1);
+        uv2s.Add(uv2);
+        uv2s.Add(uv3);
+        uv2s.Add(uv4);
     }
 
     public void AddQuadUV(float uMin, float uMax, float vMin, float vMax)
     {
-        myUVs.Add(new Vector2(uMin, vMin));
-        myUVs.Add(new Vector2(uMax, vMin));
-        myUVs.Add(new Vector2(uMin, vMax));
-        myUVs.Add(new Vector2(uMax, vMax));
+        uvs.Add(new Vector2(uMin, vMin));
+        uvs.Add(new Vector2(uMax, vMin));
+        uvs.Add(new Vector2(uMin, vMax));
+        uvs.Add(new Vector2(uMax, vMax));
     }
 
     public void AddQuadUV2(float uMin, float uMax, float vMin, float vMax)
     {
-        myUV2s.Add(new Vector2(uMin, vMin));
-        myUV2s.Add(new Vector2(uMax, vMin));
-        myUV2s.Add(new Vector2(uMin, vMax));
-        myUV2s.Add(new Vector2(uMax, vMax));
+        uv2s.Add(new Vector2(uMin, vMin));
+        uv2s.Add(new Vector2(uMax, vMin));
+        uv2s.Add(new Vector2(uMin, vMax));
+        uv2s.Add(new Vector2(uMax, vMax));
     }
 }
