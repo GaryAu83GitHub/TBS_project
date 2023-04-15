@@ -1,0 +1,31 @@
+using UnityEngine;
+
+public class HexCellShaderData : MonoBehaviour
+{
+    private Texture2D cellTexture;
+    private Color32[] cellTextureData;
+
+    public void Initialize(int x, int z)
+    {
+        if (cellTexture)
+            cellTexture.Reinitialize(x, z);
+        else
+        {
+            cellTexture = new Texture2D(x, z, TextureFormat.ARGB32, false, true);
+            cellTexture.filterMode = FilterMode.Point;
+            cellTexture.wrapMode = TextureWrapMode.Clamp;
+        }
+
+        if(cellTextureData == null || cellTextureData.Length != x * z)
+        {
+            cellTextureData = new Color32[x * z];
+        }
+        else
+        {
+            for(int i = 0; i < cellTextureData.Length; i++)
+            {
+                cellTextureData[i] = new Color32(0, 0, 0, 0);
+            }
+        }
+    }
+}
