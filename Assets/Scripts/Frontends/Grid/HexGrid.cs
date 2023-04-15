@@ -39,11 +39,14 @@ public class HexGrid : MonoBehaviour
 
     private List<HexUnit> units = new List<HexUnit>();
 
+    private HexCellShaderData cellShaderData;
+
     void Awake()
     {
         HexMetrics.NoiseSource = noiseSource;
         HexMetrics.InitializeHashGrid(seed);
         HexUnit.unitPrefab = unitPrefab;
+        cellShaderData = gameObject.AddComponent<HexCellShaderData>();
         CreateMap(cellCountX, cellCountZ);
     }
 
@@ -166,6 +169,9 @@ public class HexGrid : MonoBehaviour
 
         chunkCountX = cellCountX / HexMetrics.ChunkSizeX;
         chunkCountZ = cellCountZ / HexMetrics.ChunkSizeZ;
+
+        cellShaderData.Initialize(cellCountX, cellCountZ);
+
         CreateChunks();
         CreateCells();
 
@@ -266,6 +272,8 @@ public class HexGrid : MonoBehaviour
         HexCell cell = cells[i] = Instantiate<HexCell>(cellPrefab);
         cell.transform.localPosition = position;
         cell.Coordinates = HexCoordinates.FromOffsetCoordinates(x, z);
+        cell.Index = i;
+        cell.ShaderData = cellShaderData;
         
         if(x > 0)
         {
@@ -296,7 +304,6 @@ public class HexGrid : MonoBehaviour
 
         Text label = Instantiate<Text>(cellLabelPrefab);
         label.rectTransform.anchoredPosition = new Vector2(position.x, position.z);
-        //label.text = cell.Coordinates.ToStringOnSeperateLines();
 
         cell.UIRect = label.rectTransform;
 
