@@ -226,6 +226,10 @@ public class HexCell : MonoBehaviour
 
     public int Index { get; set; }
 
+    // visibility stuff
+    public bool IsVisible { get { return visibility > 0; } }
+    private int visibility;
+
     public HexCell GetNeighbor(HexDirection aDir)
     {
         return neighbors[(int)aDir];
@@ -422,6 +426,19 @@ public class HexCell : MonoBehaviour
     {
         Text label = UIRect.GetComponent<Text>();
         label.text = text;
+    }
+
+    public void IncreaseVisibility()
+    {
+        visibility += 1;
+        if (visibility == 1)
+            ShaderData.RefreshVisibility(this);
+    }
+    public void DecreaseVisibility()
+    {
+        visibility -= 1;
+        if (visibility == 0)
+            ShaderData.RefreshVisibility(this);
     }
 
     private bool IsValidRiverDestination(HexCell neighbor)
