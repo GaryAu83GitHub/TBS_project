@@ -226,9 +226,11 @@ public class HexCell : MonoBehaviour
 
     public int Index { get; set; }
 
-    // visibility stuff
+    // visibility and exploring stuff
     public bool IsVisible { get { return visibility > 0; } }
     private int visibility;
+
+    public bool IsExplored { get; private set; }
 
     public HexCell GetNeighbor(HexDirection aDir)
     {
@@ -432,7 +434,10 @@ public class HexCell : MonoBehaviour
     {
         visibility += 1;
         if (visibility == 1)
+        {
+            IsExplored = true;
             ShaderData.RefreshVisibility(this);
+        }
     }
     public void DecreaseVisibility()
     {
