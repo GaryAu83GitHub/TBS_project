@@ -17,7 +17,7 @@ Shader "Custom/Road" {
 			#pragma surface surf Standard fullforwardshadows decal:blend vertex:vert
 			#pragma target 3.0
 
-			#include "HexCellData.cginc"
+			#include "../HexCellData.cginc"
 
 			sampler2D _MainTex;
 
@@ -42,12 +42,11 @@ Shader "Custom/Road" {
 			}
 
 			void surf(Input IN, inout SurfaceOutputStandard o) {
-				float4 noise = tex2D(_MainTex, IN.worldPos.xz * .025);
-				fixed4 c = _Color * ((noise.y * .75 + .25) * IN.visibility);
+				float4 noise = tex2D(_MainTex, IN.worldPos.xz * 0.025);
+				fixed4 c = _Color * ((noise.y * 0.75 + 0.25) * IN.visibility);
 				float blend = IN.uv_MainTex.x;
-
-				blend *= noise.x + .5;
-				blend = smoothstep(.4f, .7f, blend);
+				blend *= noise.x + 0.5;
+				blend = smoothstep(0.4, 0.7, blend);
 
 				o.Albedo = c.rgb;
 				o.Metallic = _Metallic;
