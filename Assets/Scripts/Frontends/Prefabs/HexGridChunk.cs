@@ -792,6 +792,9 @@ public class HexGridChunk : MonoBehaviour
         Vector3 c2 = center + HexMetrics.GetSecondWaterCorner(aDir);
 
         water.AddTriangle(center, c1, c2);
+        Vector3 indices;
+        indices.x = indices.y = indices.z = aCell.Index;
+        water.AddTriangleCellData(indices, weights1);
 
         if (aDir <= HexDirection.SE && neighbor != null)
         {
@@ -800,6 +803,8 @@ public class HexGridChunk : MonoBehaviour
             Vector3 e2 = c2 + bridge;
 
             water.AddQuad(c1, c2, e1, e2);
+            indices.y = neighbor.Index;
+            water.AddQuadCellData(indices, weights1, weights2);
 
             if (aDir <= HexDirection.E)
             {
@@ -808,6 +813,8 @@ public class HexGridChunk : MonoBehaviour
                     return;
 
                 water.AddTriangle(c2, e2, c2 + HexMetrics.GetWaterBridge(aDir.Next()));
+                indices.z = nextNeighbor.Index;
+                water.AddTriangleCellData(indices, weights1, weights2, weights3);
             }
         }
     }
@@ -824,6 +831,14 @@ public class HexGridChunk : MonoBehaviour
         water.AddTriangle(center, e1.v3, e1.v4);
         water.AddTriangle(center, e1.v4, e1.v5);
 
+        Vector3 indices;
+        indices.x = indices.z = aCell.Index;
+        indices.y = neighbor.Index;
+        water.AddTriangleCellData(indices, weights1);
+        water.AddTriangleCellData(indices, weights1);
+        water.AddTriangleCellData(indices, weights1);
+        water.AddTriangleCellData(indices, weights1);
+
         Vector3 center2 = neighbor.Position;
         center2.y = center.y;
 
@@ -834,7 +849,7 @@ public class HexGridChunk : MonoBehaviour
 
         if (aCell.HasRiverThroughEdge(aDir))
         {
-            TriangulateEstuary(e1, e2, aCell.IncomingRiver == aDir);
+            TriangulateEstuary(e1, e2, aCell.IncomingRiver == aDir, indices);
         }
         else
         {
@@ -842,10 +857,16 @@ public class HexGridChunk : MonoBehaviour
             waterShore.AddQuad(e1.v2, e1.v3, e2.v2, e2.v3);
             waterShore.AddQuad(e1.v3, e1.v4, e2.v3, e2.v4);
             waterShore.AddQuad(e1.v4, e1.v5, e2.v4, e2.v5);
+
             waterShore.AddQuadUV(0f, 0f, 0f, 1f);
             waterShore.AddQuadUV(0f, 0f, 0f, 1f);
             waterShore.AddQuadUV(0f, 0f, 0f, 1f);
             waterShore.AddQuadUV(0f, 0f, 0f, 1f);
+            
+            waterShore.AddQuadCellData(indices, weights1, weights2);
+            waterShore.AddQuadCellData(indices, weights1, weights2);
+            waterShore.AddQuadCellData(indices, weights1, weights2);
+            waterShore.AddQuadCellData(indices, weights1, weights2);
         }
 
         HexCell nextNeighbor = aCell.GetNeighbor(aDir.Next());
@@ -858,6 +879,9 @@ public class HexGridChunk : MonoBehaviour
 
             waterShore.AddTriangle(e1.v5, e2.v5, v3);
             waterShore.AddTriangleUV(new Vector2(0f, 0f), new Vector2(0f, 1f), new Vector2(0f, nextNeighbor.IsUnderwater ? 0f : 1f));
+
+            indices.z = nextNeighbor.Index;
+            waterShore.AddTriangleCellData(indices, weights1, weights2, weights3);
         }
     }
 
@@ -879,12 +903,15 @@ public class HexGridChunk : MonoBehaviour
         rivers.AddQuadUV(0f, 1f, .8f, 1f);
     }
 
-    private void TriangulateEstuary(EdgeVertices e1, EdgeVertices e2, bool incomingRiver)
+    private void TriangulateEstuary(EdgeVertices e1, EdgeVertices e2, bool incomingRiver, Vector3 indices)
     {
         waterShore.AddTriangle(e2.v1, e1.v2, e1.v1);
         waterShore.AddTriangle(e2.v5, e1.v5, e1.v4);
         waterShore.AddTriangleUV(new Vector2(0f, 1f), new Vector2(0f, 0f), new Vector2(0f, 0f));
         waterShore.AddTriangleUV(new Vector2(0f, 1f), new Vector2(0f, 0f), new Vector2(0f, 0f));
+
+        waterShore.AddTriangleCellData(indices, weights2, weights1, weights1);
+        waterShore.AddTriangleCellData(indices, weights2, weights1, weights1);
 
         estuaries.AddQuad(e2.v1, e1.v2, e2.v2, e1.v3);
         estuaries.AddTriangle(e1.v3, e2.v2, e2.v4);
@@ -903,6 +930,10 @@ public class HexGridChunk : MonoBehaviour
             new Vector2(0f, 0f), new Vector2(0f, 0f),
             new Vector2(1f, 1f), new Vector2(0f, 1f)
             );
+
+        estuaries.AddQuadCellData(indices, weights2, weights1, weights2, weights1);
+        estuaries.AddTriangleCellData(indices, weights1, weights2, weights2);
+        estuaries.AddQuadCellData(indices, weights1, weights2);
 
         if (incomingRiver)
         {
