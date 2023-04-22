@@ -18,7 +18,7 @@ Shader "Custom/Terrain"
         #pragma target 3.5
         #pragma multi_compile _ GRID_ON
 
-        #include "HexCellData.cginc"
+        #include "../HexCellData.cginc"
 
         UNITY_DECLARE_TEX2DARRAY(_MainTex);
 

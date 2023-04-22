@@ -17,7 +17,7 @@ Shader "Custom/Water"
         #pragma target 3.0
 
         #include "Water.cginc"
-        #include "HexCellData.cginc"
+        #include "../HexCellData.cginc"
 
         sampler2D _MainTex;
 
