@@ -16,6 +16,8 @@ Shader "Custom/Estuary"
         #pragma surface surf Standard alpha vertex:vert
         #pragma target 3.0
 
+        #pragma multi_compile _ HEX_MAP_EDIT_MODE
+
         #include "Water.cginc"
         #include "../HexCellData.cginc"
 
