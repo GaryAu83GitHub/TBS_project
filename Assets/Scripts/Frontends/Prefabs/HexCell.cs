@@ -27,7 +27,8 @@ public class HexCell : MonoBehaviour
             if(terrainTypeIndex != value)
             {
                 terrainTypeIndex = value;
-                Refresh();
+                //Refresh();
+                ShaderData.RefreshTerrain(this);
             }
         }
     }
@@ -221,6 +222,14 @@ public class HexCell : MonoBehaviour
     // unit stuff
     public HexUnit Unit { get; set; }
 
+    public HexCellShaderData ShaderData { get; set; }
+
+    public int Index { get; set; }
+
+    // visibility stuff
+    public bool IsVisible { get { return visibility > 0; } }
+    private int visibility;
+
     public HexCell GetNeighbor(HexDirection aDir)
     {
         return neighbors[(int)aDir];
@@ -367,6 +376,7 @@ public class HexCell : MonoBehaviour
     public void Load(BinaryReader reader)
     {
         terrainTypeIndex = reader.ReadByte();
+        ShaderData.RefreshTerrain(this);
         elevation = reader.ReadByte();
         RefreshPosition();
         waterLevel = reader.ReadByte();
@@ -416,6 +426,19 @@ public class HexCell : MonoBehaviour
     {
         Text label = UIRect.GetComponent<Text>();
         label.text = text;
+    }
+
+    public void IncreaseVisibility()
+    {
+        visibility += 1;
+        if (visibility == 1)
+            ShaderData.RefreshVisibility(this);
+    }
+    public void DecreaseVisibility()
+    {
+        visibility -= 1;
+        if (visibility == 0)
+            ShaderData.RefreshVisibility(this);
     }
 
     private bool IsValidRiverDestination(HexCell neighbor)
