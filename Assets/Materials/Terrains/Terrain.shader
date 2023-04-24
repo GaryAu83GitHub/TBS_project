@@ -7,6 +7,7 @@ Shader "Custom/Terrain"
         _GridTex ("Grid Texture", 2D) = "white" {}
         _Glossiness ("Smoothness", Range(0,1)) = 0.5
         _Specular("Specular", Color) = (0.2, 0.2, 0.2)
+        _BackgroundColor("Background Color", Color) = (0,0,0)
     }
     SubShader
     {
@@ -29,6 +30,7 @@ Shader "Custom/Terrain"
         half _Glossiness;
         fixed3 _Specular;
         fixed4 _Color;
+        half3 _BackgroundColor;
 
         struct Input
         {
@@ -82,6 +84,7 @@ Shader "Custom/Terrain"
             o.Specular = _Specular * explored;
             o.Smoothness = _Glossiness;
             o.Occlusion = explored;
+            o.Emission = _BackgroundColor * (1 - explored);
             o.Alpha = c.a;
         }
         ENDCG
