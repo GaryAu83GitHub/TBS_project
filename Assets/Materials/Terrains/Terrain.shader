@@ -35,7 +35,7 @@ Shader "Custom/Terrain"
             float4 color : COLOR;
             float3 worldPos;
             float3 terrain;
-            float3 visibility;
+            float4 visibility;
         };
 
         float4 GetTerrainColor(Input IN, int index) {
@@ -58,7 +58,8 @@ Shader "Custom/Terrain"
             data.visibility.x = cell0.x;
             data.visibility.y = cell1.x;
             data.visibility.z = cell2.x;
-            data.visibility = lerp(.25, 1, data.visibility);
+            data.visibility.xyz = lerp(.25, 1, data.visibility.xyz);
+            data.visibility.w = cell0.y * v.color.x + cell1.y * v.color.y + cell2.y * v.color.z;
         }
 
         UNITY_INSTANCING_BUFFER_START(Props)
@@ -76,7 +77,8 @@ Shader "Custom/Terrain"
             grid = tex2D(_GridTex, gridUV);
         #endif
 
-            o.Albedo = c.rgb * grid * _Color;
+            float explored = IN.visibility.w;
+            o.Albedo = c.rgb * grid * _Color * explored;
             o.Metallic = _Metallic;
             o.Smoothness = _Glossiness;
             o.Alpha = c.a;
