@@ -88,6 +88,29 @@ public class HexCellShaderData : MonoBehaviour
         Color32 data = cellTextureData[index];
         bool stillUpdating = false;
 
+        if(cell.IsExplored && data.g < 255)
+        {
+            stillUpdating = true;
+            int t = data.g + delta;
+            data.g = t >= 255 ? (byte)255 : (byte)t;
+        }
+
+        if (cell.IsVisible)
+        {
+            if (data.r < 255)
+            {
+                stillUpdating = true;
+                int t = data.r + delta;
+                data.r = t >= 255 ? (byte)255 : (byte)t;
+            }
+        }
+        else if(data.r > 0)
+        {
+            stillUpdating = true;
+            int t = data.r - delta;
+            data.r = t < 0 ? (byte)0 : (byte)t;
+        }
+
         cellTextureData[index] = data;
 
         return stillUpdating;
