@@ -1,9 +1,14 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class HexCellShaderData : MonoBehaviour
 {
     private Texture2D cellTexture;
     private Color32[] cellTextureData;
+
+    private List<HexCell> transitioningCells = new List<HexCell>();
+
+    public bool ImmediateMode { get; set; }
 
     private void LateUpdate()
     {
@@ -37,6 +42,7 @@ public class HexCellShaderData : MonoBehaviour
             }
         }
 
+        transitioningCells.Clear();
         enabled = true;
     }
 
@@ -50,8 +56,13 @@ public class HexCellShaderData : MonoBehaviour
     {
         int index = cell.Index;
 
-        cellTextureData[index].r = cell.IsVisible ? (byte)255 : (byte)0;
-        cellTextureData[index].g = cell.IsExplored ? (byte)255 : (byte)0;
+        if (ImmediateMode)
+        {
+            cellTextureData[index].r = cell.IsVisible ? (byte)255 : (byte)0;
+            cellTextureData[index].g = cell.IsExplored ? (byte)255 : (byte)0;
+        }
+        else
+            transitioningCells.Add(cell);
 
         enabled = true;
     }
