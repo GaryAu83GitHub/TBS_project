@@ -6,7 +6,7 @@ Shader "Custom/Terrain"
         _MainTex ("Terrain Texture Array", 2DArray) = "white" {}
         _GridTex ("Grid Texture", 2D) = "white" {}
         _Glossiness ("Smoothness", Range(0,1)) = 0.5
-        _Metallic ("Metallic", Range(0,1)) = 0.0
+        _Specular("Specular", Color) = (0.2, 0.2, 0.2)
     }
     SubShader
     {
@@ -14,7 +14,7 @@ Shader "Custom/Terrain"
         LOD 200
 
         CGPROGRAM
-        #pragma surface surf Standard fullforwardshadows vertex:vert
+        #pragma surface surf StandardSpecular fullforwardshadows vertex:vert
         #pragma target 3.5
 
         #pragma multi_compile _ GRID_ON
@@ -27,7 +27,7 @@ Shader "Custom/Terrain"
         sampler2D _GridTex;
 
         half _Glossiness;
-        half _Metallic;
+        fixed3 _Specular;
         fixed4 _Color;
 
         struct Input
@@ -65,7 +65,7 @@ Shader "Custom/Terrain"
         UNITY_INSTANCING_BUFFER_START(Props)
         UNITY_INSTANCING_BUFFER_END(Props)
 
-        void surf (Input IN, inout SurfaceOutputStandard o)
+        void surf (Input IN, inout SurfaceOutputStandardSpecular o)
         {
             fixed4 c = GetTerrainColor(IN, 0) + GetTerrainColor(IN, 1) + GetTerrainColor(IN, 2);
 
@@ -79,8 +79,9 @@ Shader "Custom/Terrain"
 
             float explored = IN.visibility.w;
             o.Albedo = c.rgb * grid * _Color * explored;
-            o.Metallic = _Metallic;
+            o.Specular = _Specular * explored;
             o.Smoothness = _Glossiness;
+            o.Occlusion = explored;
             o.Alpha = c.a;
         }
         ENDCG
