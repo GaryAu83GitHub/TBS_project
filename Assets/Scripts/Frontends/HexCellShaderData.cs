@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class HexCellShaderData : MonoBehaviour
 {
+    private const float transitionSpeed = 255;
+
     private Texture2D cellTexture;
     private Color32[] cellTextureData;
 
@@ -12,9 +14,22 @@ public class HexCellShaderData : MonoBehaviour
 
     private void LateUpdate()
     {
+        int delta = (int)(Time.deltaTime * transitionSpeed);
+        if (delta == 0)
+            delta = 1;
+
+        for(int i = 0; i < transitioningCells.Count; i++)
+        {
+            if(!UpdateCellData(transitioningCells[i], delta))
+            {
+                transitioningCells[i--] = transitioningCells[transitioningCells.Count - 1];
+                transitioningCells.RemoveAt(transitioningCells.Count - 1);
+            }
+        }
+
         cellTexture.SetPixels32(cellTextureData);
         cellTexture.Apply();
-        enabled = false;
+        enabled = transitioningCells.Count > 0;
     }
 
     public void Initialize(int x, int z)
@@ -65,5 +80,16 @@ public class HexCellShaderData : MonoBehaviour
             transitioningCells.Add(cell);
 
         enabled = true;
+    }
+
+    private bool UpdateCellData(HexCell cell, int delta)
+    {
+        int index = cell.Index;
+        Color32 data = cellTextureData[index];
+        bool stillUpdating = false;
+
+        cellTextureData[index] = data;
+
+        return stillUpdating;
     }
 }
