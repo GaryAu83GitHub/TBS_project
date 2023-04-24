@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using Assets.Scripts.Backends.HexGrid;
 using Assets.Scripts.Backends.Tools;
+using Assets.Scripts.Backends.HexGrid.Tools;
 
 public class HexUnit : MonoBehaviour
 {
@@ -46,6 +47,8 @@ public class HexUnit : MonoBehaviour
 
     public HexGrid Grid { get; set; }
 
+    public int Speed { get { return 24; } }
+
     public static void Load(BinaryReader reader, HexGrid grid)
     {
         HexCoordinates coordinates = HexCoordinates.Load(reader);
@@ -72,6 +75,28 @@ public class HexUnit : MonoBehaviour
         transform.localPosition = location.Position;
     }
 
+    public int GetMoveCost(HexCell fromCell, HexCell toCell, HexDirection direction)
+    {
+        HexEdgeType edgeType = fromCell.GetEdgeType(toCell);
+        if (edgeType == HexEdgeType.CLIFF)
+            return -1;
+
+        int moveCost;
+        if (fromCell.HasRoadThroughEdge(direction))
+        {
+            moveCost = 1;
+        }
+        else if (fromCell.Walled != toCell.Walled)
+            return -1;
+        else
+        {
+            moveCost = edgeType == HexEdgeType.FLAT ? 5 : 10;
+            moveCost += toCell.UrbanLevel + toCell.FarmLevel + toCell.PlantLevel;
+        }
+
+        return moveCost;
+    }
+
     public void Die()
     {
         if (location)
@@ -90,7 +115,7 @@ public class HexUnit : MonoBehaviour
 
     public bool IsValidDestination(HexCell cell)
     {
-        return !cell.IsUnderwater && !cell.Unit;
+        return cell.IsExplored && !cell.IsUnderwater && !cell.Unit;
     }
 
     public void Travel(List<HexCell> path)
